@@ -403,12 +403,12 @@ function onboardView(){
    '<div class="eyebrow" style="margin-bottom:6px">Name</div>'+
    '<input id="ob-name" class="inp" placeholder="Your name" value="'+esc(pr.name||'')+'">'+
    '<div class="row" style="margin-top:12px">'+
-    '<div style="flex:1"><div class="eyebrow" style="margin-bottom:6px">Age</div><input id="ob-age" class="inp" type="number" inputmode="numeric" value="'+(pr.age||'')+'" placeholder="33"></div>'+
+    '<div style="flex:1"><div class="eyebrow" style="margin-bottom:6px">Age</div><input id="ob-age" class="inp" type="number" inputmode="numeric" value="'+(pr.age||'')+'" placeholder="Age"></div>'+
     '<div style="flex:1"><div class="eyebrow" style="margin-bottom:6px">Sex</div><select id="ob-sex" class="inp"><option value="M"'+(pr.sex!=='F'?' selected':'')+'>Male</option><option value="F"'+(pr.sex==='F'?' selected':'')+'>Female</option></select></div>'+
    '</div>'+
    '<div class="row" style="margin-top:12px">'+
     '<div style="flex:1.2"><div class="eyebrow" style="margin-bottom:6px">Height</div><div class="row"><input id="ob-ft" class="inp" type="number" inputmode="numeric" placeholder="ft" value="'+(pr.heightIn?Math.floor(pr.heightIn/12):'')+'"><input id="ob-in" class="inp" type="number" inputmode="numeric" placeholder="in" value="'+(pr.heightIn?pr.heightIn%12:'')+'"></div></div>'+
-    '<div style="flex:1"><div class="eyebrow" style="margin-bottom:6px">Weight (lb)</div><input id="ob-w" class="inp" type="number" inputmode="decimal" value="'+(pr.weight||'')+'" placeholder="190"></div>'+
+    '<div style="flex:1"><div class="eyebrow" style="margin-bottom:6px">Weight (lb)</div><input id="ob-w" class="inp" type="number" inputmode="decimal" value="'+(pr.weight||'')+'" placeholder="lb"></div>'+
    '</div>'+
    '<button class="go-btn" style="background:#E4573D;margin-top:16px" onclick="saveProfile()">'+(pr.name?'Save changes':'Start training')+'</button>'+
   '</div>'+
