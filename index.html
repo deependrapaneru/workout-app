@@ -143,6 +143,10 @@ var ACTIVITIES={
  other:{name:'Other cardio',fields:['duration']}
 };
 var FIELD_LABEL={distance:'Distance (mi)',duration:'Duration (min)',steps:'Steps'};
+// muscle keys -> labels (for the custom-exercise muscle picker)
+var MN={chest:'Chest',delts:'Shoulders',rearDelts:'Rear delts',biceps:'Biceps',triceps:'Triceps',forearms:'Forearms',
+abs:'Abs / core',obliques:'Obliques',quads:'Quads',hamstrings:'Hamstrings',glutes:'Glutes',calves:'Calves',
+traps:'Traps',lats:'Lats',lowerback:'Lower back'};
 
 // muscle key -> uploaded icon file (lowercase, in /icons)
 var M2I={chest:'chest',delts:'shoulders',rearDelts:'shoulders',biceps:'biceps',triceps:'triceps',forearms:'forearms',
@@ -238,7 +242,20 @@ function isWorkout(dk){var a=dayAssign(dk);return !!splitDef().workouts[a];}
 function workoutOf(dk){return splitDef().workouts[dayAssign(dk)]||null;}
 function dayType(dk){var w=workoutOf(dk);if(w)return w.type;if(dayAssign(dk)==='act')return 'act';return 'rest';}
 function dayLabel(dk){var w=workoutOf(dk);if(w)return w.label;if(dayAssign(dk)==='act')return activityName(dk);return 'Rest';}
-function planEx(dk){var w=workoutOf(dk);return w?w.ex:[];}
+function planEx(dk){
+ var w=workoutOf(dk),base=w?w.ex.slice():[];
+ // remove user-deleted slots for this day
+ var del=(S.profile&&S.profile.del&&S.profile.del[dk])||[];
+ base=base.filter(function(id){return del.indexOf(id)<0;});
+ // append user-added custom exercises for this day
+ var add=(S.profile&&S.profile.add&&S.profile.add[dk])||[];
+ return base.concat(add);
+}
+// merge any custom exercise definitions into EXDB at load
+function hydrateCustom(){
+ var cx=(S.profile&&S.profile.custom)||{};
+ for(var id in cx){EXDB[id]=cx[id];}
+}
 function activityFor(dk){return (S.profile&&S.profile.acts&&S.profile.acts[dk])||'run';}
 function activityName(dk){var a=ACTIVITIES[activityFor(dk)];return a?a.name:'Activity';}
 function liftDaysPerWeek(){return DAYS.filter(isWorkout).length;}
@@ -249,9 +266,15 @@ var KEY='training-week';
 var mem=null;
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function blank(){return {start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null};}
+// ensure profile has containers for custom exercises / per-day edits
+function ensureProfileEdits(){if(!S.profile)return;
+ if(!S.profile.custom)S.profile.custom={};
+ if(!S.profile.add)S.profile.add={};
+ if(!S.profile.del)S.profile.del={};}
 function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);return Object.assign(blank(),d);}}catch(e){}return mem||blank();}
 function save(){mem=S;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var S=load();
+hydrateCustom();
 
 // ===================== HELPERS =====================
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
@@ -409,7 +432,7 @@ function ring(pct,hex){var r=20,c=2*Math.PI*r;
 function exportData(){try{var b=new Blob([JSON.stringify(S)],{type:'application/json'});var a=document.createElement('a');
  a.href=URL.createObjectURL(b);a.download='training-backup-'+todayStr()+'.json';a.click();}catch(e){alert('Export failed.');}}
 function importData(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();
- rd.onload=function(){try{var d=JSON.parse(rd.result);if(d&&d.logs&&d.start){S=Object.assign(blank(),d);save();render();alert('Backup restored.');}else alert('Not a valid backup.');}catch(e){alert('Could not read file.');}};
+ rd.onload=function(){try{var d=JSON.parse(rd.result);if(d&&d.logs&&d.start){S=Object.assign(blank(),d);hydrateCustom();save();render();alert('Backup restored.');}else alert('Not a valid backup.');}catch(e){alert('Could not read file.');}};
  rd.readAsText(f);}
 
 // ===================== STATE =====================
@@ -417,8 +440,8 @@ var tab='home', viewDay=dayKeyOf(todayStr()), openEx=null, histEx='bench', editP
 var timerSecs=0, timerInt=null;
 
 // ===================== ACTIONS =====================
-function setTab(t){tab=t;openEx=null;render();}
-function setDay(k){viewDay=k;openEx=null;render();}
+function setTab(t){tab=t;openEx=null;addingTo=null;render();}
+function setDay(k){viewDay=k;openEx=null;addingTo=null;render();}
 function toggleEx(i){openEx=openEx===i?null:i;render();}
 function setCheckin(v){S.checkin[todayStr()]=v;save();render();}
 function setActivity(dk){var el=document.getElementById('act-pick');if(!el)return;
@@ -428,6 +451,42 @@ function logActivity(dk){var actId=activityFor(dk),act=ACTIVITIES[actId]||ACTIVI
  act.fields.forEach(function(f){var el=document.getElementById('af-'+f);if(el&&el.value!==''){entry[f]=+el.value;any=true;}});
  if(!S.acts)S.acts={};S.acts[todayStr()]=entry; // logging counts even with no numbers
  save();render();}
+
+// ---- custom exercise add / delete ----
+var addingTo=null; // day key where the add-form is open
+function openAddForm(dk){addingTo=dk;render();}
+function cancelAdd(){addingTo=null;render();}
+function deleteExercise(dk,id){
+ ensureProfileEdits();
+ var w=workoutOf(dk),inBase=w&&w.ex.indexOf(id)>=0;
+ if(inBase){ // hide a built-in slot for this day
+  if(!S.profile.del[dk])S.profile.del[dk]=[];
+  if(S.profile.del[dk].indexOf(id)<0)S.profile.del[dk].push(id);
+ } else { // remove a custom add
+  if(S.profile.add[dk])S.profile.add[dk]=S.profile.add[dk].filter(function(x){return x!==id;});
+ }
+ // drop any pending sub pointing at removed slot handled naturally by re-render
+ openEx=null;save();render();
+}
+function addExercise(dk){
+ var g=function(id){var el=document.getElementById(id);return el?el.value:'';};
+ var name=(g('nx-name')||'').trim();
+ if(!name){alert('Give the exercise a name.');return;}
+ var sets=Math.min(6,Math.max(1,parseInt(g('nx-sets'))||3));
+ var rmin=Math.max(1,parseInt(g('nx-rmin'))||8);
+ var rmax=Math.max(rmin,parseInt(g('nx-rmax'))||12);
+ var rest=Math.max(15,parseInt(g('nx-rest'))||90);
+ var musc=g('nx-musc')||'chest';
+ ensureProfileEdits();
+ var id='cx_'+Date.now().toString(36);
+ var def={name:name,pat:'Custom',pri:[musc],sec:[],sets:sets,rMin:rmin,rMax:rmax,rest:rest,inc:5,
+  tempo:'Controlled',rir:'1–2 in reserve',start:'Pick a weight you can do for about '+(rmax+2)+' reps.',
+  cues:'Your own movement — keep form strict and log honestly.',alts:[],custom:true};
+ S.profile.custom[id]=def;EXDB[id]=def;
+ if(!S.profile.add[dk])S.profile.add[dk]=[];
+ S.profile.add[dk].push(id);
+ addingTo=null;save();render();
+}
 function setHistEx(){var el=document.getElementById('hist-sel');if(el){histEx=el.value;render();}}
 function subEx(i,dk){var el=document.getElementById('sub-'+i);if(!el)return;S.subs[dk+'-'+i]=el.value;openEx=null;save();render();}
 function quickWeight(){var el=document.getElementById('qw');var w=el?+el.value:0;if(!w)return;S.body.push({d:todayStr(),w:w});save();render();}
@@ -486,7 +545,7 @@ function saveProfile(){
  var prevActs=(S.profile&&S.profile.acts)||{};
  S.profile={name:name,age:age,sex:sex,heightIn:ft*12+inch,weight:w,split:obSplit||'ul',sched:obSched||DEFAULT_SCHED.ul,acts:prevActs};
  if(first)S.body.push({d:todayStr(),w:w});
- editProf=false;save();render();
+ensureProfileEdits();hydrateCustom();editProf=false;save();render();
 }
 
 // ===================== VIEWS =====================
@@ -645,19 +704,43 @@ function todayView(){
    html+='</div>';
   }
   if(open){
+   var canSwap=EXDB[base]&&EXDB[base].alts&&EXDB[base].alts.length;
    html+='<div class="detail">'+
     '<img class="eximg" src="img/'+id+'.gif" alt="'+esc(ex.name)+'" loading="lazy" data-alt="img/'+id+'.jpg" onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=\'\';}else{this.style.display=\'none\';}">'+
     '<dd>'+esc(ex.cues)+'</dd>'+
     '<div class="chips"><span class="chip">'+esc(ex.tempo)+'</span><span class="chip">'+esc(ex.rir)+'</span></div>'+
     '<p class="sub" style="margin:10px 0 0">'+esc(rec.why)+'</p>'+
     iconGrid(ex.pri,ex.sec,hex)+
-    '<div class="eyebrow" style="margin:14px 0 4px">Swap (same pattern)</div>'+
+    (canSwap?('<div class="eyebrow" style="margin:14px 0 4px">Swap (same pattern)</div>'+
     '<div class="row"><select class="inp" id="sub-'+i+'">'+[base].concat(EXDB[base].alts).map(function(a){return '<option value="'+a+'"'+(a===id?' selected':'')+'>'+esc(EXDB[a].name)+'</option>';}).join('')+'</select>'+
-    '<button class="ghost-btn" style="color:var(--chalk)" onclick="subEx('+i+',\''+dk+'\')">Swap</button></div>'+
+    '<button class="ghost-btn" style="color:var(--chalk)" onclick="subEx('+i+',\''+dk+'\')">Swap</button></div>'):'')+
+    '<button class="ghost-btn" style="width:100%;margin-top:12px;color:#E4573D;border-color:rgba(228,87,61,.4)" onclick="deleteExercise(\''+dk+'\',\''+id+'\')">Remove from this day</button>'+
    '</div>';
   }
   html+='</div>';
  });
+
+ // add custom exercise
+ if(isToday){
+  if(addingTo===dk){
+   html+='<div class="card"><div class="eyebrow" style="margin-bottom:8px">New exercise</div>'+
+    '<input id="nx-name" class="inp" placeholder="Exercise name (e.g. Pec Deck)">'+
+    '<div class="row" style="margin-top:8px">'+
+     '<div style="flex:1"><div class="eyebrow" style="margin-bottom:4px">Sets</div><input id="nx-sets" class="inp" type="number" inputmode="numeric" value="3"></div>'+
+     '<div style="flex:1"><div class="eyebrow" style="margin-bottom:4px">Rep min</div><input id="nx-rmin" class="inp" type="number" inputmode="numeric" value="8"></div>'+
+     '<div style="flex:1"><div class="eyebrow" style="margin-bottom:4px">Rep max</div><input id="nx-rmax" class="inp" type="number" inputmode="numeric" value="12"></div>'+
+    '</div>'+
+    '<div class="row" style="margin-top:8px">'+
+     '<div style="flex:1"><div class="eyebrow" style="margin-bottom:4px">Rest (s)</div><input id="nx-rest" class="inp" type="number" inputmode="numeric" value="90"></div>'+
+     '<div style="flex:1.4"><div class="eyebrow" style="margin-bottom:4px">Main muscle</div><select id="nx-musc" class="inp">'+
+      Object.keys(MN).map(function(m){return '<option value="'+m+'">'+MN[m]+'</option>';}).join('')+'</select></div>'+
+    '</div>'+
+    '<div class="row" style="margin-top:12px"><button class="go-btn" style="background:'+hex+'" onclick="addExercise(\''+dk+'\')">Add to '+dayLabel(dk)+'</button>'+
+    '<button class="ghost-btn" style="color:var(--chalk);padding:0 18px" onclick="cancelAdd()">Cancel</button></div></div>';
+  } else {
+   html+='<div style="margin:0 18px 12px"><button class="ghost-btn" style="width:100%;padding:12px 0;color:var(--chalk);border-style:dashed" onclick="openAddForm(\''+dk+'\')">+ Add exercise to '+dayLabel(dk)+'</button></div>';
+  }
+ }
  return html;
 }
 
