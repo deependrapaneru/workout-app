@@ -311,6 +311,32 @@ function targets(){
 function needsWeighIn(){var last=null;for(var i=S.body.length-1;i>=0;i--)if(S.body[i].w){last=S.body[i].d;break;}
  if(!last)return true;return (new Date(todayStr())-new Date(last))/864e5>=7;}
 
+
+// streaks: consecutive weeks (Mon-anchored) with >=1 lift OR >=1 pickleball logged
+function activeDates(){var set={};for(var id in S.logs)logsOf(id).forEach(function(l){set[l.d]=1;});
+ Object.keys(S.pb).forEach(function(d){if(S.pb[d])set[d]=1;});return set;}
+function currentStreak(){var act=activeDates();var wk={};Object.keys(act).forEach(function(d){wk[mondayOf(d)]=1;});
+ var cur=mondayOf(todayStr()),n=0;
+ for(var i=0;i<520;i++){var m=new Date(cur+'T12:00');m.setDate(m.getDate()-7*i);var key=m.toISOString().slice(0,10);
+  if(wk[key])n++;else if(i>0)break;else if(!wk[key]){/*allow current week not yet trained*/}}
+ // recount cleanly: walk back from most recent trained week
+ var weeks=Object.keys(wk).sort();if(!weeks.length)return 0;
+ var streak=0,probe=mondayOf(todayStr());
+ // if current week untouched, start from last week
+ if(!wk[probe]){var p=new Date(probe+'T12:00');p.setDate(p.getDate()-7);probe=p.toISOString().slice(0,10);}
+ while(wk[probe]){streak++;var p=new Date(probe+'T12:00');p.setDate(p.getDate()-7);probe=p.toISOString().slice(0,10);}
+ return streak;}
+function trainedToday(){if(liftDoneOn(todayStr()))return true;return !!S.pb[todayStr()];}
+function nextUp(){ // returns {dk,label,type} for today's focus
+ var dk=dayKeyOf(todayStr());return {dk:dk,label:DAY_LABEL[dk],type:DAY_TYPE[dk]};}
+function heatCells(){ // last 12 weeks x 7 days of activity intensity
+ var act=activeDates(),cells=[],cur=new Date(todayStr()+'T12:00');
+ cur.setDate(cur.getDate()-((cur.getDay()+6)%7)); // this monday
+ for(var w=11;w>=0;w--){var col=[];for(var d=0;d<7;d++){var x=new Date(cur);x.setDate(cur.getDate()-7*w+d);
+  var ds=x.toISOString().slice(0,10);var lift=liftDoneOn(ds),pb=!!S.pb[ds];
+  col.push({ds:ds,lvl:lift?2:(pb?1:0),future:ds>todayStr()});}cells.push(col);}
+ return cells;}
+
 // charts
 function spark(vals,hex,w,h){w=w||140;h=h||36;if(vals.length<2)return '<span class="sub">Log 2+ entries to see a trend.</span>';
  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),rg=(mx-mn)||1;
@@ -333,7 +359,7 @@ function importData(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new F
  rd.readAsText(f);}
 
 // ===================== STATE =====================
-var tab='today', viewDay=dayKeyOf(todayStr()), openEx=null, histEx='bench', editProf=false;
+var tab='home', viewDay=dayKeyOf(todayStr()), openEx=null, histEx='bench', editProf=false;
 var timerSecs=0, timerInt=null;
 
 // ===================== ACTIONS =====================
@@ -587,9 +613,49 @@ function planView(){
  return html;
 }
 
+function homeView(){
+ var nu=nextUp(),hex=HEX[nu.type],streak=currentStreak(),done=trainedToday();
+ var html=headerHtml('Today',nu.type);
+ // hero: what to do now
+ if(PLAN[nu.dk]){
+  var n=PLAN[nu.dk].length;
+  html+='<div class="card" style="border-color:'+hex+'"><div class="eyebrow" style="color:'+hex+'">Today\'s focus</div>'+
+   '<div class="display" style="font-size:26px;margin:2px 0 6px">'+esc(nu.label)+'</div>'+
+   '<p class="sub" style="margin:0 0 12px">'+n+' exercises · ~'+estMin(nu.dk)+' min'+(done?' · <b style="color:#1FA463">done ✓</b>':'')+'</p>'+
+   '<button class="go-btn" style="background:'+hex+'" onclick="setTab(\'today\')">'+(done?'Review session':'Start today\'s workout')+'</button></div>';
+ } else {
+  html+='<div class="card" style="border-color:'+hex+'"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">'+
+   '<img src="icons/cardio.svg" style="width:44px;height:44px;border-radius:12px;border:2px solid '+hex+'" onerror="this.style.display=\'none\'">'+
+   '<div><div class="eyebrow" style="color:'+hex+'">Today</div><div class="display" style="font-size:24px">Pickleball</div></div></div>'+
+   '<button class="go-btn" style="background:'+(done?'rgba(255,255,255,.6)':hex)+';color:'+(done?'var(--chalk)':'#fff')+'" onclick="setTab(\'today\')">'+(done?'✓ Logged':'Open')+'</button></div>';
+ }
+ // streak + week stats
+ var wd=weekDates(),lifts=wd.filter(liftDoneOn).length,pbs=wd.filter(function(d){return S.pb[d];}).length;
+ html+='<div class="grid2">'+
+  '<div class="card"><div class="eyebrow">Streak</div><div class="display big">'+(streak>0?'🔥 '+streak:'—')+'</div><div class="sub">'+(streak===1?'week':'weeks')+' in a row</div></div>'+
+  '<div class="card"><div class="eyebrow">This week</div><div class="display big">'+lifts+'+'+pbs+'</div><div class="sub">'+lifts+' lifts · '+pbs+' pickle</div></div></div>';
+ // 12-week heatmap
+ var cells=heatCells();
+ var colw=(340/12);
+ var svg='<svg class="spark" width="340" height="'+(7*13+2)+'">';
+ cells.forEach(function(col,ci){col.forEach(function(c,ri){
+  var color=c.future?'#EEE8DA':(c.lvl===2?'#1FA463':(c.lvl===1?'#F0A626':'#E6E0D2'));
+  svg+='<rect x="'+(ci*13).toFixed(0)+'" y="'+(ri*13).toFixed(0)+'" width="11" height="11" rx="3" fill="'+color+'"/>';});});
+ svg+='</svg>';
+ html+='<div class="card"><h3>Last 12 weeks</h3>'+svg+
+  '<div class="chips" style="margin-top:8px"><span class="chip" style="border-color:#1FA463;color:#1FA463">Lift</span><span class="chip" style="border-color:#F0A626;color:#F0A626">Pickleball</span><span class="sub" style="align-self:center">green = strength · amber = court</span></div></div>';
+ // next weigh-in nudge
+ if(needsWeighIn()){
+  html+='<div class="card" style="border-color:#2F7DE1"><div class="eyebrow" style="color:#2F7DE1">Weekly weigh-in due</div>'+
+   '<div class="row" style="margin-top:8px"><input id="qw" class="inp" type="number" inputmode="decimal" placeholder="Weight (lb)">'+
+   '<button class="go-btn" style="background:#2F7DE1;width:auto;padding:0 20px" onclick="quickWeight()">Save</button></div></div>';
+ }
+ return html;
+}
+
 // ===================== RENDER =====================
-var TABS=[['today','▶','Today'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard'],['plan','✱','Plan']];
-var VIEWS={today:todayView,history:historyView,body:bodyView,dash:dashView,plan:planView};
+var TABS=[['home','◆','Home'],['today','▶','Workout'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard'],['plan','✱','Plan']];
+var VIEWS={home:homeView,today:todayView,history:historyView,body:bodyView,dash:dashView,plan:planView};
 
 function render(){
  try{
