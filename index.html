@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="FlexFuel" />
-<meta name="theme-color" content="#F7F9F4" />
+<meta name="theme-color" content="#F6F7F5" />
 <meta name="format-detection" content="telephone=no" />
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -1044,6 +1044,26 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .home-action-card b{display:block;font-size:13px}
 .home-action-card span{display:block;font-size:11px;color:var(--dim);margin-top:2px}
 .home-split-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin:0 14px 16px}
+.home-clean-head{margin:18px 18px 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.home-logo-wrap{display:flex;align-items:center;min-width:0}
+.home-logo-large{display:block;width:min(248px,58vw);height:auto;object-fit:contain;background:#fff;border:1px solid rgba(18,32,20,.08);border-radius:16px;padding:8px 12px;box-shadow:var(--elev)}
+.home-clean-date{text-align:right;flex:0 0 auto;color:var(--dim);font-size:11px;line-height:1.35}
+.home-clean-date b{display:block;color:var(--chalk);font-size:13px}
+.home-today-card{padding:18px!important}
+.home-today-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.home-today-title{font-size:27px;line-height:1.05;margin:4px 0 6px}
+.home-today-meta{font-size:12.5px;color:var(--dim)}
+.home-week-chip{flex:0 0 auto;padding:6px 9px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);color:var(--dim);font-size:10px;font-weight:750}
+.home-clean-actions{display:grid;grid-template-columns:1.35fr .85fr;gap:9px;margin-top:16px}
+.home-clean-actions button{min-height:46px;border-radius:14px}
+.home-clean-actions .go-btn{background:var(--chalk)!important;color:var(--page)!important;box-shadow:none!important}
+.home-essential-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 16px}
+.home-essential-card{padding:14px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--elev)}
+.home-essential-card span{display:block;font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.home-essential-card b{display:block;margin-top:5px;font-size:22px;color:var(--chalk)}
+.home-essential-card small{display:block;margin-top:3px;font-size:11px;color:var(--dim)}
+.home-essential-card .mini-progress{height:6px;margin-top:10px;border-radius:999px;overflow:hidden;background:var(--surface3)}
+.home-essential-card .mini-progress i{display:block;height:100%;border-radius:999px;background:var(--accent)}
 .momentum-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
 .momentum-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(180,246,61,.08)}
 .momentum-row b{display:block;font-size:13px}.momentum-row span{font-size:11px;color:var(--dim)}
@@ -1341,26 +1361,26 @@ input::placeholder,textarea::placeholder,.inp::placeholder{color:var(--dim)!impo
 .theme-preview.amoled,.accent-row{display:none!important}
 
 :root[data-resolved-theme="light"]{
-  --page:#F7F9F4;--bg:#F7F9F4;
-  --card:#FFFFFF;--card-up:#F0F4EC;--surface:#FFFFFF;--surface2:#F3F6F0;--surface3:#E9EFE5;
-  --glass:rgba(255,255,255,.94);--glass-in:#F3F6F0;--glass-btn:#EDF2E9;--glass-btn2:#F5F8F3;--glass-sec:#EDF2E9;
-  --chalk:#122014;--ink:#122014;--dim:#5D6B5C;--muted:#5D6B5C;
-  --line:#DCE5D7;--hair:rgba(18,32,20,.10);--glass-brd:rgba(18,32,20,.08);
-  --brd-soft:rgba(18,32,20,.10);--brd-soft2:rgba(18,32,20,.12);--brd-soft3:rgba(18,32,20,.08);
-  --tab:rgba(255,255,255,.94);--sw:#E1E9DD;--shadow:rgba(31,71,37,.10);
+  --page:#F6F7F5;--bg:#F6F7F5;
+  --card:#FFFFFF;--card-up:#F0F1EF;--surface:#FFFFFF;--surface2:#F1F2F0;--surface3:#E6E8E5;
+  --glass:rgba(255,255,255,.95);--glass-in:#F1F2F0;--glass-btn:#ECEEEC;--glass-btn2:#F5F6F4;--glass-sec:#ECEEEC;
+  --chalk:#171A18;--ink:#171A18;--dim:#626762;--muted:#626762;
+  --line:#E0E3DF;--hair:rgba(23,26,24,.10);--glass-brd:rgba(23,26,24,.08);
+  --brd-soft:rgba(23,26,24,.10);--brd-soft2:rgba(23,26,24,.12);--brd-soft3:rgba(23,26,24,.08);
+  --tab:rgba(255,255,255,.95);--sw:#E1E4E0;--shadow:rgba(22,27,23,.09);
   --accent:#246F32;--accent2:#4E9E43;--accent-rgb:36,111,50;
   --accent-soft:rgba(36,111,50,.12);--accent-softer:rgba(36,111,50,.07);
   --hero-grad:linear-gradient(135deg,#B7ED3E 0%,#62C85B 100%);
   --elev:0 14px 38px rgba(32,63,34,.08);--elev-lg:0 22px 60px rgba(32,63,34,.12);
 }
 :root[data-resolved-theme="dark"]{
-  --page:#0B120C;--bg:#0B120C;
-  --card:#121A13;--card-up:#19231A;--surface:#121A13;--surface2:#182219;--surface3:#213022;
-  --glass:rgba(18,26,19,.94);--glass-in:#182219;--glass-btn:#1A261B;--glass-btn2:#151F16;--glass-sec:#1A261B;
-  --chalk:#F2F7EF;--ink:#F2F7EF;--dim:#A8B6A5;--muted:#A8B6A5;
-  --line:#29382A;--hair:rgba(226,244,222,.10);--glass-brd:rgba(226,244,222,.09);
-  --brd-soft:rgba(226,244,222,.11);--brd-soft2:rgba(226,244,222,.14);--brd-soft3:rgba(226,244,222,.09);
-  --tab:rgba(10,17,11,.94);--sw:#253126;--shadow:rgba(0,0,0,.42);
+  --page:#0F1110;--bg:#0F1110;
+  --card:#171A18;--card-up:#1D211E;--surface:#171A18;--surface2:#202421;--surface3:#2A2F2B;
+  --glass:rgba(23,26,24,.95);--glass-in:#202421;--glass-btn:#232824;--glass-btn2:#1B1F1C;--glass-sec:#232824;
+  --chalk:#F3F5F2;--ink:#F3F5F2;--dim:#A9AFAA;--muted:#A9AFAA;
+  --line:#303531;--hair:rgba(243,245,242,.10);--glass-brd:rgba(243,245,242,.09);
+  --brd-soft:rgba(243,245,242,.11);--brd-soft2:rgba(243,245,242,.14);--brd-soft3:rgba(243,245,242,.09);
+  --tab:rgba(15,17,16,.95);--sw:#282D29;--shadow:rgba(0,0,0,.42);
   --accent:#B9EE43;--accent2:#66D06B;--accent-rgb:185,238,67;
   --accent-soft:rgba(185,238,67,.13);--accent-softer:rgba(185,238,67,.07);
   --hero-grad:linear-gradient(135deg,#B9EE43 0%,#61C95F 100%);
@@ -1597,7 +1617,7 @@ function ensureProfileEdits(){if(!S.profile)return;
  if(!S.profile.del)S.profile.del={};}
 function load(){try{var r=localStorage.getItem(KEY);if(r){
  var b=blank(),d=Object.assign(b,JSON.parse(r));
- d.notes=d.notes||{};d.goals=Object.assign({},b.goals,d.goals||{});d.templates=d.templates||{};d.settings=Object.assign({},b.settings,d.settings||{});d.settings.nutritionTargets=Object.assign({},b.settings.nutritionTargets,d.settings.nutritionTargets||{});if(['system','light','dark'].indexOf(d.settings.theme)<0)d.settings.theme='dark';d.settings.accent='green';
+ d.notes=d.notes||{};d.goals=Object.assign({},b.goals,d.goals||{});d.templates=d.templates||{};d.settings=Object.assign({},b.settings,d.settings||{});d.settings.nutritionTargets=Object.assign({},b.settings.nutritionTargets,d.settings.nutritionTargets||{});d.settings.theme='system';d.settings.accent='green';
  d.foodMeta=Object.assign({},b.foodMeta,d.foodMeta||{});
  ['favorites','usual','savedMeals','customFoods','barcodes'].forEach(function(k){d.foodMeta[k]=Object.assign({},b.foodMeta[k]||{},d.foodMeta[k]||{});});
  d.foodMeta.recent=Array.isArray(d.foodMeta.recent)?d.foodMeta.recent:[];
@@ -2041,14 +2061,11 @@ var FOODS=[
 
 var S=load();
 function resolvedTheme(){
- var t=S.settings&&S.settings.theme||'system';
- if(t!=='system'&&t!=='light'&&t!=='dark')t='dark';
- if(t==='system'){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}
- return t;
+ try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}
 }
 function applyAppearance(){
  var st=S.settings||{},root=document.documentElement,rt=resolvedTheme();
- if(st.theme!=='system'&&st.theme!=='light'&&st.theme!=='dark')st.theme='dark';
+ st.theme='system';
  st.accent='green';
  root.setAttribute('data-theme',st.theme||'system');
  root.setAttribute('data-resolved-theme',rt);
@@ -2056,13 +2073,13 @@ function applyAppearance(){
  root.setAttribute('data-text',st.largeText?'large':'normal');
  root.setAttribute('data-motion',st.reduceMotion?'reduced':'full');
  var meta=document.querySelector('meta[name="theme-color"]');
- if(meta)meta.setAttribute('content',rt==='light'?'#F7F9F4':'#0B120C');
+ if(meta)meta.setAttribute('content',rt==='light'?'#F6F7F5':'#0F1110');
  var ios=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');if(ios)ios.setAttribute('content',rt==='light'?'default':'black-translucent');
 }
 function initials(){var n=S.profile&&S.profile.name||'FF';return n.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x.charAt(0).toUpperCase();}).join('')||'FF';}
 function goalLabel(){var g=S.profile&&S.profile.goal||'lose';return g==='gain'?'Build muscle':g==='maintain'?'Maintain':'Lose fat';}
 function levelLabel(){var l=S.profile&&S.profile.level||'intermediate';return l.charAt(0).toUpperCase()+l.slice(1);}
-function setTheme(v){if(!S.settings)S.settings=blank().settings;S.settings.theme=v;applyAppearance();haptic(10);save();render();}
+function setTheme(){if(!S.settings)S.settings=blank().settings;S.settings.theme='system';applyAppearance();save();render();}
 function setAccent(v){if(!S.settings)S.settings=blank().settings;S.settings.accent='green';applyAppearance();haptic(10);save();render();}
 function toggleSetting(k){if(!S.settings)S.settings=blank().settings;S.settings[k]=!S.settings[k];applyAppearance();save();render();}
 function haptic(ms){if(S.settings&&S.settings.haptics&&navigator.vibrate)try{navigator.vibrate(ms||18);}catch(e){}}
@@ -2897,20 +2914,15 @@ function homeView(){
  var dayName=dayNames[now.getDay()],dateStr=monNames[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
  var exCount=isTraining(nu.dk)?planEx(nu.dk).length:0;
  var ds=foodDate||today,T=foodTargets(),tot=dayTotals(ds),remaining=T.cal-tot.k;
- var streak=currentStreak(),goal=(S.goals&&S.goals.weekly)||4,lifts=weekDates().filter(liftDoneOn).length,weekPct=Math.min(100,Math.round(lifts/Math.max(1,goal)*100));
- var bw=bwTrend(),vv=volThisVsLast(),volDelta=vv.prev?Math.round((vv.now-vv.prev)/vv.prev*100):0;
- var html='<section class="home-hero-premium">'+
-  '<div class="home-hero-top"><div><div style="font-size:13px;opacity:.94">'+greet()+'</div><div class="display hero-name">'+esc(firstName())+'</div><div class="home-hero-sub">'+dayName+' · '+dateStr+' · '+APP_TAG+'</div></div>'+brandPill()+'</div>'+
-  '<div class="home-focus-card"><div class="home-focus-top"><div><div class="home-focus-kicker">Today\'s mission</div><div class="display home-focus-title">'+esc(isTraining(nu.dk)?nu.label:(dayType(nu.dk)==='act'?activityName(nu.dk):'Recovery day'))+(done?' ✓':'')+'</div><div style="font-size:13px;opacity:.9">'+(isTraining(nu.dk)?(exCount+' exercises · ~'+estMin(nu.dk)+' min'):dayType(nu.dk)==='act'?'Keep your streak and move with intention.':'Reset, recover and come back stronger.')+'</div></div><div class="home-focus-badge">Week '+weekNum()+'</div></div>'+
-  '<div class="home-focus-meta"><span>🔥 '+streak+' week streak</span><span>⚡ '+Math.abs(remaining).toLocaleString()+' kcal '+(remaining>=0?'left':'over')+'</span><span>🎯 '+lifts+'/'+goal+' sessions this week</span></div>'+
-  '<div class="home-primary-actions"><button class="go-btn" onclick="setTab(\'today\')">'+(done?(isTraining(nu.dk)?'Review training':'Review today'):(isTraining(nu.dk)?'Start training':'Open today'))+'</button><button class="ghost-btn" onclick="openFoodSearch(foodMeal)">Log fuel</button></div></div></section>';
- html+='<div class="home-premium-grid"><div class="home-snapshot"><small>Weekly consistency</small><b>'+weekPct+'%</b><div style="font-size:12px;color:var(--dim);margin-top:4px">'+lifts+' of '+goal+' sessions complete</div><div class="mini-progress"><i style="width:'+weekPct+'%"></i></div></div><div class="home-snapshot"><small>Calories remaining</small><b>'+Math.abs(remaining).toLocaleString()+'</b><div style="font-size:12px;color:var(--dim);margin-top:4px">'+(remaining>=0?'Still available today':'Over today\'s target')+'</div><div class="mini-progress"><i style="width:'+Math.max(0,Math.min(100,Math.round((tot.k/Math.max(1,T.cal))*100)))+'%"></i></div></div></div>';
- html+='<div class="home-action-grid"><button class="home-action-card" onclick="setTab(\'today\')"><span class="icon">'+appIcon('calendar',20)+'</span><b>Today</b><span>Open plan</span></button><button class="home-action-card" onclick="openFoodSearch(foodMeal)"><span class="icon">'+appIcon('food',20)+'</span><b>Fuel</b><span>Search foods</span></button><button class="home-action-card" onclick="setMorePage(\'body\');setTab(\'more\')"><span class="icon">'+appIcon('scale',20)+'</span><b>Body</b><span>Check in</span></button><button class="home-action-card" onclick="setTab(\'progress\')"><span class="icon">'+appIcon('progress',20)+'</span><b>Progress</b><span>Review data</span></button></div>';
- html+='<div class="home-split-grid"><div class="card"><div class="modern-panel-title"><h3>Momentum</h3><span>What matters today</span></div><div class="momentum-list">'+
-   '<div class="momentum-row"><div style="display:flex;align-items:center;gap:10px"><span class="momentum-icon">'+appIcon('flame',18)+'</span><span><b>Streak status</b><span>'+(streak?('You\'re '+streak+' week'+(streak===1?'':'s')+' in a row'):'Start your first streak this week')+'</span></span></div><b>'+streak+'</b></div>'+
-   '<div class="momentum-row"><div style="display:flex;align-items:center;gap:10px"><span class="momentum-icon">'+appIcon('trophy',18)+'</span><span><b>Volume trend</b><span>'+(vv.prev?('Compared with last week'):'Keep logging to compare weeks')+'</span></span></div><b>'+(vv.prev?(volDelta>0?'+':'')+volDelta+'%':'—')+'</b></div>'+
-   '<div class="momentum-row"><div style="display:flex;align-items:center;gap:10px"><span class="momentum-icon">'+appIcon('scale',18)+'</span><span><b>Bodyweight trend</b><span>'+(bw?('Last 30 days'):'Add Sunday weigh-ins to track')+'</span></span></div><b>'+(bw?(bw.delta>0?'+':'')+bw.delta+' lb':'—')+'</b></div></div></div>'+
-   '<div class="card"><div class="modern-panel-title"><h3>Today\'s fuel</h3><span>'+tot.k.toLocaleString()+' / '+T.cal.toLocaleString()+' kcal</span></div><div class="macro-stack">'+macroMeter('Protein',tot.p,T.prot)+macroMeter('Carbs',tot.cb,T.cb)+macroMeter('Fat',tot.f,T.f)+macroMeter('Fiber',tot.fi,T.fi)+'</div><button class="ghost-btn" style="width:100%;margin-top:14px;color:var(--accent)" onclick="setTab(\'food\')">Open Fuel dashboard</button></div></div>';
+ var goal=(S.goals&&S.goals.weekly)||4,lifts=weekDates().filter(liftDoneOn).length,weekPct=Math.min(100,Math.round(lifts/Math.max(1,goal)*100));
+ var calPct=Math.max(0,Math.min(100,Math.round((tot.k/Math.max(1,T.cal))*100)));
+ var mission=isTraining(nu.dk)?nu.label:(dayType(nu.dk)==='act'?activityName(nu.dk):'Recovery day');
+ var missionMeta=isTraining(nu.dk)?(exCount+' exercises · about '+estMin(nu.dk)+' min'):dayType(nu.dk)==='act'?'Activity scheduled for today':'Rest, recover, and prepare for the next session';
+ var html='<section class="home-clean-head"><div class="home-logo-wrap">'+brandLogo(0,'home-logo-large')+'</div><div class="home-clean-date"><b>'+greet()+', '+esc(firstName())+'</b>'+dayName+'<br>'+dateStr+'</div></section>';
+ html+='<section class="card home-today-card"><div class="home-today-top"><div><div class="eyebrow">Today</div><div class="display home-today-title">'+esc(mission)+(done?' ✓':'')+'</div><div class="home-today-meta">'+missionMeta+'</div></div><span class="home-week-chip">Week '+weekNum()+'</span></div>'+
+  '<div class="home-clean-actions"><button class="go-btn" onclick="setTab(\'today\')">'+(done?'Review today':isTraining(nu.dk)?'Start training':'Open today')+'</button><button class="ghost-btn" onclick="setTab(\'food\')">Fuel</button></div></section>';
+ html+='<div class="home-essential-grid"><div class="home-essential-card"><span>Weekly goal</span><b>'+lifts+' / '+goal+'</b><small>'+weekPct+'% complete</small><div class="mini-progress"><i style="width:'+weekPct+'%"></i></div></div>'+
+  '<div class="home-essential-card"><span>Calories left</span><b>'+Math.abs(remaining).toLocaleString()+'</b><small>'+(remaining>=0?'Remaining today':'Over target')+'</small><div class="mini-progress"><i style="width:'+calPct+'%"></i></div></div></div>';
  return html;
 }
 
@@ -3214,7 +3226,7 @@ function profileView(){
  html+='<section class="settings-section"><div class="modern-panel-title"><h3>Achievements</h3><span>Unlocked from your activity</span></div><div class="achievement-row">'+ach.map(function(a){return '<div class="achievement"><div class="ico">'+appIcon(a[0],23)+'</div><b>'+a[1]+'</b><span>'+a[2]+'</span></div>';}).join('')+'</div></section>';
 
  html+='<div class="profile-section-grid">'+
-   '<section class="settings-section"><div class="modern-panel-title"><h3>Appearance</h3><span>FlexFuel green stays consistent</span></div><div class="theme-grid theme-grid-three">'+[['system','System'],['light','Light'],['dark','Dark']].map(function(x){return '<button class="theme-choice '+(st.theme===x[0]?'on':'')+'" onclick="setTheme(\''+x[0]+'\')"><div class="theme-preview '+x[0]+'"></div>'+x[1]+'</button>';}).join('')+'</div><div class="sub" style="margin-top:12px">System follows your device appearance. FlexFuel uses one brand-green accent in every theme for consistent contrast.</div></section>'+
+   '<section class="settings-section"><div class="modern-panel-title"><h3>Appearance</h3><span>Automatic</span></div><div class="setting-row"><div class="setting-label"><b>System theme</b><span>FlexFuel automatically matches your device’s Light or Dark setting.</span></div><span class="tool-icon">'+appIcon('palette',20)+'</span></div></section>'+
    '<section class="settings-section"><div class="modern-panel-title"><h3>Experience</h3><span>Comfort & accessibility</span></div><div class="setting-stack">'+
       '<div class="setting-row"><div class="setting-label"><b>Haptics</b><span>Tap feedback</span></div><button class="toggle '+(st.haptics?'on':'')+'" onclick="toggleSetting(\'haptics\')"><i></i></button></div>'+
       '<div class="setting-row"><div class="setting-label"><b>Reduce motion</b><span>Fewer animations</span></div><button class="toggle '+(st.reduceMotion?'on':'')+'" onclick="toggleSetting(\'reduceMotion\')"><i></i></button></div>'+
