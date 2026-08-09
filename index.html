@@ -841,6 +841,18 @@ function planView(){
  return html;
 }
 
+function bwTrend(){ // returns {latest, deltaMonth} or null
+ var ws=S.body.filter(function(b){return b.w;});
+ if(!ws.length)return null;
+ var latest=ws[ws.length-1].w;
+ var monthAgo=null,cut=new Date(todayStr());cut.setDate(cut.getDate()-30);var cutS=cut.toISOString().slice(0,10);
+ for(var i=0;i<ws.length;i++){if(ws[i].d<=cutS)monthAgo=ws[i].w;}
+ if(monthAgo==null)monthAgo=ws[0].w;
+ return {latest:latest,delta:+(latest-monthAgo).toFixed(1),vals:ws.map(function(b){return b.w;})};
+}
+function volThisVsLast(){
+ var vb=volumeByWeek(2);return {now:vb[1]?vb[1].v:0,prev:vb[0]?vb[0].v:0};
+}
 function homeView(){
  var nu=nextUp(),hex=HEX[nu.type],streak=currentStreak(),done=trainedToday();
  var now=new Date();
@@ -856,41 +868,74 @@ function homeView(){
    '<span class="display" id="home-clock" style="font-size:30px;color:var(--chalk)">'+clockStr()+'</span>'+
   '</div>'+
   '<div class="accent-bar" style="background:'+hex+';margin-top:10px"></div></header>';
- html+='<div class="card" style="padding:12px 14px"><p class="sub" style="margin:0;font-style:italic;line-height:1.5">\u201c'+esc(dailyJoke())+'\u201d</p></div>';
- // hero: what to do now
+
+ // ---- HERO: today's focus (big, with exercise preview) ----
  if(isWorkout(nu.dk)){
-  var n=planEx(nu.dk).length;
-  html+='<div class="card" style="border-color:'+hex+'"><div class="eyebrow" style="color:'+hex+'">Today\'s focus</div>'+
-   '<div class="display" style="font-size:26px;margin:2px 0 6px">'+esc(nu.label)+'</div>'+
-   '<p class="sub" style="margin:0 0 12px">'+n+' exercises · ~'+estMin(nu.dk)+' min'+(done?' · <b style="color:#1FA463">done ✓</b>':'')+'</p>'+
-   '<button class="go-btn" style="background:'+hex+'" onclick="setTab(\'today\')">'+(done?'Review session':'Start today\'s workout')+'</button></div>';
+  var exIds=planEx(nu.dk),n=exIds.length;
+  var preview=exIds.slice(0,3).map(function(id){return EXDB[id]?EXDB[id].name:id;});
+  var more=n>3?(' +'+(n-3)+' more'):'';
+  html+='<div class="card" style="border:1.5px solid '+hex+';padding:16px">'+
+   '<div class="eyebrow" style="color:'+hex+'">Today\u2019s focus</div>'+
+   '<div class="display" style="font-size:30px;margin:2px 0 4px">'+esc(nu.label)+(done?' <span style="font-size:15px;color:#1FA463">done \u2713</span>':'')+'</div>'+
+   '<p class="sub" style="margin:0 0 10px">'+n+' exercises \u00b7 ~'+estMin(nu.dk)+' min</p>'+
+   '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px">'+
+    preview.map(function(nm){return '<div style="display:flex;align-items:center;gap:8px;font-size:13.5px"><span style="width:6px;height:6px;border-radius:50%;background:'+hex+';flex-shrink:0"></span>'+esc(nm)+'</div>';}).join('')+
+    (more?'<div class="sub" style="padding-left:14px">'+more+'</div>':'')+
+   '</div>'+
+   '<button class="go-btn" style="background:'+hex+'" onclick="setTab(\'today\')">'+(done?'Review session':'Start workout')+'</button></div>';
  } else {
-  html+='<div class="card" style="border-color:'+hex+'"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">'+
-   '<img src="icons/cardio.svg" style="width:44px;height:44px;border-radius:12px;border:2px solid '+hex+'" onerror="this.style.display=\'none\'">'+
-   '<div><div class="eyebrow" style="color:'+hex+'">Today</div><div class="display" style="font-size:24px">'+esc(dayType(nu.dk)==='act'?activityName(nu.dk):'Rest')+'</div></div></div>'+
-   '<button class="go-btn" style="background:'+(done?'rgba(255,255,255,.6)':hex)+';color:'+(done?'var(--chalk)':'#fff')+'" onclick="setTab(\'today\')">'+(done?'✓ Logged':'Open')+'</button></div>';
+  var isAct=dayType(nu.dk)==='act';
+  html+='<div class="card" style="border:1.5px solid '+hex+';padding:16px"><div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">'+
+   '<img src="icons/cardio.svg" style="width:48px;height:48px;border-radius:12px;border:2px solid '+hex+'" onerror="this.style.display=\'none\'">'+
+   '<div><div class="eyebrow" style="color:'+hex+'">Today\u2019s focus</div><div class="display" style="font-size:28px">'+esc(isAct?activityName(nu.dk):'Rest day')+(done?' <span style="font-size:14px;color:#1FA463">done \u2713</span>':'')+'</div></div></div>'+
+   (isAct?'<button class="go-btn" style="background:'+(done?'var(--glass-btn)':hex)+';color:'+(done?'var(--chalk)':'#fff')+'" onclick="setTab(\'today\')">'+(done?'\u2713 Logged':'Log activity')+'</button>':'<p class="sub" style="margin:0">Recovery builds muscle. Sleep, protein, an easy walk.</p>')+'</div>';
  }
- // streak + week stats
+
+ // ---- PROGRESS STRIP: is it working? ----
+ var bw=bwTrend(),vv=volThisVsLast();
+ var volDelta=vv.prev?Math.round((vv.now-vv.prev)/vv.prev*100):0;
+ html+='<div class="grid2">';
+ // bodyweight
+ if(bw){
+  var down=bw.delta<0,flat=bw.delta===0;
+  var arrow=flat?'\u2192':(down?'\u2193':'\u2191');
+  var bcol=flat?'var(--dim)':(down?'#1FA463':'#F0A626');
+  html+='<div class="card"><div class="eyebrow">Bodyweight</div>'+
+   '<div class="display big">'+bw.latest+'<span style="font-size:14px"> lb</span></div>'+
+   '<div class="sub" style="color:'+bcol+';font-weight:700">'+arrow+' '+Math.abs(bw.delta)+' lb / 30 d</div></div>';
+ } else {
+  html+='<div class="card"><div class="eyebrow">Bodyweight</div><div class="display big">\u2014</div><div class="sub">log it in Body</div></div>';
+ }
+ // volume trend
+ html+='<div class="card"><div class="eyebrow">Volume vs last wk</div>'+
+  '<div class="display big">'+(vv.now?Math.round(vv.now/1000)+'k':'\u2014')+'</div>'+
+  '<div class="sub" style="color:'+(volDelta>=0?'#1FA463':'#E4573D')+';font-weight:700">'+(vv.prev?(volDelta>=0?'\u25b2 +':'\u25bc ')+volDelta+'%':'first week')+'</div></div>';
+ html+='</div>';
+
+ // ---- CONSISTENCY: streak + heatmap combined ----
  var wd=weekDates(),lifts=wd.filter(liftDoneOn).length,pbs=wd.filter(function(d){return actDoneOn(d)||S.pb[d];}).length;
- html+='<div class="grid2">'+
-  '<div class="card"><div class="eyebrow">Streak</div><div class="display big">'+(streak>0?'🔥 '+streak:'—')+'</div><div class="sub">'+(streak===1?'week':'weeks')+' in a row</div></div>'+
-  '<div class="card"><div class="eyebrow">This week</div><div class="display big">'+lifts+'+'+pbs+'</div><div class="sub">'+lifts+' lifts · '+pbs+' activity</div></div></div>';
- // 12-week heatmap
  var cells=heatCells();
- var colw=(340/12);
  var svg='<svg class="spark" width="340" height="'+(7*13+2)+'">';
  cells.forEach(function(col,ci){col.forEach(function(c,ri){
   var color=c.future?futureCol():(c.lvl===2?'#1FA463':(c.lvl===1?'#F0A626':emptyCol()));
   svg+='<rect x="'+(ci*13).toFixed(0)+'" y="'+(ri*13).toFixed(0)+'" width="11" height="11" rx="3" fill="'+color+'"/>';});});
  svg+='</svg>';
- html+='<div class="card"><h3>Last 12 weeks</h3>'+svg+
-  '<div class="chips" style="margin-top:8px"><span class="chip" style="border-color:#1FA463;color:#1FA463">Lift</span><span class="chip" style="border-color:#F0A626;color:#F0A626">Activity</span><span class="sub" style="align-self:center">green = strength · amber = cardio</span></div></div>';
- // next weigh-in nudge
+ html+='<div class="card">'+
+  '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'+
+   '<div><span class="display" style="font-size:24px">'+(streak>0?'\ud83d\udd25 '+streak:'\u2014')+'</span> <span class="sub">week'+(streak===1?'':'s')+' streak</span></div>'+
+   '<div class="sub">'+lifts+' lifts \u00b7 '+pbs+' activity this wk</div>'+
+  '</div>'+svg+
+  '<div class="chips" style="margin-top:8px"><span class="chip" style="border-color:#1FA463;color:#1FA463">Lift</span><span class="chip" style="border-color:#F0A626;color:#F0A626">Activity</span><span class="sub" style="align-self:center">last 12 weeks</span></div></div>';
+
+ // ---- weigh-in nudge (only when due) ----
  if(needsWeighIn()){
   html+='<div class="card" style="border-color:#2F7DE1"><div class="eyebrow" style="color:#2F7DE1">Weekly weigh-in due</div>'+
    '<div class="row" style="margin-top:8px"><input id="qw" class="inp" type="number" inputmode="decimal" placeholder="Weight (lb)">'+
    '<button class="go-btn" style="background:#2F7DE1;width:auto;padding:0 20px" onclick="quickWeight()">Save</button></div></div>';
  }
+
+ // ---- joke footer (light touch) ----
+ html+='<div class="note" style="text-align:center;font-style:italic;padding:2px 24px 0">\u201c'+esc(dailyJoke())+'\u201d</div>';
  return html;
 }
 
