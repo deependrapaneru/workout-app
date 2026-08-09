@@ -1044,11 +1044,12 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .home-action-card b{display:block;font-size:13px}
 .home-action-card span{display:block;font-size:11px;color:var(--dim);margin-top:2px}
 .home-split-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin:0 14px 16px}
-.home-clean-head{margin:18px 18px 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
-.home-logo-wrap{display:flex;align-items:center;min-width:0}
-.home-logo-large{display:block;width:min(248px,58vw);height:auto;object-fit:contain;background:#fff;border:1px solid rgba(18,32,20,.08);border-radius:16px;padding:8px 12px;box-shadow:var(--elev)}
-.home-clean-date{text-align:right;flex:0 0 auto;color:var(--dim);font-size:11px;line-height:1.35}
-.home-clean-date b{display:block;color:var(--chalk);font-size:13px}
+.home-clean-head{margin:16px 18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.home-logo-wrap{display:flex;align-items:center;justify-content:center;width:100%;min-width:0}
+.home-logo-large{display:block;width:min(340px,calc(100vw - 42px));max-width:100%;height:auto;object-fit:contain;background:transparent!important;border:0!important;border-radius:0;padding:0;box-shadow:none!important;filter:drop-shadow(0 8px 16px rgba(17,24,19,.10))}
+:root[data-resolved-theme="dark"] .home-logo-large{content:url('flexfuel_fitness_logo_dark.png');filter:drop-shadow(0 8px 18px rgba(0,0,0,.32))}
+.home-clean-date{text-align:center;color:var(--dim);font-size:11px;line-height:1.4}
+.home-clean-date b{display:block;color:var(--chalk);font-size:14px;margin-bottom:1px}
 .home-today-card{padding:18px!important}
 .home-today-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .home-today-title{font-size:27px;line-height:1.05;margin:4px 0 6px}
