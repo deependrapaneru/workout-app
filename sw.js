@@ -1,5 +1,5 @@
 // Training Week — service worker (network-first for the app shell)
-const CACHE = 'training-week-profile-theme-v2';
+const CACHE = 'training-week-ios-polish-v3';
 const SHELL = ['./', './index.html'];
 
 self.addEventListener('install', e => {

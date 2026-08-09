@@ -1,21 +1,19 @@
-# Training Week — Profile & Theme Upgrade
+# Training Week — iOS Mobile Polish
 
-This build upgrades the rebuilt Training Week app with a native personalization system.
+This build focuses on the mobile experience without changing the core training data model.
 
-## New in this version
-- System, Light, Dark, and AMOLED appearance modes
-- Six user-selectable accent palettes
-- Theme choices persist locally and sync with the existing account state
-- Automatic System appearance responds to OS light/dark changes
-- Profile shortcut/avatar available from every main app view
-- New Profile hub with current weight, goal weight, streak, PRs, training phase, and weekly progress
-- Training-level profile field: Beginner / Intermediate / Advanced
-- Optional goal body weight
-- Achievement cards derived from existing workout data
-- Haptic-feedback preference
-- Reduce-motion accessibility preference
-- Larger-text accessibility preference
-- Profile editor remains integrated with the existing schedule/split editor
-- Updated service-worker cache version for cleaner deployment upgrades
+## Improvements
+- Crisp inline SVG icon system for navigation and primary tools
+- iPhone-safe floating tab bar with Home-indicator spacing
+- 44–58 px touch targets and mobile press feedback
+- Smoother page/detail transitions with Reduce Motion support
+- Compact headers and less repetitive helper text
+- Cleaner More and Profile screens
+- Better iOS typography/input behavior (16 px controls, text scaling protection)
+- Dynamic status-bar/theme-color handling for Light, Dark and AMOLED modes
+- Overscroll and touch behavior tuned for installed/mobile use
+- Existing themes, Supabase sync, workouts, food, body tracking, templates and progress remain intact
+- Service worker cache bumped to training-week-ios-polish-v3
 
-The implementation uses the original `S` state, `load()/save()`, `render()`, Supabase sync, and existing app navigation. It does not create a second application state or overlay database.
+## Mobile behavior
+For best iOS behavior, deploy all files together and open the app once in Safari after updating. If installed to the Home Screen, relaunch it after the site refreshes so the new service-worker cache takes effect.
