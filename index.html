@@ -2740,6 +2740,9 @@ function todayView(){
   var timeBased=ex.inc===0&&ex.rMin>=20;
   html+='<div class="ex'+(open?' open':'')+(done?' done-ex':'')+'">'+
    '<div class="ex-head">'+
+   '<button class="exercise-thumb-btn" type="button" onclick="event.stopPropagation();showExerciseImage(\''+id+'\')" aria-label="View '+esc(ex.name)+' image">'+
+    '<img class="exercise-thumb" src="img/'+id+'.jpg" alt="'+esc(ex.name)+'" loading="lazy" onerror="this.closest(\'.exercise-thumb-btn\').style.display=\'none\'">'+
+   '</button>'+
    '<div style="flex:1;min-width:0"><div class="ex-title">'+(done?'✓ ':'')+esc(ex.name)+'</div>'+
    '<div class="ex-meta">'+setsDone+' of '+rec.sets+' sets complete · '+ex.pri.map(function(m){return MN[m]||m;}).join(', ')+'</div></div>'+
    '<button class="chev" onclick="toggleEx('+i+')" aria-label="'+(open?'Close':'Open')+' '+esc(ex.name)+'">▼</button></div>'+
