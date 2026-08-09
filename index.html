@@ -131,6 +131,342 @@ select.inp{appearance:none}
 .seg button.on{color:#FFF;border-color:transparent;font-weight:700}
 .plan-p{font-size:13.5px;line-height:1.55;margin:0}
 .note{margin:0 18px 12px;font-size:12px;color:var(--dim);line-height:1.5}
+
+/* =========================================================
+   TRAINING WEEK — PREMIUM UI LAYER
+   Keeps the existing app logic/data model intact while
+   upgrading hierarchy, responsiveness and interaction polish.
+   ========================================================= */
+
+:root{
+  --premium-ink:#111827;
+  --premium-muted:#6B7280;
+  --premium-bg:#F5F7FB;
+  --premium-surface:rgba(255,255,255,.86);
+  --premium-border:rgba(17,24,39,.08);
+  --premium-blue:#315CFF;
+  --premium-violet:#7657FF;
+  --premium-cyan:#14B8A6;
+  --premium-orange:#FF6B35;
+  --premium-green:#16B364;
+  --premium-shadow:0 14px 40px rgba(31,41,55,.08);
+}
+
+body{
+  max-width:none !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(49,92,255,.10), transparent 30%),
+    radial-gradient(circle at 92% 8%, rgba(118,87,255,.08), transparent 28%),
+    var(--premium-bg);
+  color:var(--premium-ink);
+}
+
+body::before{
+  background:transparent !important;
+}
+
+#app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:0 20px;
+}
+
+header{
+  padding:30px 2px 14px !important;
+}
+
+header h1{
+  letter-spacing:-.035em;
+  font-size:clamp(30px,4vw,48px) !important;
+}
+
+.eyebrow{
+  letter-spacing:.18em !important;
+  font-size:10px !important;
+  font-weight:800 !important;
+}
+
+.card,.ex,.timer{
+  background:var(--premium-surface) !important;
+  border:1px solid var(--premium-border) !important;
+  box-shadow:var(--premium-shadow) !important;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.card{
+  border-radius:24px !important;
+  padding:20px !important;
+}
+
+.ex{
+  border-radius:22px !important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+.ex:hover{
+  transform:translateY(-2px);
+  box-shadow:0 18px 44px rgba(31,41,55,.11) !important;
+}
+
+.ex-head{
+  padding:16px 18px !important;
+}
+
+.ex-title{
+  font-size:15px !important;
+  font-weight:750 !important;
+}
+
+.ex-meta{
+  font-size:11px !important;
+}
+
+.go-btn{
+  min-height:46px;
+  border-radius:14px !important;
+  letter-spacing:.01em;
+  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
+}
+
+.go-btn:hover{
+  transform:translateY(-1px);
+  filter:saturate(1.08);
+}
+
+.ghost-btn,.timer-btns button,.seg button{
+  border-radius:12px !important;
+  transition:background .15s ease,transform .15s ease;
+}
+
+.ghost-btn:hover,.timer-btns button:hover,.seg button:hover{
+  transform:translateY(-1px);
+}
+
+.inp{
+  min-height:46px;
+  border-radius:13px !important;
+}
+
+.strip{
+  padding:10px 2px 16px !important;
+  gap:8px !important;
+}
+
+.day-btn{
+  min-width:58px !important;
+  border-radius:16px !important;
+  background:rgba(255,255,255,.54) !important;
+  border-color:rgba(17,24,39,.07) !important;
+  transition:transform .15s ease,background .15s ease;
+}
+
+.day-btn:hover{
+  transform:translateY(-2px);
+}
+
+.day-btn.active{
+  background:#111827 !important;
+  color:#fff !important;
+  border-color:#111827 !important;
+  box-shadow:0 8px 20px rgba(17,24,39,.16);
+}
+
+.micon img{
+  border-radius:16px !important;
+}
+
+.chip{
+  border-radius:999px !important;
+}
+
+.food-list{
+  max-height:420px !important;
+}
+
+.food-item{
+  padding:13px 6px !important;
+}
+
+.hist-row{
+  padding:11px 0 !important;
+}
+
+.tabbar{
+  max-width:none !important;
+}
+
+@media (min-width:900px){
+  body{
+    padding:0 0 30px !important;
+  }
+
+  #app{
+    padding:0 30px 40px 126px;
+  }
+
+  .tabbar{
+    left:18px !important;
+    top:18px !important;
+    bottom:18px !important;
+    transform:none !important;
+    width:82px !important;
+    max-width:82px !important;
+    height:auto !important;
+    padding:12px 8px !important;
+    border:1px solid var(--premium-border) !important;
+    border-radius:24px !important;
+    background:rgba(255,255,255,.78) !important;
+    box-shadow:0 20px 55px rgba(31,41,55,.10);
+    flex-direction:column !important;
+    justify-content:center;
+    gap:8px;
+  }
+
+  .tabbar button{
+    flex:none !important;
+    width:100% !important;
+    min-height:68px;
+    border-radius:17px;
+    font-size:10px !important;
+    color:#8A90A6 !important;
+  }
+
+  .tabbar button.on{
+    background:#111827 !important;
+    color:#fff !important;
+    box-shadow:0 10px 24px rgba(17,24,39,.15);
+  }
+
+  .tabbar .ic{
+    font-size:20px !important;
+  }
+
+  /* Give the main content more dashboard-like breathing room. */
+  #app > .grid2{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  #app > .card,
+  #app > .ex,
+  #app > .timer,
+  #app > .note{
+    width:100%;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+
+  #app > .grid2 .card{
+    margin:0 !important;
+  }
+
+  .ex-head{
+    min-height:72px;
+  }
+
+  .sets{
+    padding-bottom:16px !important;
+  }
+
+  /* More app-like exercise rows on large screens. */
+  .set-row input{
+    width:92px !important;
+  }
+}
+
+@media (max-width:899px){
+  #app{
+    padding:0 14px 10px;
+  }
+
+  header{
+    padding-left:4px !important;
+    padding-right:4px !important;
+  }
+
+  .card,.ex,.timer,.note{
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+}
+
+/* Premium dashboard surfaces that are already represented by the
+   app's existing semantic elements. */
+.card h3{
+  letter-spacing:-.01em;
+}
+
+.sub{
+  line-height:1.5;
+}
+
+.display{
+  letter-spacing:-.025em;
+}
+
+.accent-bar{
+  height:5px !important;
+  width:72px !important;
+  border-radius:99px !important;
+  box-shadow:0 5px 16px rgba(49,92,255,.16);
+}
+
+/* Scrollbars */
+*{
+  scrollbar-width:thin;
+  scrollbar-color:rgba(107,114,128,.35) transparent;
+}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{
+  background:rgba(107,114,128,.28);
+  border-radius:999px;
+}
+
+/* Subtle entrance animation */
+@keyframes premiumIn{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:none}
+}
+#app > *{
+  animation:premiumIn .28s ease both;
+}
+@media (prefers-reduced-motion:reduce){
+  #app > *{animation:none}
+}
+
+/* Make the login/onboarding experience feel like a real product. */
+@media (min-width:900px){
+  #app > header:first-child{
+    padding-top:64px !important;
+  }
+}
+
+/* Dark mode remains supported by the original app. */
+@media (prefers-color-scheme:dark){
+  body{
+    background:
+      radial-gradient(circle at 8% 0%,rgba(49,92,255,.16),transparent 30%),
+      radial-gradient(circle at 92% 8%,rgba(118,87,255,.12),transparent 28%),
+      #0E1118;
+  }
+  .tabbar{
+    background:rgba(24,27,36,.84) !important;
+    border-color:rgba(255,255,255,.08) !important;
+  }
+  .day-btn{
+    background:rgba(35,40,56,.68) !important;
+  }
+  .day-btn.active{
+    background:#F4F5F7 !important;
+    color:#111827 !important;
+    border-color:#F4F5F7 !important;
+  }
+  #app{
+    color:var(--chalk);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1578,6 +1914,41 @@ if('serviceWorker' in navigator){
 // start: check auth (offline-friendly), then render
 render(); // shows Loading… immediately
 initAuth(function(){render();});
+
+/* ===== Premium interaction layer ===== */
+(function(){
+  function enhance(){
+    var app=document.getElementById('app');
+    if(!app) return;
+
+    // Add a compact "live" document title based on the active section.
+    var active=document.querySelector('#tabbar button.on');
+    if(active){
+      var label=(active.textContent||'Training').trim();
+      document.title='Training Week · '+label;
+    }
+
+    // Improve keyboard behavior for desktop users.
+    document.onkeydown=function(e){
+      if(e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+      var key=(e.key||'').toLowerCase();
+      if(key==='1') window.setTab && window.setTab('home');
+      if(key==='2') window.setTab && window.setTab('today');
+      if(key==='3') window.setTab && window.setTab('food');
+      if(key==='4') window.setTab && window.setTab('dash');
+    };
+  }
+
+  var oldRender=window.render;
+  if(typeof oldRender==='function'){
+    window.render=function(){
+      oldRender.apply(this,arguments);
+      requestAnimationFrame(enhance);
+    };
+  }
+  document.addEventListener('DOMContentLoaded',enhance);
+})();
+
 </script>
 </body>
 </html>
