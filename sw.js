@@ -1,5 +1,5 @@
 // Training Week — service worker (network-first for the app shell)
-const CACHE = 'training-week-v3';
+const CACHE = 'training-week-v4';
 const SHELL = ['./', './index.html'];
 
 self.addEventListener('install', e => {

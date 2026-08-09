@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
 <title>Training Week</title>
@@ -292,7 +293,78 @@ function ensureProfileEdits(){if(!S.profile)return;
  if(!S.profile.add)S.profile.add={};
  if(!S.profile.del)S.profile.del={};}
 function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);return Object.assign(blank(),d);}}catch(e){}return mem||blank();}
-function save(){mem=S;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){mem=S;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}syncPush();}
+
+// ===================== CLOUD SYNC (Supabase) =====================
+var SUPABASE_URL='https://azafunkyeoxeweejzfeh.supabase.co';
+var SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6YWZ1bmt5ZW94ZXdlZWp6ZmVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMzA2OTksImV4cCI6MjEwMTgwNjY5OX0.P1_UFGXP6e8Bdfc-KwwcYHS3lmBZqG7A94-gN8U6Cdg';
+var sb=null, authUser=null, authReady=false, pushTimer=null, syncStatus='';
+function sbClient(){if(!sb&&window.supabase)sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);return sb;}
+
+// merge two app states: logs/body/acts by key, newest-wins on scalars
+function mergeState(local,cloud){
+ if(!cloud)return local;if(!local)return cloud;
+ var out=Object.assign({},cloud,local); // start from local, we'll union collections
+ // logs: union by exercise id + date
+ out.logs={};
+ [cloud.logs,local.logs].forEach(function(src){if(!src)return;for(var id in src){if(!out.logs[id])out.logs[id]=[];
+  src[id].forEach(function(entry){var ex=out.logs[id].find(function(e){return e.d===entry.d;});
+   if(!ex)out.logs[id].push(entry);else if((entry.sets||[]).length>=(ex.sets||[]).length)ex.sets=entry.sets;});}});
+ for(var id in out.logs)out.logs[id].sort(function(a,b){return a.d<b.d?-1:1;});
+ // body + acts: union by date
+ function unionByDate(field){var m={};[cloud[field],local[field]].forEach(function(arr){(arr||[]).forEach(function(x){m[x.d]=x;});});
+  return Object.keys(m).sort().map(function(d){return m[d];});}
+ out.body=unionByDate('body');
+ // acts is an object keyed by date
+ out.acts=Object.assign({},cloud.acts||{},local.acts||{});
+ out.pb=Object.assign({},cloud.pb||{},local.pb||{});
+ out.checkin=Object.assign({},cloud.checkin||{},local.checkin||{});
+ // profile: prefer whichever was saved more recently (local, since user just used it) but keep cloud if local lacks one
+ out.profile=local.profile||cloud.profile;
+ out.start=(local.start&&cloud.start)?(local.start<cloud.start?local.start:cloud.start):(local.start||cloud.start);
+ return out;
+}
+
+function syncPull(cb){
+ var c=sbClient();if(!c||!authUser){if(cb)cb();return;}
+ c.from('profiles').select('data').eq('id',authUser.id).maybeSingle().then(function(res){
+  if(res&&res.data&&res.data.data){
+   S=mergeState(S,res.data.data);hydrateCustom();
+   try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+  }
+  if(cb)cb();
+ }).catch(function(){if(cb)cb();});
+}
+function syncPush(){
+ var c=sbClient();if(!c||!authUser)return;
+ clearTimeout(pushTimer);
+ pushTimer=setTimeout(function(){
+  c.from('profiles').upsert({id:authUser.id,data:S,updated_at:new Date().toISOString()}).then(function(){}).catch(function(){});
+ },1200); // debounce rapid saves
+}
+
+function initAuth(cb){
+ var c=sbClient();
+ if(!c){authReady=true;if(cb)cb();return;} // library failed to load (offline first run)
+ c.auth.getSession().then(function(res){
+  var sess=res&&res.data&&res.data.session;
+  if(sess&&sess.user){authUser=sess.user;authReady=true;
+   syncPull(function(){if(cb)cb();});
+  } else {authReady=true;if(cb)cb();}
+ }).catch(function(){authReady=true;if(cb)cb();});
+ c.auth.onAuthStateChange(function(_ev,sess){
+  if(sess&&sess.user){authUser=sess.user;syncPull(function(){render();});}
+  else{authUser=null;render();}
+ });
+}
+function signInGoogle(){
+ var c=sbClient();if(!c){alert('No internet connection. Sign-in needs to be online the first time.');return;}
+ syncStatus='Redirecting to Google…';render();
+ c.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}});
+}
+function signOut(){var c=sbClient();if(c)c.auth.signOut();authUser=null;render();}
+function hasSession(){return !!authUser;}
+
 var S=load();
 hydrateCustom();
 
@@ -837,6 +909,9 @@ function planView(){
  html+='<div class="card"><h3>Abs · 4×/wk</h3><p class="plan-p sub" style="margin:4px 0 0">Mon crunch machine · Tue reverse crunch · Thu hanging raise + Pallof · Fri side bend. Built by load, revealed by the deficit.</p></div>';
  html+='<div class="card"><h3>Rules of thumb</h3><p class="plan-p sub" style="margin:4px 0 0">Stalled 2 wks → −150 kcal or +2k steps · Sleep 7–9 h · Joint barking → Swap · Beat up → check in “Rough” · Missed day → move on, never stack.</p></div>';
  html+='<div class="card"><button class="ghost-btn" style="width:100%;padding:11px 0" onclick="editProfile()">Edit profile · name, age, height, weight</button></div>';
+ html+='<div class="card"><div class="eyebrow" style="margin-bottom:6px">Account</div>'+
+  '<p class="sub" style="margin:0 0 10px">'+(authUser&&authUser.email?'Synced as '+esc(authUser.email):'Signed in')+' · your data backs up automatically.</p>'+
+  '<button class="ghost-btn" style="width:100%;padding:11px 0;color:var(--chalk)" onclick="signOut()">Sign out</button></div>';
  html+='<div class="note">General fitness guidance, not medical advice.</div>';
  return html;
 }
@@ -993,9 +1068,24 @@ function dailyJoke(){
 var TABS=[['home','◆','Home'],['today','▶','Workout'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard'],['plan','✱','Plan']];
 var VIEWS={home:homeView,today:todayView,history:historyView,body:bodyView,dash:dashView,plan:planView};
 
+function loginView(){
+ return '<header style="padding-top:60px"><div class="eyebrow">Training Week</div>'+
+  '<h1 class="display" style="color:#E4573D;font-size:38px">Welcome</h1>'+
+  '<div class="accent-bar" style="background:#E4573D"></div></header>'+
+  '<div class="card" style="margin-top:20px"><p class="sub" style="margin:0 0 16px;line-height:1.6">Sign in once to sync your training across your phone, laptop, and any device. After that it works offline too.</p>'+
+  '<button class="go-btn" style="background:#2F7DE1;display:flex;align-items:center;justify-content:center;gap:10px" onclick="signInGoogle()">'+
+   '<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.2 35 26.7 36 24 36c-5.3 0-9.7-3.1-11.3-7.5l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C41.4 36.3 44 30.7 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>'+
+   'Sign in with Google</button>'+
+  (syncStatus?'<p class="sub" style="margin:12px 0 0;text-align:center">'+esc(syncStatus)+'</p>':'')+'</div>'+
+  '<div class="note">Your data is private to your account. First sign-in needs internet; after that the app works offline on that device.</div>';
+}
+
 function render(){
  try{
   var app=document.getElementById('app'),bar=document.getElementById('tabbar');
+  // required login: gate until authenticated (once signed in, session caches for offline)
+  if(authReady&&!hasSession()){app.innerHTML=loginView();bar.innerHTML='';return;}
+  if(!authReady){app.innerHTML='<div class="card" style="margin-top:60px;text-align:center"><p class="sub" style="margin:0">Loading…</p></div>';bar.innerHTML='';return;}
   if(!S.profile||editProf){app.innerHTML=onboardView();bar.innerHTML='';return;}
   var fn=VIEWS[tab]||todayView;
   app.innerHTML=fn();
@@ -1017,7 +1107,9 @@ if('serviceWorker' in navigator){
   var nw=reg.installing;if(nw)nw.addEventListener('statechange',function(){if(nw.state==='installed'&&navigator.serviceWorker.controller)location.reload();});});}).catch(function(){});
 }
 
-render();
+// start: check auth (offline-friendly), then render
+render(); // shows Loading… immediately
+initAuth(function(){render();});
 </script>
 </body>
 </html>
