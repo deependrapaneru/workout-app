@@ -1,8 +1,4 @@
-# Training Week — Advanced Workout App
-
-This build adds an advanced workout layer on top of the existing application.
-
-New functionality:
+Training Week App
 - Workout dashboard with weekly goal and completion progress
 - One-tap quick actions
 - Rest timer (30/60/90/120 seconds)
@@ -14,5 +10,3 @@ New functionality:
 - Responsive mobile and desktop UI
 - Persistent quick rest-timer button on desktop
 - Premium cards, navigation, animations and visual hierarchy
-
-Existing application functionality and files are preserved.
