@@ -7,12 +7,24 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="Training" />
-<meta name="theme-color" content="#F7F3EC" />
+<meta name="theme-color" content="#F7F3EC" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0F1116" media="(prefers-color-scheme: dark)" />
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23E4573D'/%3E%3Crect x='30' y='78' width='120' height='24' rx='6' fill='%23FFFFFF'/%3E%3Crect x='22' y='58' width='20' height='64' rx='6' fill='%23F0A626'/%3E%3Crect x='138' y='58' width='20' height='64' rx='6' fill='%232F7DE1'/%3E%3C/svg%3E" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 :root{--card:#FFFFFF;--card-up:#F4EFE4;--line:#E6E0D2;--chalk:#23283A;--dim:#857F71;--bg:#FBF8F1;
---red:#E4573D;--blue:#2F7DE1;--yellow:#F0A626;--green:#1FA463;}
+--red:#E4573D;--blue:#2F7DE1;--yellow:#F0A626;--green:#1FA463;
+--glass:rgba(255,255,255,.58);--glass-brd:rgba(255,255,255,.75);--glass-in:rgba(255,255,255,.7);
+--glass-btn:rgba(255,255,255,.5);--glass-btn2:rgba(255,255,255,.45);--glass-sec:rgba(255,255,255,.65);
+--brd-soft:rgba(35,40,58,.14);--brd-soft2:rgba(35,40,58,.16);--brd-soft3:rgba(35,40,58,.12);
+--shadow:rgba(35,40,58,.10);--tab:rgba(255,255,255,.55);--sw:#EAEAEA;}
+@media (prefers-color-scheme: dark){
+:root{--card:#1B1E26;--card-up:#232733;--line:#333947;--chalk:#ECEBE6;--dim:#9AA0AE;--bg:#0F1116;
+--glass:rgba(38,42,54,.62);--glass-brd:rgba(255,255,255,.10);--glass-in:rgba(20,23,30,.6);
+--glass-btn:rgba(255,255,255,.08);--glass-btn2:rgba(255,255,255,.06);--glass-sec:rgba(255,255,255,.10);
+--brd-soft:rgba(255,255,255,.14);--brd-soft2:rgba(255,255,255,.16);--brd-soft3:rgba(255,255,255,.12);
+--shadow:rgba(0,0,0,.35);--tab:rgba(24,27,34,.7);--sw:#2A2E38;}
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{color:var(--chalk);font-family:'Inter',system-ui,sans-serif;max-width:430px;margin:0 auto;
@@ -23,6 +35,14 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;background:
  radial-gradient(700px at 15% 88%, rgba(31,164,99,.15), transparent 62%),
  radial-gradient(620px at 88% 94%, rgba(240,166,38,.18), transparent 62%),
  #F7F3EC;}
+@media (prefers-color-scheme: dark){
+body::before{background:
+ radial-gradient(620px at 12% 6%, rgba(228,87,61,.16), transparent 60%),
+ radial-gradient(720px at 92% 22%, rgba(47,125,225,.16), transparent 60%),
+ radial-gradient(700px at 15% 88%, rgba(31,164,99,.14), transparent 60%),
+ radial-gradient(620px at 88% 94%, rgba(240,166,38,.15), transparent 60%),
+ #0F1116;}
+}
 .display{font-family:'Oswald',sans-serif;font-weight:600}
 button{cursor:pointer;font-family:inherit}
 button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
@@ -34,81 +54,81 @@ h1{font-size:30px;margin:2px 0 0;text-transform:uppercase;line-height:1.05}
 .accent-bar{height:4px;width:56px;border-radius:2px;margin-top:8px}
 .sub{font-size:12.5px;color:var(--dim)}
 .big{font-size:26px;line-height:1.1}
-.card{margin:0 18px 12px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.75);
+.card{margin:0 18px 12px;background:var(--glass);border:1px solid var(--glass-brd);
  border-radius:16px;padding:14px;backdrop-filter:blur(16px) saturate(1.5);
- -webkit-backdrop-filter:blur(16px) saturate(1.5);box-shadow:0 8px 24px rgba(35,40,58,.10)}
+ -webkit-backdrop-filter:blur(16px) saturate(1.5);box-shadow:0 8px 24px var(--shadow)}
 .card h3{margin:0 0 6px;font-size:14px}
 .strip{display:flex;gap:6px;padding:10px 18px;overflow-x:auto}
-.day-btn{flex:1 0 auto;min-width:46px;padding:9px 0 7px;background:transparent;border:1px solid rgba(35,40,58,.12);
+.day-btn{flex:1 0 auto;min-width:46px;padding:9px 0 7px;background:transparent;border:1px solid var(--brd-soft3);
  border-radius:12px;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:4px}
-.day-btn.active{background:rgba(255,255,255,.75);color:var(--chalk);border-width:1.5px;
+.day-btn.active{background:var(--glass-brd);color:var(--chalk);border-width:1.5px;
  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .day-btn .lbl{font-size:12px;font-weight:700}
 .day-btn .dot{width:8px;height:8px;border-radius:50%}
 .day-btn .today{font-size:9px;font-weight:700}
 .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-block}
-.ghost-btn{background:rgba(255,255,255,.45);border:1px solid rgba(35,40,58,.18);color:var(--dim);
+.ghost-btn{background:var(--glass-btn2);border:1px solid rgba(35,40,58,.18);color:var(--dim);
  border-radius:10px;padding:7px 10px;font-size:12px;font-weight:600}
 .go-btn{border:none;border-radius:10px;padding:12px 0;font-weight:700;font-size:14px;color:#FFF;width:100%;
  box-shadow:0 6px 16px rgba(35,40,58,.20)}
-.timer{margin:0 18px 12px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.75);border-radius:14px;
+.timer{margin:0 18px 12px;background:var(--glass);border:1px solid var(--glass-brd);border-radius:14px;
  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
- backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(35,40,58,.10)}
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 24px var(--shadow)}
 .timer-num{font-size:26px;line-height:1.1}
 .timer-btns{display:flex;gap:6px}
-.timer-btns button{background:rgba(255,255,255,.5);color:var(--chalk);border:1px solid var(--line);
+.timer-btns button{background:var(--glass-btn);color:var(--chalk);border:1px solid var(--line);
  border-radius:10px;padding:7px 10px;font-size:12px;font-weight:600}
 .timer-btns button.stop{border:none;font-weight:700;color:#FFF}
-.ex{margin:0 18px 10px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.75);border-radius:14px;
- overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(35,40,58,.10)}
+.ex{margin:0 18px 10px;background:var(--glass);border:1px solid var(--glass-brd);border-radius:14px;
+ overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 24px var(--shadow)}
 .ex.done-ex{border-color:var(--green)}
 .ex-head{padding:12px 14px;display:flex;align-items:center;gap:10px}
 .ex-title{font-weight:600;font-size:15px}
 .ex-meta{font-size:12px;color:var(--dim);margin-top:2px}
 .mini-wrap{display:flex;gap:4px;align-items:center;margin-left:auto}
-.mini-ic{width:28px;height:28px;border-radius:8px;border:1.5px solid;object-fit:cover;background:#EAEAEA}
+.mini-ic{width:28px;height:28px;border-radius:8px;border:1.5px solid;object-fit:cover;background:var(--sw)}
 .chev{color:var(--dim);font-size:11px;padding:4px 2px;transition:transform .2s ease;background:none;border:none}
 .ex.open .chev{transform:rotate(180deg)}
-.rec{margin:0 14px 10px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.85);
+.rec{margin:0 14px 10px;background:var(--tab);border:1px solid var(--glass-brd);
  border-radius:10px;padding:9px 11px;font-size:12.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tag{font-size:10px;font-weight:800;letter-spacing:.06em;padding:4px 9px;border-radius:999px}
 .sets{padding:0 14px 12px;display:flex;flex-direction:column;gap:6px}
 .set-row{display:flex;align-items:center;gap:8px}
 .set-row .n{width:30px;font-size:12px;color:var(--dim);font-weight:700}
-.set-row input{width:70px;background:rgba(255,255,255,.7);border:1px solid rgba(35,40,58,.14);border-radius:9px;
+.set-row input{width:70px;background:var(--glass-in);border:1px solid var(--brd-soft);border-radius:9px;
  padding:9px 10px;color:var(--chalk);font-size:16px;text-align:center}
 .set-row .x{color:var(--dim);font-size:12px}
-.detail{display:none;border-top:1px solid rgba(35,40,58,.10);padding:12px 14px;font-size:13px}
+.detail{display:none;border-top:1px solid var(--shadow);padding:12px 14px;font-size:13px}
 .ex.open .detail{display:block}
 .detail dd{margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;border:1px solid rgba(35,40,58,.16);color:var(--dim)}
+.chip{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;border:1px solid var(--brd-soft2);color:var(--dim)}
 .micon-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .micon{display:flex;flex-direction:column;align-items:center;gap:4px;width:58px}
-.micon img{width:52px;height:52px;border-radius:14px;border:2.5px solid;object-fit:cover;background:#EAEAEA}
+.micon img{width:52px;height:52px;border-radius:14px;border:2.5px solid;object-fit:cover;background:var(--sw)}
 .micon span{font-size:10px;font-weight:700;text-align:center;line-height:1.15}
 .micon.msec img{width:40px;height:40px;border-width:1.5px;opacity:.75}
 .micon.msec{width:48px}
 .eximg{width:100%;border-radius:12px;border:1px solid var(--line);margin-bottom:10px;display:block}
-.hist-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(35,40,58,.10);font-size:13px}
+.hist-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--shadow);font-size:13px}
 .hist-row:last-child{border-bottom:none}
 .spark{display:block;margin-top:6px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 12px}
 .grid2 .card{margin:0}
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;
- background:rgba(255,255,255,.55);border-top:1px solid rgba(255,255,255,.75);
+ background:var(--tab);border-top:1px solid var(--glass-brd);
  backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);
  display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:10}
 .tabbar button{flex:1;background:none;border:none;color:var(--dim);font-size:10.5px;font-weight:600;
  display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0}
 .tabbar button.on{color:var(--chalk)}
 .tabbar .ic{font-size:17px;line-height:1}
-.inp{background:rgba(255,255,255,.7);border:1px solid rgba(35,40,58,.14);border-radius:10px;padding:11px 12px;
+.inp{background:var(--glass-in);border:1px solid var(--brd-soft);border-radius:10px;padding:11px 12px;
  color:var(--chalk);font-size:16px;width:100%}
 select.inp{appearance:none}
 .row{display:flex;gap:8px}
 .seg{display:flex;gap:6px}
-.seg button{flex:1;background:rgba(255,255,255,.5);border:1px solid var(--line);color:var(--dim);
+.seg button{flex:1;background:var(--glass-btn);border:1px solid var(--line);color:var(--dim);
  border-radius:10px;padding:9px 0;font-size:12.5px;font-weight:600}
 .seg button.on{color:#FFF;border-color:transparent;font-weight:700}
 .plan-p{font-size:13.5px;line-height:1.55;margin:0}
@@ -264,7 +284,7 @@ function actDaysPerWeek(){return DAYS.filter(function(dk){return dayType(dk)==='
 // ===================== STORAGE =====================
 var KEY='training-week';
 var mem=null;
-function todayStr(){return new Date().toISOString().slice(0,10);}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
 function blank(){return {start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null};}
 // ensure profile has containers for custom exercises / per-day edits
 function ensureProfileEdits(){if(!S.profile)return;
@@ -282,6 +302,11 @@ function dayKeyOf(ds){return DAYS[(new Date(ds+'T12:00').getDay()+6)%7];}
 function slotEx(dk,i){var base=planEx(dk)[i];return (S.subs&&S.subs[dk+'-'+i])||base;}
 function firstName(){return S.profile&&S.profile.name?S.profile.name.split(' ')[0]:'there';}
 function greet(){var h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening';}
+function clockStr(){var d=new Date(),h=d.getHours(),m=('0'+d.getMinutes()).slice(-2),ap=h<12?'AM':'PM',h12=h%12;if(h12===0)h12=12;return h12+':'+m+' '+ap;}
+function isDark(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){return false;}}
+function trackCol(){return isDark()?'#333947':'#E6E0D2';}
+function emptyCol(){return isDark()?'#242a36':'#E6E0D2';}
+function futureCol(){return isDark()?'#1a1e27':'#EEE8DA';}
 
 // weeks / phase
 function weekNum(){return Math.floor((new Date(todayStr())-new Date(S.start))/6048e5)+1;}
@@ -425,7 +450,7 @@ function barChart(data,hex,w,h){w=w||340;h=h||90;var mx=Math.max.apply(null,data
   return '<rect x="'+x+'" y="'+(h-bh)+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+hex+'" opacity="'+(i===data.length-1?1:0.45)+'"/>'+
    '<text x="'+(x+bw/2)+'" y="'+(h+12)+'" text-anchor="middle" font-size="9" fill="#857F71">'+d.mon.slice(5)+'</text>';}).join('')+'</svg>';}
 function ring(pct,hex){var r=20,c=2*Math.PI*r;
- return '<svg width="46" height="46" style="transform:rotate(-90deg)"><circle cx="23" cy="23" r="'+r+'" fill="none" stroke="#E6E0D2" stroke-width="5"/>'+
+ return '<svg width="46" height="46" style="transform:rotate(-90deg)"><circle cx="23" cy="23" r="'+r+'" fill="none" stroke="'+trackCol()+'" stroke-width="5"/>'+
   '<circle cx="23" cy="23" r="'+r+'" fill="none" stroke="'+hex+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'"/></svg>';}
 
 // backup
@@ -720,8 +745,8 @@ function todayView(){
   html+='</div>';
  });
 
- // add custom exercise
- if(isToday){
+ // add custom exercise (available on any workout day, not just today)
+ if(true){
   if(addingTo===dk){
    html+='<div class="card"><div class="eyebrow" style="margin-bottom:8px">New exercise</div>'+
     '<input id="nx-name" class="inp" placeholder="Exercise name (e.g. Pec Deck)">'+
@@ -818,7 +843,19 @@ function planView(){
 
 function homeView(){
  var nu=nextUp(),hex=HEX[nu.type],streak=currentStreak(),done=trainedToday();
- var html=headerHtml('Today',nu.type);
+ var now=new Date();
+ var dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+ var monNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+ var dayName=dayNames[now.getDay()];
+ var dateStr=monNames[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+ var html='<header style="padding:22px 18px 6px">'+
+  '<div class="sub" style="margin-bottom:6px">'+greet()+', <b style="color:var(--chalk)">'+esc(firstName())+'</b></div>'+
+  '<h1 class="display" style="font-size:40px;color:'+hex+';line-height:1">'+dayName+'</h1>'+
+  '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px">'+
+   '<span class="display" style="font-size:22px;color:var(--chalk)">'+dateStr+'</span>'+
+   '<span class="display" id="home-clock" style="font-size:30px;color:var(--chalk)">'+clockStr()+'</span>'+
+  '</div>'+
+  '<div class="accent-bar" style="background:'+hex+';margin-top:10px"></div></header>';
  html+='<div class="card" style="padding:12px 14px"><p class="sub" style="margin:0;font-style:italic;line-height:1.5">\u201c'+esc(dailyJoke())+'\u201d</p></div>';
  // hero: what to do now
  if(isWorkout(nu.dk)){
@@ -843,7 +880,7 @@ function homeView(){
  var colw=(340/12);
  var svg='<svg class="spark" width="340" height="'+(7*13+2)+'">';
  cells.forEach(function(col,ci){col.forEach(function(c,ri){
-  var color=c.future?'#EEE8DA':(c.lvl===2?'#1FA463':(c.lvl===1?'#F0A626':'#E6E0D2'));
+  var color=c.future?futureCol():(c.lvl===2?'#1FA463':(c.lvl===1?'#F0A626':emptyCol()));
   svg+='<rect x="'+(ci*13).toFixed(0)+'" y="'+(ri*13).toFixed(0)+'" width="11" height="11" rx="3" fill="'+color+'"/>';});});
  svg+='</svg>';
  html+='<div class="card"><h3>Last 12 weeks</h3>'+svg+
@@ -926,7 +963,8 @@ function render(){
 function resetApp(){if(confirm('Erase all data on this phone and start fresh?')){try{localStorage.removeItem(KEY);}catch(e){}S=blank();editProf=false;tab='today';render();}}
 
 // live session clock
-setInterval(function(){var el=document.getElementById('elapsed'),a=activeSession();if(el&&a)el.textContent=fmtDur(Date.now()-a.start);},15000);
+setInterval(function(){var el=document.getElementById('elapsed'),a=activeSession();if(el&&a)el.textContent=fmtDur(Date.now()-a.start);
+ var ck=document.getElementById('home-clock');if(ck)ck.textContent=clockStr();},10000);
 
 // service worker (self-updating; never traps an old version)
 if('serviceWorker' in navigator){
