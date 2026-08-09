@@ -1,4 +1,4 @@
-# Training Week — Rebuilt Advanced App
+# Training Week
 
 This build integrates the advanced features directly into the original app architecture.
 
@@ -14,6 +14,3 @@ This build integrates the advanced features directly into the original app archi
 - Existing Supabase sync, export/restore and offline behavior retained
 - Responsive desktop sidebar and mobile bottom navigation
 - Backward-compatible state migration for existing users
-
-## Deployment
-Upload the contents of this ZIP over the existing /workout-app/ files. Because the service worker changed, do one hard refresh after deployment.
