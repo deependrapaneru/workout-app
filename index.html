@@ -467,6 +467,182 @@ header h1{
   }
 }
 
+
+/* =========================================================
+   TRAINING WEEK — ADVANCED WORKOUT APP UI
+   ========================================================= */
+:root{
+  --aw-ink:#111827;
+  --aw-muted:#687084;
+  --aw-bg:#f4f6fa;
+  --aw-card:rgba(255,255,255,.9);
+  --aw-line:rgba(17,24,39,.08);
+  --aw-blue:#315cff;
+  --aw-green:#16a36a;
+  --aw-orange:#f97316;
+  --aw-purple:#7657ff;
+  --aw-shadow:0 16px 45px rgba(22,31,52,.08);
+}
+body{
+  background:
+    radial-gradient(circle at 10% 0%,rgba(49,92,255,.09),transparent 30%),
+    radial-gradient(circle at 95% 4%,rgba(118,87,255,.08),transparent 27%),
+    var(--aw-bg);
+}
+#app{max-width:1240px !important}
+.card,.ex,.timer{
+  border:1px solid var(--aw-line) !important;
+  box-shadow:var(--aw-shadow) !important;
+  border-radius:22px !important;
+}
+.card{padding:20px !important}
+.ex{
+  overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.ex:hover{transform:translateY(-2px)}
+.ex-head{min-height:70px}
+.go-btn{
+  border-radius:13px !important;
+  min-height:44px;
+  font-weight:750;
+}
+.inp{
+  border-radius:12px !important;
+  min-height:44px;
+}
+.day-btn{
+  border-radius:15px !important;
+  min-width:58px !important;
+}
+.chip{border-radius:999px !important}
+.hist-row{border-radius:12px}
+.aw-panel{
+  background:var(--aw-card);
+  border:1px solid var(--aw-line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:var(--aw-shadow);
+  margin:14px 0;
+}
+.aw-panel-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.aw-panel-title strong{font-size:15px;letter-spacing:-.01em}
+.aw-muted{color:var(--aw-muted);font-size:12px}
+.aw-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.aw-kpi{
+  padding:14px;
+  border-radius:17px;
+  background:rgba(245,247,251,.85);
+  border:1px solid var(--aw-line);
+}
+.aw-kpi b{display:block;font-size:22px;letter-spacing:-.03em}
+.aw-kpi span{font-size:10px;color:var(--aw-muted);font-weight:700}
+.aw-actions{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.aw-action{
+  border:1px solid var(--aw-line);
+  background:#fff;
+  border-radius:17px;
+  padding:14px 12px;
+  text-align:left;
+  cursor:pointer;
+  font:inherit;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.aw-action:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(22,31,52,.08)}
+.aw-action-icon{font-size:22px;margin-bottom:8px}
+.aw-action strong{display:block;font-size:12px}
+.aw-action small{color:var(--aw-muted);font-size:10px}
+.aw-progress{
+  height:8px;background:#e9edf5;border-radius:999px;overflow:hidden;margin-top:9px;
+}
+.aw-progress i{
+  display:block;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--aw-blue),var(--aw-purple));
+}
+.aw-pr{
+  display:flex;align-items:center;gap:12px;margin:11px 0;
+}
+.aw-pr .num{
+  min-width:62px;font-weight:800;font-size:12px;
+}
+.aw-pr .bar{flex:1}
+.aw-pr .trend{font-size:10px;color:var(--aw-muted)}
+.aw-next{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:15px;border-radius:17px;background:linear-gradient(135deg,#111827,#25304a);color:white;
+}
+.aw-next .ey{font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.65}
+.aw-next b{display:block;margin-top:4px;font-size:15px}
+.aw-next button{
+  border:0;border-radius:12px;padding:10px 13px;background:white;color:#111827;
+  font-weight:800;cursor:pointer;
+}
+.aw-timer-fab{
+  position:fixed;right:20px;bottom:86px;z-index:40;
+  border:0;border-radius:18px;padding:12px 15px;
+  background:#111827;color:white;box-shadow:0 14px 35px rgba(17,24,39,.24);
+  font-weight:800;cursor:pointer;display:none;
+}
+.aw-toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(12px);
+  z-index:100;background:#111827;color:white;padding:11px 15px;border-radius:12px;
+  font-size:12px;opacity:0;pointer-events:none;transition:.22s ease;
+}
+.aw-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.aw-modal{
+  position:fixed;inset:0;background:rgba(9,13,22,.42);backdrop-filter:blur(5px);
+  z-index:90;display:none;align-items:flex-end;justify-content:center;padding:18px;
+}
+.aw-modal.open{display:flex}
+.aw-sheet{
+  width:min(560px,100%);background:#fff;border-radius:25px;padding:20px;
+  box-shadow:0 30px 80px rgba(0,0,0,.2);
+}
+.aw-sheet-head{display:flex;justify-content:space-between;align-items:center}
+.aw-close{border:0;background:#f1f3f7;border-radius:10px;width:36px;height:36px;cursor:pointer}
+.aw-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.aw-form .full{grid-column:1/-1}
+.aw-label{font-size:10px;font-weight:800;color:var(--aw-muted);display:block;margin-bottom:6px}
+.aw-field{width:100%;box-sizing:border-box;border:1px solid var(--aw-line);border-radius:12px;padding:11px;background:#f8f9fc;font:inherit}
+.aw-submit{grid-column:1/-1;border:0;border-radius:13px;padding:13px;background:#111827;color:white;font-weight:800;cursor:pointer}
+.aw-search{
+  width:100%;box-sizing:border-box;border:1px solid var(--aw-line);background:#fff;
+  border-radius:13px;padding:12px 14px;font:inherit;margin-bottom:10px;
+}
+.aw-empty{text-align:center;padding:24px;color:var(--aw-muted);font-size:12px}
+@media(max-width:760px){
+  .aw-kpis,.aw-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .aw-form{grid-template-columns:1fr}
+  .aw-form .full,.aw-submit{grid-column:auto}
+}
+@media(min-width:900px){
+  #app{padding-left:126px}
+  .tabbar{
+    left:18px !important;top:18px !important;bottom:18px !important;transform:none !important;
+    width:82px !important;max-width:82px !important;height:auto !important;
+    border-radius:24px !important;flex-direction:column !important;
+    justify-content:center;gap:7px;padding:10px 8px !important;
+    background:rgba(255,255,255,.78) !important;backdrop-filter:blur(18px);
+    box-shadow:0 20px 55px rgba(22,31,52,.1);
+  }
+  .tabbar button{width:100% !important;min-height:64px;border-radius:16px !important}
+  .aw-timer-fab{display:block}
+}
+
 </style>
 </head>
 <body>
@@ -1982,5 +2158,209 @@ initAuth(function(){render();});
 })();
 
 </script>
+
+/* =========================================================
+   ADVANCED WORKOUT FEATURES
+   Uses localStorage so the app remains offline-friendly.
+   ========================================================= */
+(function(){
+  const KEY='tw_advanced_v1';
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
+  const save=(x)=>localStorage.setItem(KEY,JSON.stringify(x));
+  let db=load();
+  db.completed = db.completed || {};
+  db.pr = db.pr || {};
+  db.notes = db.notes || {};
+  db.body = db.body || {};
+  db.goal = db.goal || {weekly:4};
+  db.timer = db.timer || {seconds:60};
+  db.templates = db.templates || [];
+
+  function toast(msg){
+    let el=document.querySelector('.aw-toast');
+    if(!el){el=document.createElement('div');el.className='aw-toast';document.body.appendChild(el)}
+    el.textContent=msg;el.classList.add('show');
+    clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1800);
+  }
+  function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function dayKey(d=new Date()){return d.toISOString().slice(0,10)}
+  function weekStart(d=new Date()){
+    let x=new Date(d); x.setHours(0,0,0,0);
+    let n=x.getDay(); x.setDate(x.getDate()-(n===0?6:n-1)); return x.toISOString().slice(0,10)
+  }
+  function setTabSafe(tab){
+    if(window.setTab) window.setTab(tab);
+    else {
+      const b=[...document.querySelectorAll('#tabbar button')].find(x=>(x.getAttribute('onclick')||'').includes(tab));
+      if(b)b.click();
+    }
+    setTimeout(renderAdvanced,120);
+  }
+  window.awSetTab=setTabSafe;
+
+  function calcStats(){
+    const keys=Object.keys(db.completed);
+    const total=keys.reduce((a,k)=>a+(db.completed[k]||0),0);
+    const weeks=new Set(keys.map(k=>weekStart(new Date(k)))).size;
+    const today=dayKey();
+    const recent=keys.filter(k=>k>=new Date(Date.now()-6*864e5).toISOString().slice(0,10)).reduce((a,k)=>a+(db.completed[k]||0),0);
+    return {total,weeks,recent};
+  }
+
+  function dashboardHTML(){
+    const s=calcStats();
+    const weeklyGoal=Number(db.goal.weekly)||4;
+    const pct=Math.min(100,Math.round(s.recent/weeklyGoal*100));
+    const weights=Object.entries(db.body).sort((a,b)=>a[0].localeCompare(b[0]));
+    const lastWeight=weights.length?weights[weights.length-1][1]:null;
+    const prevWeight=weights.length>1?weights[weights.length-2][1]:null;
+    const delta=lastWeight&&prevWeight ? (lastWeight-prevWeight).toFixed(1):'—';
+    const prs=Object.entries(db.pr).slice(-5).reverse();
+
+    return `
+      <section class="aw-panel">
+        <div class="aw-panel-title"><strong>Training overview</strong><span class="aw-muted">This week</span></div>
+        <div class="aw-kpis">
+          <div class="aw-kpi"><b>${s.recent}</b><span>WORKOUTS</span></div>
+          <div class="aw-kpi"><b>${weeklyGoal}</b><span>WEEKLY GOAL</span></div>
+          <div class="aw-kpi"><b>${s.total}</b><span>TOTAL LOGS</span></div>
+          <div class="aw-kpi"><b>${lastWeight?esc(lastWeight)+' lb':'—'}</b><span>SUNDAY WEIGHT</span></div>
+        </div>
+        <div class="aw-progress"><i style="width:${pct}%"></i></div>
+        <div class="aw-muted" style="margin-top:7px">${pct}% of weekly goal completed</div>
+      </section>
+
+      <section class="aw-panel">
+        <div class="aw-panel-title"><strong>Quick actions</strong><span class="aw-muted">One tap</span></div>
+        <div class="aw-actions">
+          <button class="aw-action" onclick="awOpenWorkout()"><div class="aw-action-icon">▶️</div><strong>Start workout</strong><small>Open today's session</small></button>
+          <button class="aw-action" onclick="awOpenTimer()"><div class="aw-action-icon">⏱️</div><strong>Rest timer</strong><small>Start a quick timer</small></button>
+          <button class="aw-action" onclick="awOpenBody()"><div class="aw-action-icon">⚖️</div><strong>Log weight</strong><small>Sunday check-in</small></button>
+          <button class="aw-action" onclick="awOpenNote()"><div class="aw-action-icon">📝</div><strong>Workout note</strong><small>Save how you felt</small></button>
+        </div>
+      </section>
+
+      <section class="aw-panel">
+        <div class="aw-panel-title"><strong>Progress signals</strong><span class="aw-muted">Recent</span></div>
+        <div class="aw-pr"><div class="num">Weight</div><div class="bar"><div class="aw-progress"><i style="width:${lastWeight?65:0}%"></i></div></div><div class="trend">${delta==='—'?'—':(delta>0?'+':'')+delta+' lb'}</div></div>
+        ${prs.length?prs.map(([k,v])=>`<div class="aw-pr"><div class="num">${esc(k)}</div><div class="bar"><div class="aw-progress"><i style="width:82%"></i></div></div><div class="trend">${esc(v)} lb</div></div>`).join(''):'<div class="aw-empty">Your personal records will appear here as you log them.</div>'}
+      </section>
+    `;
+  }
+
+  function injectHomePanel(){
+    const app=document.getElementById('app'); if(!app)return;
+    if(document.querySelector('.aw-home-panel'))return;
+    const el=document.createElement('div'); el.className='aw-home-panel';
+    el.innerHTML=dashboardHTML();
+    // Put it before the first main card so it feels like a dashboard.
+    const target=app.querySelector('.card');
+    if(target) target.parentNode.insertBefore(el,target);
+    else app.appendChild(el);
+  }
+
+  function modal(id,title,body){
+    let m=document.getElementById(id);
+    if(!m){
+      m=document.createElement('div');m.id=id;m.className='aw-modal';
+      m.innerHTML=`<div class="aw-sheet"><div class="aw-sheet-head"><strong>${title}</strong><button class="aw-close" onclick="awClose('${id}')">×</button></div>${body}</div>`;
+      document.body.appendChild(m);
+    }
+    m.classList.add('open');
+    return m;
+  }
+  window.awClose=id=>document.getElementById(id)?.classList.remove('open');
+
+  window.awOpenTimer=()=>{
+    const m=modal('awTimer','Rest timer',`
+      <div style="text-align:center;padding:20px 0"><div id="awTimerDisplay" style="font-size:52px;font-weight:850;letter-spacing:-.04em">01:00</div>
+      <div class="aw-muted">Quick rest timer</div></div>
+      <div class="aw-actions">
+        <button class="aw-action" onclick="awTimerStart(30)"><strong>30 sec</strong></button>
+        <button class="aw-action" onclick="awTimerStart(60)"><strong>60 sec</strong></button>
+        <button class="aw-action" onclick="awTimerStart(90)"><strong>90 sec</strong></button>
+        <button class="aw-action" onclick="awTimerStart(120)"><strong>2 min</strong></button>
+      </div>
+    `);
+  };
+  let timerHandle=null;
+  window.awTimerStart=(sec)=>{
+    clearInterval(timerHandle); let left=sec;
+    const d=document.getElementById('awTimerDisplay');
+    const tick=()=>{if(!d)return;d.textContent=`${String(Math.floor(left/60)).padStart(2,'0')}:${String(left%60).padStart(2,'0')}`;if(left<=0){clearInterval(timerHandle);toast('Rest complete — next set!')}left--};
+    tick();timerHandle=setInterval(tick,1000);
+  };
+
+  window.awOpenWorkout=()=>{setTabSafe('today');toast("Today's workout opened")};
+
+  window.awOpenBody=()=>{
+    const today=new Date(); const sunday=today.getDay()===0;
+    modal('awBody','Sunday body-weight check-in',`
+      <div class="aw-muted" style="margin-top:5px">${sunday?'Today is Sunday — great time for your weekly check-in.':'Weekly body weight is designed for Sunday check-ins.'}</div>
+      <form class="aw-form" onsubmit="awSaveBody(event)">
+        <div class="full"><label class="aw-label">Date</label><input class="aw-field" id="awBodyDate" type="date" value="${dayKey()}"></div>
+        <div class="full"><label class="aw-label">Body weight (lb)</label><input class="aw-field" id="awBodyWeight" type="number" step="0.1" min="1" placeholder="e.g. 198.4" required></div>
+        <button class="aw-submit">Save Sunday weight</button>
+      </form>
+    `);
+  };
+  window.awSaveBody=(e)=>{
+    e.preventDefault();
+    const d=document.getElementById('awBodyDate').value,w=Number(document.getElementById('awBodyWeight').value);
+    if(!d||!w)return;
+    db.body[d]=w;save(db);awClose('awBody');renderAdvanced();toast('Body weight saved');
+  };
+
+  window.awOpenNote=()=>{
+    modal('awNote','Workout note',`
+      <form class="aw-form" onsubmit="awSaveNote(event)">
+        <div class="full"><label class="aw-label">Date</label><input class="aw-field" id="awNoteDate" type="date" value="${dayKey()}"></div>
+        <div class="full"><label class="aw-label">How did the workout feel?</label><textarea class="aw-field" id="awNoteText" rows="5" placeholder="Energy, soreness, difficult sets, sleep, anything worth remembering…"></textarea></div>
+        <button class="aw-submit">Save note</button>
+      </form>
+    `);
+  };
+  window.awSaveNote=(e)=>{
+    e.preventDefault();
+    const d=document.getElementById('awNoteDate').value,t=document.getElementById('awNoteText').value.trim();
+    if(!t)return;
+    db.notes[d]=t;save(db);awClose('awNote');toast('Workout note saved');
+  };
+
+  function addWorkoutLogButton(){
+    const btns=[...document.querySelectorAll('button,.go-btn')];
+    btns.forEach(b=>{
+      const t=(b.textContent||'').trim().toLowerCase();
+      if(t.includes('complete') && !b.dataset.awBound){
+        b.dataset.awBound='1';
+        b.addEventListener('click',()=>{const d=dayKey();db.completed[d]=(db.completed[d]||0)+1;save(db);setTimeout(renderAdvanced,100);toast('Workout logged ✓')});
+      }
+    });
+  }
+
+  function renderAdvanced(){
+    injectHomePanel();
+    const panel=document.querySelector('.aw-home-panel');
+    if(panel && document.querySelector('#app')) panel.innerHTML=dashboardHTML();
+    addWorkoutLogButton();
+  }
+
+  // Small persistent navigation helper.
+  function injectHelpers(){
+    if(!document.querySelector('.aw-timer-fab')){
+      const f=document.createElement('button');f.className='aw-timer-fab';f.textContent='⏱ Rest';f.onclick=awOpenTimer;document.body.appendChild(f);
+    }
+    if(!document.querySelector('.aw-toast')){const t=document.createElement('div');t.className='aw-toast';document.body.appendChild(t)}
+  }
+
+  // Observe app re-renders because the original app is single-page and dynamically replaces DOM.
+  const obs=new MutationObserver(()=>{injectHelpers();renderAdvanced()});
+  const start=()=>{
+    injectHelpers();renderAdvanced();
+    const app=document.getElementById('app'); if(app)obs.observe(app,{childList:true,subtree:true});
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+
 </body>
 </html>
