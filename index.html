@@ -136,8 +136,17 @@ select.inp{appearance:none}
 .seg button.on{color:#FFF;border-color:transparent;font-weight:700}
 .plan-p{font-size:13.5px;line-height:1.55;margin:0}
 .note{margin:0 18px 12px;font-size:12px;color:var(--dim);line-height:1.5}
-.train-today-banner{display:flex;align-items:center;gap:12px;padding:13px 15px}
-.train-today-banner .tool-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
+.train-day-browser{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:10px;padding:13px 14px}
+.train-day-arrow{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--chalk);font-size:25px;font-weight:800;line-height:1}
+.train-day-arrow:active{transform:scale(.94)}
+.train-day-center{text-align:center;min-width:0}
+.train-day-top{display:flex;align-items:center;justify-content:center;gap:7px;min-height:22px}
+.train-today-chip,.train-today-jump{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);padding:4px 9px;font-size:9px;font-weight:850;letter-spacing:.10em;text-transform:uppercase}
+.train-today-jump{cursor:pointer}
+.train-day-center b{display:block;margin-top:3px;font-size:17px;color:var(--chalk)}
+.train-day-center small{display:block;margin-top:2px;color:var(--dim);font-size:11px}
+.train-preview-note{display:flex;align-items:flex-start;gap:10px;border-style:dashed!important}
+.train-preview-note .tool-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
 
 /* =========================================================
    TRAINING WEEK — PREMIUM UI LAYER
@@ -2387,7 +2396,7 @@ function importData(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new F
  rd.readAsText(f);}
 
 // ===================== STATE =====================
-var tab='home', viewDay=dayKeyOf(todayStr()), openEx=null, histEx='bench', editProf=false;
+var tab='home', viewDay=dayKeyOf(todayStr()), trainViewDate=todayStr(), openEx=null, histEx='bench', editProf=false;
 var timerSecs=0, timerInt=null;
 var undoState=null,undoLabel='',undoTimer=null,focusAfterRender=null,extraSets={};
 var progressWeeks=8;
@@ -2408,8 +2417,13 @@ function setProgressRange(n){progressWeeks=n==='all'?Math.min(52,Math.max(8,week
 
 
 // ===================== ACTIONS =====================
-function setTab(t){var same=tab===t;if(tab==='food'&&t!=='food'&&typeof stopBarcodeScanner==='function')stopBarcodeScanner();if(t!=='food'&&typeof foodSearchOrigin!=='undefined')foodSearchOrigin='food';tab=t;openEx=null;addingTo=null;haptic(same?7:10);render();try{window.scrollTo({top:0,behavior:(S.settings&&S.settings.reduceMotion)?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}}
-function setDay(k){viewDay=k;openEx=null;addingTo=null;render();}
+function setTab(t){var same=tab===t;if(tab==='food'&&t!=='food'&&typeof stopBarcodeScanner==='function')stopBarcodeScanner();if(t!=='food'&&typeof foodSearchOrigin!=='undefined')foodSearchOrigin='food';if(t==='today'&&tab!=='today'){viewDay=dayKeyOf(todayStr());trainViewDate=todayStr();}tab=t;openEx=null;addingTo=null;haptic(same?7:10);render();try{window.scrollTo({top:0,behavior:(S.settings&&S.settings.reduceMotion)?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}}
+function setDay(k,ds){viewDay=k;trainViewDate=ds||weekDates()[DAYS.indexOf(k)];openEx=null;addingTo=null;render();}
+function shiftTrainDay(delta){
+ var next=datePlus(trainViewDate||todayStr(),delta);
+ setDay(dayKeyOf(next),next);
+}
+function trainGoToday(){setDay(dayKeyOf(todayStr()),todayStr());}
 function toggleEx(i){openEx=openEx===i?null:i;render();}
 function setCheckin(v){S.checkin[todayStr()]=v;save();render();}
 function setActivity(dk){var el=document.getElementById('act-pick');if(!el)return;
@@ -2503,7 +2517,7 @@ function saveTrainingNote(){var el=document.getElementById('workout-note'),t=el?
 function clearTrainingNote(){if(S.notes)delete S.notes[todayStr()];save();render();}
 function setWeeklyGoal(){var el=document.getElementById('weekly-goal'),v=el?+el.value:0;if(v<1)return;if(!S.goals)S.goals={weekly:4};S.goals.weekly=Math.max(1,Math.min(7,Math.round(v)));save();render();}
 function saveTemplate(){var ids=planEx(viewDay);if(!ids.length)return;var name=prompt('Template name',dayLabel(viewDay)+' workout');if(!name)return;if(!S.templates)S.templates={};S.templates['t_'+Date.now().toString(36)]={name:name,ex:ids.slice(),created:todayStr()};save();render();}
-function applyTemplate(tid,dk){var t=S.templates&&S.templates[tid];if(!t)return;ensureProfileEdits();var base=workoutOf(dk);S.profile.del[dk]=base&&base.ex?base.ex.slice():[];S.profile.add[dk]=t.ex.slice();save();viewDay=dk;tab='today';render();}
+function applyTemplate(tid,dk){var t=S.templates&&S.templates[tid];if(!t)return;ensureProfileEdits();var base=workoutOf(dk);S.profile.del[dk]=base&&base.ex?base.ex.slice():[];S.profile.add[dk]=t.ex.slice();save();viewDay=dk;trainViewDate=weekDates()[DAYS.indexOf(dk)];tab='today';render();}
 function deleteTemplate(tid){if(S.templates)delete S.templates[tid];save();render();}
 var morePage='menu';
 function setMorePage(p){morePage=p;render();}
@@ -2611,12 +2625,15 @@ function closeExerciseImage(){
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeExerciseImage();});
 
 function todayView(){
- // Train is intentionally a focused Today surface. Weekly planning and history
- // live under More and Progress, so this tab never drifts into another day.
- var dk=dayKeyOf(todayStr());viewDay=dk;
- var type=dayType(dk),hex=HEX[type],isToday=true;
- var html=headerHtml(dayLabel(dk),type);
- html+='<div class="card train-today-banner"><span class="tool-icon">'+appIcon('calendar',20)+'</span><div><div class="eyebrow">TODAY ONLY</div><b>'+new Date(todayStr()+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})+'</b></div><span class="pill" style="margin-left:auto;background:var(--accent-soft);color:var(--accent)">'+(isTraining(dk)?'Training':dayType(dk)==='act'?'Activity':'Recovery')+'</span></div>';
+ var dk=viewDay,type=dayType(dk),hex=HEX[type],isToday=dk===dayKeyOf(todayStr());
+ var scheduledDate=trainViewDate||weekDates()[DAYS.indexOf(dk)];
+ var scheduleType=isTraining(dk)?'Training':dayType(dk)==='act'?'Activity':'Recovery';
+ var html=headerHtml(isToday?'Today':dayLabel(dk),type);
+ html+='<div class="card train-day-browser">'+
+  '<button class="train-day-arrow" onclick="shiftTrainDay(-1)" aria-label="Previous day">‹</button>'+
+  '<div class="train-day-center"><div class="train-day-top">'+(isToday?'<span class="train-today-chip">Today</span>':'<button class="train-today-jump" onclick="trainGoToday()">Go to today</button>')+'</div><b>'+dayLabel(dk)+'</b><small>'+new Date(scheduledDate+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})+' · '+scheduleType+'</small></div>'+
+  '<button class="train-day-arrow" onclick="shiftTrainDay(1)" aria-label="Next day">›</button></div>';
+ if(!isToday)html+='<div class="card train-preview-note"><span class="tool-icon">'+appIcon('calendar',18)+'</span><div><b>Schedule preview</b><div class="sub" style="margin-top:3px">Viewing '+dayLabel(dk)+'. Use “Go to today” when you are ready to log today’s training.</div></div></div>';
 
  // weekly weigh-in prompt
  if(isToday&&needsWeighIn()){
@@ -2680,15 +2697,15 @@ function todayView(){
   }
  }
 
- // rest timer
- html+='<div class="timer"><div><div class="eyebrow">Rest timer</div><div class="display timer-num" id="timer-num">0:00</div></div>'+
+ // Rest controls only belong to today's live session; other days are previews.
+ if(isToday)html+='<div class="timer"><div><div class="eyebrow">Rest timer</div><div class="display timer-num" id="timer-num">0:00</div></div>'+
   '<div class="timer-btns"><button onclick="startTimer(60)">60s</button><button onclick="startTimer(90)">90s</button><button onclick="startTimer(150)">150s</button><button onclick="addTimer(30)">+30</button>'+
   '<button id="timer-stop" class="stop" style="display:none;background:'+hex+'" onclick="stopTimer()">Skip</button></div></div>';
 
  // exercises
  planEx(dk).forEach(function(base,i){
   var id=slotEx(dk,i),ex=EXDB[id],rec=recommend(id),open=openEx===i;
-  var t=todayStr(),entry=null;logsOf(id).forEach(function(l){if(l.d===t)entry=l;});
+  var t=scheduledDate,entry=null;logsOf(id).forEach(function(l){if(l.d===t)entry=l;});
   var setsDone=entry?entry.sets.filter(function(s){return s&&(+s.w||+s.r);}).length:0;
   var done=setsDone>=rec.sets&&setsDone>0;
   var timeBased=ex.inc===0&&ex.rMin>=20;
