@@ -468,180 +468,22 @@ header h1{
 }
 
 
-/* =========================================================
-   TRAINING WEEK — ADVANCED WORKOUT APP UI
-   ========================================================= */
-:root{
-  --aw-ink:#111827;
-  --aw-muted:#687084;
-  --aw-bg:#f4f6fa;
-  --aw-card:rgba(255,255,255,.9);
-  --aw-line:rgba(17,24,39,.08);
-  --aw-blue:#315cff;
-  --aw-green:#16a36a;
-  --aw-orange:#f97316;
-  --aw-purple:#7657ff;
-  --aw-shadow:0 16px 45px rgba(22,31,52,.08);
-}
-body{
-  background:
-    radial-gradient(circle at 10% 0%,rgba(49,92,255,.09),transparent 30%),
-    radial-gradient(circle at 95% 4%,rgba(118,87,255,.08),transparent 27%),
-    var(--aw-bg);
-}
-#app{max-width:1240px !important}
-.card,.ex,.timer{
-  border:1px solid var(--aw-line) !important;
-  box-shadow:var(--aw-shadow) !important;
-  border-radius:22px !important;
-}
-.card{padding:20px !important}
-.ex{
-  overflow:hidden;
-  transition:transform .18s ease,box-shadow .18s ease;
-}
-.ex:hover{transform:translateY(-2px)}
-.ex-head{min-height:70px}
-.go-btn{
-  border-radius:13px !important;
-  min-height:44px;
-  font-weight:750;
-}
-.inp{
-  border-radius:12px !important;
-  min-height:44px;
-}
-.day-btn{
-  border-radius:15px !important;
-  min-width:58px !important;
-}
-.chip{border-radius:999px !important}
-.hist-row{border-radius:12px}
-.aw-panel{
-  background:var(--aw-card);
-  border:1px solid var(--aw-line);
-  border-radius:22px;
-  padding:18px;
-  box-shadow:var(--aw-shadow);
-  margin:14px 0;
-}
-.aw-panel-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px;
-}
-.aw-panel-title strong{font-size:15px;letter-spacing:-.01em}
-.aw-muted{color:var(--aw-muted);font-size:12px}
-.aw-kpis{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-.aw-kpi{
-  padding:14px;
-  border-radius:17px;
-  background:rgba(245,247,251,.85);
-  border:1px solid var(--aw-line);
-}
-.aw-kpi b{display:block;font-size:22px;letter-spacing:-.03em}
-.aw-kpi span{font-size:10px;color:var(--aw-muted);font-weight:700}
-.aw-actions{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-.aw-action{
-  border:1px solid var(--aw-line);
-  background:#fff;
-  border-radius:17px;
-  padding:14px 12px;
-  text-align:left;
-  cursor:pointer;
-  font:inherit;
-  transition:transform .15s ease,box-shadow .15s ease;
-}
-.aw-action:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(22,31,52,.08)}
-.aw-action-icon{font-size:22px;margin-bottom:8px}
-.aw-action strong{display:block;font-size:12px}
-.aw-action small{color:var(--aw-muted);font-size:10px}
-.aw-progress{
-  height:8px;background:#e9edf5;border-radius:999px;overflow:hidden;margin-top:9px;
-}
-.aw-progress i{
-  display:block;height:100%;border-radius:999px;
-  background:linear-gradient(90deg,var(--aw-blue),var(--aw-purple));
-}
-.aw-pr{
-  display:flex;align-items:center;gap:12px;margin:11px 0;
-}
-.aw-pr .num{
-  min-width:62px;font-weight:800;font-size:12px;
-}
-.aw-pr .bar{flex:1}
-.aw-pr .trend{font-size:10px;color:var(--aw-muted)}
-.aw-next{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:15px;border-radius:17px;background:linear-gradient(135deg,#111827,#25304a);color:white;
-}
-.aw-next .ey{font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.65}
-.aw-next b{display:block;margin-top:4px;font-size:15px}
-.aw-next button{
-  border:0;border-radius:12px;padding:10px 13px;background:white;color:#111827;
-  font-weight:800;cursor:pointer;
-}
-.aw-timer-fab{
-  position:fixed;right:20px;bottom:86px;z-index:40;
-  border:0;border-radius:18px;padding:12px 15px;
-  background:#111827;color:white;box-shadow:0 14px 35px rgba(17,24,39,.24);
-  font-weight:800;cursor:pointer;display:none;
-}
-.aw-toast{
-  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(12px);
-  z-index:100;background:#111827;color:white;padding:11px 15px;border-radius:12px;
-  font-size:12px;opacity:0;pointer-events:none;transition:.22s ease;
-}
-.aw-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.aw-modal{
-  position:fixed;inset:0;background:rgba(9,13,22,.42);backdrop-filter:blur(5px);
-  z-index:90;display:none;align-items:flex-end;justify-content:center;padding:18px;
-}
-.aw-modal.open{display:flex}
-.aw-sheet{
-  width:min(560px,100%);background:#fff;border-radius:25px;padding:20px;
-  box-shadow:0 30px 80px rgba(0,0,0,.2);
-}
-.aw-sheet-head{display:flex;justify-content:space-between;align-items:center}
-.aw-close{border:0;background:#f1f3f7;border-radius:10px;width:36px;height:36px;cursor:pointer}
-.aw-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
-.aw-form .full{grid-column:1/-1}
-.aw-label{font-size:10px;font-weight:800;color:var(--aw-muted);display:block;margin-bottom:6px}
-.aw-field{width:100%;box-sizing:border-box;border:1px solid var(--aw-line);border-radius:12px;padding:11px;background:#f8f9fc;font:inherit}
-.aw-submit{grid-column:1/-1;border:0;border-radius:13px;padding:13px;background:#111827;color:white;font-weight:800;cursor:pointer}
-.aw-search{
-  width:100%;box-sizing:border-box;border:1px solid var(--aw-line);background:#fff;
-  border-radius:13px;padding:12px 14px;font:inherit;margin-bottom:10px;
-}
-.aw-empty{text-align:center;padding:24px;color:var(--aw-muted);font-size:12px}
-@media(max-width:760px){
-  .aw-kpis,.aw-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .aw-form{grid-template-columns:1fr}
-  .aw-form .full,.aw-submit{grid-column:auto}
-}
-@media(min-width:900px){
-  #app{padding-left:126px}
-  .tabbar{
-    left:18px !important;top:18px !important;bottom:18px !important;transform:none !important;
-    width:82px !important;max-width:82px !important;height:auto !important;
-    border-radius:24px !important;flex-direction:column !important;
-    justify-content:center;gap:7px;padding:10px 8px !important;
-    background:rgba(255,255,255,.78) !important;backdrop-filter:blur(18px);
-    box-shadow:0 20px 55px rgba(22,31,52,.1);
-  }
-  .tabbar button{width:100% !important;min-height:64px;border-radius:16px !important}
-  .aw-timer-fab{display:block}
-}
+/* ===== Advanced native architecture UI ===== */
+.rpe-select{width:58px;height:40px;border-radius:9px;border:1px solid var(--line);background:var(--card-up);color:var(--chalk);font:inherit;font-size:10px;padding:0 3px;flex-shrink:0}
+.workout-note{width:100%;resize:vertical;box-sizing:border-box;font-family:inherit;min-height:84px}
+.compact-action{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.progress-head,.card-headline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.progress-ring{width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--card-up);border:1px solid var(--line)}
+.progress-ring b{font-size:18px}.progress-ring span{font-size:9px;color:var(--dim)}
+.progress-track{height:8px;border-radius:999px;background:var(--card-up);overflow:hidden;margin-top:12px}.progress-track i{display:block;height:100%;background:linear-gradient(90deg,#315CFF,#7657FF);border-radius:999px}
+.goal-row{align-items:center;margin-top:12px}.goal-row input{width:78px}
+.note-entry{padding:10px 0;border-bottom:1px solid var(--line)}
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 14px}
+.tool-card{border:1px solid var(--line);background:var(--card);color:var(--chalk);border-radius:18px;padding:16px;text-align:left;box-shadow:0 9px 26px var(--shadow);font:inherit;cursor:pointer}.tool-card span{font-size:24px;display:block;margin-bottom:9px}.tool-card b{display:block;font-size:13px}.tool-card small{display:block;color:var(--dim);font-size:10px;line-height:1.4;margin-top:3px}
+.section-back{margin:14px 14px -4px;border:1px solid var(--line);background:var(--card);color:var(--chalk);border-radius:12px;padding:9px 12px;font:inherit;font-weight:700;cursor:pointer}
+.mini-action{padding:6px 8px!important;color:var(--chalk)!important}
+@media(min-width:900px){body{max-width:none!important;padding-bottom:32px}#app{width:min(1160px,calc(100% - 150px));max-width:1160px!important;margin:0 auto;padding-left:96px;padding-right:24px}.tabbar{left:18px!important;top:18px!important;bottom:18px!important;transform:none!important;width:82px!important;max-width:82px!important;height:auto!important;flex-direction:column!important;justify-content:center;gap:6px;padding:10px 8px!important;border-radius:24px!important;background:var(--tab)!important;border:1px solid var(--brd-soft)!important;box-shadow:0 18px 50px var(--shadow)}.tabbar button{width:100%!important;min-height:62px;border-radius:15px!important;font-size:9px!important}.tabbar .ic{font-size:19px!important}.tool-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-left:0;margin-right:0}.section-back{margin-left:0}.set-row{gap:7px!important}}
+@media(max-width:560px){.rpe-select{width:50px;font-size:9px}.set-row input{min-width:0}.tool-grid{margin-left:0;margin-right:0}.compact-action{align-items:flex-start;flex-direction:column}.compact-action button{width:100%}}
 
 </style>
 </head>
@@ -795,13 +637,13 @@ function actDaysPerWeek(){return DAYS.filter(function(dk){return dayType(dk)==='
 var KEY='training-week';
 var mem=null;
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
-function blank(){return {start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null,food:{}};}
+function blank(){return {start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null,food:{},notes:{},goals:{weekly:4},templates:{}};}
 // ensure profile has containers for custom exercises / per-day edits
 function ensureProfileEdits(){if(!S.profile)return;
  if(!S.profile.custom)S.profile.custom={};
  if(!S.profile.add)S.profile.add={};
  if(!S.profile.del)S.profile.del={};}
-function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);return Object.assign(blank(),d);}}catch(e){}return mem||blank();}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var b=blank(),d=Object.assign(b,JSON.parse(r));d.notes=d.notes||{};d.goals=Object.assign(b.goals,d.goals||{});d.templates=d.templates||{};return d;}}catch(e){}return mem||blank();}
 function save(){mem=S;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}syncPush();}
 
 // ===================== CLOUD SYNC (Supabase) =====================
@@ -1496,13 +1338,14 @@ function estMin(dk){var t=0,wu=false;planEx(dk).forEach(function(_,i){var id=slo
 
 function logSet(id,i,si,rest){
  var w=(document.getElementById('w-'+i+'-'+si)||{}).value, r=(document.getElementById('r-'+i+'-'+si)||{}).value;
+ var rp=(document.getElementById('rp-'+i+'-'+si)||{}).value;
  if(w===''||r===''||w==null||r==null)return;
  if(!S.logs[id])S.logs[id]=[];
  var t=todayStr(),entry=null;
  S.logs[id].forEach(function(l){if(l.d===t)entry=l;});
  if(!entry){entry={d:t,sets:[]};S.logs[id].push(entry);}
  while(entry.sets.length<=si)entry.sets.push({w:0,r:0});
- entry.sets[si]={w:+w,r:+r};
+ entry.sets[si]={w:+w,r:+r,rpe:(rp===''||rp==null?null:+rp)};
  save();startTimer(rest);render();
 }
 
@@ -1514,6 +1357,20 @@ function renderTimer(){var el=document.getElementById('timer-num');if(!el)return
  var mm=Math.floor(timerSecs/60),ss=('0'+(timerSecs%60)).slice(-2);el.textContent=mm+':'+ss;
  el.style.color=timerSecs>0?(HEX[dayType(viewDay)]||HEX.rest):'var(--chalk)';
  var st=document.getElementById('timer-stop');if(st)st.style.display=timerSecs>0?'inline-block':'none';}
+
+// ===================== ADVANCED NATIVE FEATURES =====================
+function saveWorkoutNote(){var el=document.getElementById('workout-note'),t=el?el.value.trim():'';if(!t)return;if(!S.notes)S.notes={};S.notes[todayStr()]=t;save();render();}
+function clearWorkoutNote(){if(S.notes)delete S.notes[todayStr()];save();render();}
+function setWeeklyGoal(){var el=document.getElementById('weekly-goal'),v=el?+el.value:0;if(v<1)return;if(!S.goals)S.goals={weekly:4};S.goals.weekly=Math.max(1,Math.min(7,Math.round(v)));save();render();}
+function saveTemplate(){var ids=planEx(viewDay);if(!ids.length)return;var name=prompt('Template name',dayLabel(viewDay)+' workout');if(!name)return;if(!S.templates)S.templates={};S.templates['t_'+Date.now().toString(36)]={name:name,ex:ids.slice(),created:todayStr()};save();render();}
+function applyTemplate(tid,dk){var t=S.templates&&S.templates[tid];if(!t)return;ensureProfileEdits();var base=workoutOf(dk);S.profile.del[dk]=base&&base.ex?base.ex.slice():[];S.profile.add[dk]=t.ex.slice();save();viewDay=dk;tab='today';render();}
+function deleteTemplate(tid){if(S.templates)delete S.templates[tid];save();render();}
+var morePage='menu';
+function setMorePage(p){morePage=p;render();}
+function moreBack(){morePage='menu';render();}
+function navTo(t,p){if(p)morePage=p;setTab(t);}
+function avgRpeWeek(){var ds=weekDates(),vals=[];for(var id in S.logs)logsOf(id).forEach(function(l){if(ds.indexOf(l.d)>=0)l.sets.forEach(function(s){if(s&&s.rpe)vals.push(+s.rpe);});});return vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1):'—';}
+function rpeCountWeek(){var ds=weekDates(),n=0;for(var id in S.logs)logsOf(id).forEach(function(l){if(ds.indexOf(l.d)>=0)l.sets.forEach(function(s){if(s&&s.rpe)n++;});});return n;}
 
 // in-progress onboarding choices
 var obSplit=null, obSched=null;
@@ -1700,6 +1557,7 @@ function todayView(){
      '<input id="w-'+i+'-'+si+'" type="number" inputmode="decimal" placeholder="'+(rec.w||'lb')+'" value="'+(pv?pv.w:'')+'">'+
      '<span class="x">lb ×</span>'+
      '<input id="r-'+i+'-'+si+'" type="number" inputmode="numeric" placeholder="'+(timeBased?'sec':'reps')+'" value="'+(pv?pv.r:'')+'">'+
+     '<select id="rp-'+i+'-'+si+'" class="rpe-select" title="Rate of perceived exertion"><option value="">RPE</option>'+[6,7,8,9,10].map(function(x){return '<option value="'+x+'"'+(pv&&pv.rpe===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select>'+
      '<button onclick="logSet(\''+id+'\','+i+','+si+','+ex.rest+')" aria-label="Log set" style="width:40px;height:40px;border-radius:9px;flex-shrink:0;border:2px solid '+(pv?'#22C36A':hex)+';background:'+(pv?'#22C36A':'transparent')+';color:'+(pv?'#fff':hex)+';font-weight:700">✓</button>'+
      (pr?'<span style="color:#22C36A;font-weight:700;font-size:12px">★</span>':'')+'</div>';
    }
@@ -1721,6 +1579,16 @@ function todayView(){
   }
   html+='</div>';
  });
+
+ // native session notes + template controls
+ if(isToday){
+  var wn=(S.notes&&S.notes[todayStr()])||'';
+  html+='<div class="card"><div class="eyebrow">SESSION NOTES</div><h3 style="margin:3px 0 8px">How did the workout feel?</h3>'+ 
+   '<textarea id="workout-note" class="inp workout-note" rows="3" placeholder="Energy, soreness, difficult sets, technique cues…">'+esc(wn)+'</textarea>'+ 
+   '<div class="row" style="margin-top:9px"><button class="ghost-btn" style="flex:1;color:var(--chalk)" onclick="saveWorkoutNote()">Save note</button>'+ 
+   (wn?'<button class="ghost-btn" style="color:#E4573D" onclick="clearWorkoutNote()">Clear</button>':'')+'</div></div>';
+ }
+ html+='<div class="card compact-action"><div><div class="eyebrow">WORKOUT TEMPLATE</div><div style="font-weight:750;margin-top:2px">Reuse this exercise lineup</div></div><button class="ghost-btn" style="color:var(--chalk)" onclick="saveTemplate()">Save template</button></div>';
 
  // add custom exercise (available on any workout day, not just today)
  if(true){
@@ -1777,6 +1645,18 @@ function bodyView(){
  if(S.body.length)html+='<div class="card"><details><summary style="cursor:pointer;font-weight:700">Other body entries</summary><div style="margin-top:8px">'+S.body.slice().reverse().slice(0,20).map(function(b){return '<div class="hist-row"><span class="sub">'+b.d+'</span><span>'+(b.w?b.w+' lb':'')+(b.wa?' · '+b.wa+' in':'')+'</span></div>';}).join('')+'</div></details></div>';
  return html;
 }
+function progressView(){
+ var wd=weekDates(),lifts=wd.filter(liftDoneOn).length,goal=(S.goals&&S.goals.weekly)||4,vol=weekVolume(),pct=Math.min(100,Math.round(lifts/goal*100));
+ var bw=latestSundayWeights(),notes=Object.keys(S.notes||{}).sort().slice(-4).reverse();
+ var html=headerHtml('Progress','pb');
+ html+='<div class="card"><div class="progress-head"><div><div class="eyebrow">WEEKLY GOAL</div><div class="display big">'+lifts+' / '+goal+'</div></div><div class="progress-ring"><b>'+pct+'%</b><span>done</span></div></div><div class="progress-track"><i style="width:'+pct+'%"></i></div><div class="row goal-row"><span class="sub">Workouts per week</span><input id="weekly-goal" class="inp" type="number" min="1" max="7" value="'+goal+'"><button class="ghost-btn" style="color:var(--chalk)" onclick="setWeeklyGoal()">Save</button></div></div>';
+ html+='<div class="grid2"><div class="card"><div class="eyebrow">Week volume</div><div class="display big">'+(vol?Math.round(vol/1000)+'k':'—')+'</div><div class="sub">lb lifted</div></div><div class="card"><div class="eyebrow">Average RPE</div><div class="display big">'+avgRpeWeek()+'</div><div class="sub">'+rpeCountWeek()+' rated sets</div></div><div class="card"><div class="eyebrow">PR sessions</div><div class="display big">★ '+allPRs()+'</div></div><div class="card"><div class="eyebrow">Consistency</div><div class="display big">'+weeksCompleted()+'</div><div class="sub">weeks with 3+ lifts</div></div></div>';
+ html+='<div class="card"><h3>Training volume · 8 weeks</h3>'+barChart(volumeByWeek(8),'#3B6FF5')+'<p class="sub" style="margin:8px 0 0">Volume plus RPE helps you judge progressive overload without relying on weight alone.</p></div>';
+ html+='<div class="card"><div class="card-headline"><h3>Body-weight trend</h3><button class="ghost-btn" style="color:#2F7DE1" onclick="navTo(\'more\',\'body\')">Open body</button></div>'+(bw.length?spark(bw.map(function(x){return x.w;}),'#2F7DE1')+bw.slice(-5).reverse().map(function(x){return '<div class="hist-row"><span class="sub">'+x.d+'</span><b>'+x.w+' lb</b></div>';}).join(''):'<p class="sub">No Sunday weigh-ins yet.</p>')+'</div>';
+ html+='<div class="card"><div class="card-headline"><h3>Recent workout notes</h3><button class="ghost-btn" style="color:var(--chalk)" onclick="setTab(\'today\')">Add note</button></div>'+(notes.length?notes.map(function(k){return '<div class="note-entry"><div class="eyebrow">'+k+'</div><div class="sub">'+esc(S.notes[k])+'</div></div>';}).join(''):'<p class="sub">No session notes yet.</p>')+'</div>';
+ return html;
+}
+
 function dashView(){
  var wd=weekDates(),ph=phase();
  var lifts=wd.filter(liftDoneOn).length,pbs=wd.filter(function(d){return actDoneOn(d)||S.pb[d];}).length,vol=weekVolume();
@@ -2075,9 +1955,22 @@ function foodView(){
  return html;
 }
 
+function moreView(){
+ if(morePage==='body')return '<button class="section-back" onclick="moreBack()">← More</button>'+bodyView();
+ if(morePage==='history')return '<button class="section-back" onclick="moreBack()">← More</button>'+historyView();
+ if(morePage==='plan')return '<button class="section-back" onclick="moreBack()">← More</button>'+planView();
+ var html=headerHtml('More','upper'),ts=Object.keys(S.templates||{});
+ html+='<div class="tool-grid"><button class="tool-card" onclick="setMorePage(\'body\')"><span>⚖️</span><b>Body & weight</b><small>Sunday check-ins and waist</small></button><button class="tool-card" onclick="setMorePage(\'history\')"><span>📈</span><b>Exercise history</b><small>Sets, PRs and estimated 1RM</small></button><button class="tool-card" onclick="setMorePage(\'plan\')"><span>🗓️</span><b>The plan</b><small>Calories, protein and progression</small></button><button class="tool-card" onclick="editProfile()"><span>👤</span><b>Profile</b><small>Schedule, split and goals</small></button></div>';
+ html+='<div class="card"><div class="card-headline"><h3>Workout templates</h3><span class="sub">'+ts.length+' saved</span></div>';
+ if(ts.length)ts.forEach(function(id){var t=S.templates[id];html+='<div class="hist-row"><span><b>'+esc(t.name)+'</b><span class="sub"> · '+t.ex.length+' exercises</span></span><span><button class="ghost-btn mini-action" onclick="applyTemplate(\''+id+'\',\''+viewDay+'\')">Use</button> <button class="x-btn" onclick="deleteTemplate(\''+id+'\')">×</button></span></div>';});else html+='<p class="sub">Save any workout lineup as a template from the Workout screen.</p>';
+ html+='</div><div class="card"><h3>Backup & restore</h3><p class="sub">Export a copy before changing devices.</p><div class="row"><button class="ghost-btn" style="flex:1;color:var(--chalk)" onclick="exportData()">Export backup</button><label class="ghost-btn" style="flex:1;text-align:center;color:var(--chalk)">Restore<input type="file" accept=".json" style="display:none" onchange="importData(this)"></label></div></div>';
+ html+='<div class="card"><div class="eyebrow">ACCOUNT</div><p class="sub">'+(authUser&&authUser.email?'Synced as '+esc(authUser.email):'Signed in')+'</p><button class="ghost-btn" style="width:100%;color:var(--chalk)" onclick="signOut()">Sign out</button></div>';
+ return html;
+}
+
 // ===================== RENDER =====================
-var TABS=[['home','◆','Home'],['today','▶','Workout'],['food','🍴','Food'],['dash','▦','Dashboard']];
-var VIEWS={home:homeView,today:todayView,food:foodView,dash:dashView};
+var TABS=[['home','◆','Home'],['today','▶','Workout'],['progress','▦','Progress'],['food','🍴','Food'],['more','☰','More']];
+var VIEWS={home:homeView,today:todayView,progress:progressView,food:foodView,more:moreView,dash:dashView};
 
 function loginView(){
  return '<header style="padding-top:60px"><div class="eyebrow">Training Week</div>'+
@@ -2142,8 +2035,9 @@ initAuth(function(){render();});
       var key=(e.key||'').toLowerCase();
       if(key==='1') window.setTab && window.setTab('home');
       if(key==='2') window.setTab && window.setTab('today');
-      if(key==='3') window.setTab && window.setTab('food');
-      if(key==='4') window.setTab && window.setTab('dash');
+      if(key==='3') window.setTab && window.setTab('progress');
+      if(key==='4') window.setTab && window.setTab('food');
+      if(key==='5') window.setTab && window.setTab('more');
     };
   }
 
@@ -2155,212 +2049,6 @@ initAuth(function(){render();});
     };
   }
   document.addEventListener('DOMContentLoaded',enhance);
-})();
-
-</script>
-
-<script>
-/* =========================================================
-   ADVANCED WORKOUT FEATURES
-   Uses localStorage so the app remains offline-friendly.
-   ========================================================= */
-(function(){
-  const KEY='tw_advanced_v1';
-  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
-  const save=(x)=>localStorage.setItem(KEY,JSON.stringify(x));
-  let db=load();
-  db.completed = db.completed || {};
-  db.pr = db.pr || {};
-  db.notes = db.notes || {};
-  db.body = db.body || {};
-  db.goal = db.goal || {weekly:4};
-  db.timer = db.timer || {seconds:60};
-  db.templates = db.templates || [];
-
-  function toast(msg){
-    let el=document.querySelector('.aw-toast');
-    if(!el){el=document.createElement('div');el.className='aw-toast';document.body.appendChild(el)}
-    el.textContent=msg;el.classList.add('show');
-    clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1800);
-  }
-  function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-  function dayKey(d=new Date()){return d.toISOString().slice(0,10)}
-  function weekStart(d=new Date()){
-    let x=new Date(d); x.setHours(0,0,0,0);
-    let n=x.getDay(); x.setDate(x.getDate()-(n===0?6:n-1)); return x.toISOString().slice(0,10)
-  }
-  function setTabSafe(tab){
-    if(window.setTab) window.setTab(tab);
-    else {
-      const b=[...document.querySelectorAll('#tabbar button')].find(x=>(x.getAttribute('onclick')||'').includes(tab));
-      if(b)b.click();
-    }
-    setTimeout(renderAdvanced,120);
-  }
-  window.awSetTab=setTabSafe;
-
-  function calcStats(){
-    const keys=Object.keys(db.completed);
-    const total=keys.reduce((a,k)=>a+(db.completed[k]||0),0);
-    const weeks=new Set(keys.map(k=>weekStart(new Date(k)))).size;
-    const today=dayKey();
-    const recent=keys.filter(k=>k>=new Date(Date.now()-6*864e5).toISOString().slice(0,10)).reduce((a,k)=>a+(db.completed[k]||0),0);
-    return {total,weeks,recent};
-  }
-
-  function dashboardHTML(){
-    const s=calcStats();
-    const weeklyGoal=Number(db.goal.weekly)||4;
-    const pct=Math.min(100,Math.round(s.recent/weeklyGoal*100));
-    const weights=Object.entries(db.body).sort((a,b)=>a[0].localeCompare(b[0]));
-    const lastWeight=weights.length?weights[weights.length-1][1]:null;
-    const prevWeight=weights.length>1?weights[weights.length-2][1]:null;
-    const delta=lastWeight&&prevWeight ? (lastWeight-prevWeight).toFixed(1):'—';
-    const prs=Object.entries(db.pr).slice(-5).reverse();
-
-    return `
-      <section class="aw-panel">
-        <div class="aw-panel-title"><strong>Training overview</strong><span class="aw-muted">This week</span></div>
-        <div class="aw-kpis">
-          <div class="aw-kpi"><b>${s.recent}</b><span>WORKOUTS</span></div>
-          <div class="aw-kpi"><b>${weeklyGoal}</b><span>WEEKLY GOAL</span></div>
-          <div class="aw-kpi"><b>${s.total}</b><span>TOTAL LOGS</span></div>
-          <div class="aw-kpi"><b>${lastWeight?esc(lastWeight)+' lb':'—'}</b><span>SUNDAY WEIGHT</span></div>
-        </div>
-        <div class="aw-progress"><i style="width:${pct}%"></i></div>
-        <div class="aw-muted" style="margin-top:7px">${pct}% of weekly goal completed</div>
-      </section>
-
-      <section class="aw-panel">
-        <div class="aw-panel-title"><strong>Quick actions</strong><span class="aw-muted">One tap</span></div>
-        <div class="aw-actions">
-          <button class="aw-action" onclick="awOpenWorkout()"><div class="aw-action-icon">▶️</div><strong>Start workout</strong><small>Open today's session</small></button>
-          <button class="aw-action" onclick="awOpenTimer()"><div class="aw-action-icon">⏱️</div><strong>Rest timer</strong><small>Start a quick timer</small></button>
-          <button class="aw-action" onclick="awOpenBody()"><div class="aw-action-icon">⚖️</div><strong>Log weight</strong><small>Sunday check-in</small></button>
-          <button class="aw-action" onclick="awOpenNote()"><div class="aw-action-icon">📝</div><strong>Workout note</strong><small>Save how you felt</small></button>
-        </div>
-      </section>
-
-      <section class="aw-panel">
-        <div class="aw-panel-title"><strong>Progress signals</strong><span class="aw-muted">Recent</span></div>
-        <div class="aw-pr"><div class="num">Weight</div><div class="bar"><div class="aw-progress"><i style="width:${lastWeight?65:0}%"></i></div></div><div class="trend">${delta==='—'?'—':(delta>0?'+':'')+delta+' lb'}</div></div>
-        ${prs.length?prs.map(([k,v])=>`<div class="aw-pr"><div class="num">${esc(k)}</div><div class="bar"><div class="aw-progress"><i style="width:82%"></i></div></div><div class="trend">${esc(v)} lb</div></div>`).join(''):'<div class="aw-empty">Your personal records will appear here as you log them.</div>'}
-      </section>
-    `;
-  }
-
-  function injectHomePanel(){
-    const app=document.getElementById('app'); if(!app)return;
-    if(document.querySelector('.aw-home-panel'))return;
-    const el=document.createElement('div'); el.className='aw-home-panel';
-    el.innerHTML=dashboardHTML();
-    // Put it before the first main card so it feels like a dashboard.
-    const target=app.querySelector('.card');
-    if(target) target.parentNode.insertBefore(el,target);
-    else app.appendChild(el);
-  }
-
-  function modal(id,title,body){
-    let m=document.getElementById(id);
-    if(!m){
-      m=document.createElement('div');m.id=id;m.className='aw-modal';
-      m.innerHTML=`<div class="aw-sheet"><div class="aw-sheet-head"><strong>${title}</strong><button class="aw-close" onclick="awClose('${id}')">×</button></div>${body}</div>`;
-      document.body.appendChild(m);
-    }
-    m.classList.add('open');
-    return m;
-  }
-  window.awClose=id=>document.getElementById(id)?.classList.remove('open');
-
-  window.awOpenTimer=()=>{
-    const m=modal('awTimer','Rest timer',`
-      <div style="text-align:center;padding:20px 0"><div id="awTimerDisplay" style="font-size:52px;font-weight:850;letter-spacing:-.04em">01:00</div>
-      <div class="aw-muted">Quick rest timer</div></div>
-      <div class="aw-actions">
-        <button class="aw-action" onclick="awTimerStart(30)"><strong>30 sec</strong></button>
-        <button class="aw-action" onclick="awTimerStart(60)"><strong>60 sec</strong></button>
-        <button class="aw-action" onclick="awTimerStart(90)"><strong>90 sec</strong></button>
-        <button class="aw-action" onclick="awTimerStart(120)"><strong>2 min</strong></button>
-      </div>
-    `);
-  };
-  let timerHandle=null;
-  window.awTimerStart=(sec)=>{
-    clearInterval(timerHandle); let left=sec;
-    const d=document.getElementById('awTimerDisplay');
-    const tick=()=>{if(!d)return;d.textContent=`${String(Math.floor(left/60)).padStart(2,'0')}:${String(left%60).padStart(2,'0')}`;if(left<=0){clearInterval(timerHandle);toast('Rest complete — next set!')}left--};
-    tick();timerHandle=setInterval(tick,1000);
-  };
-
-  window.awOpenWorkout=()=>{setTabSafe('today');toast("Today's workout opened")};
-
-  window.awOpenBody=()=>{
-    const today=new Date(); const sunday=today.getDay()===0;
-    modal('awBody','Sunday body-weight check-in',`
-      <div class="aw-muted" style="margin-top:5px">${sunday?'Today is Sunday — great time for your weekly check-in.':'Weekly body weight is designed for Sunday check-ins.'}</div>
-      <form class="aw-form" onsubmit="awSaveBody(event)">
-        <div class="full"><label class="aw-label">Date</label><input class="aw-field" id="awBodyDate" type="date" value="${dayKey()}"></div>
-        <div class="full"><label class="aw-label">Body weight (lb)</label><input class="aw-field" id="awBodyWeight" type="number" step="0.1" min="1" placeholder="e.g. 198.4" required></div>
-        <button class="aw-submit">Save Sunday weight</button>
-      </form>
-    `);
-  };
-  window.awSaveBody=(e)=>{
-    e.preventDefault();
-    const d=document.getElementById('awBodyDate').value,w=Number(document.getElementById('awBodyWeight').value);
-    if(!d||!w)return;
-    db.body[d]=w;save(db);awClose('awBody');renderAdvanced();toast('Body weight saved');
-  };
-
-  window.awOpenNote=()=>{
-    modal('awNote','Workout note',`
-      <form class="aw-form" onsubmit="awSaveNote(event)">
-        <div class="full"><label class="aw-label">Date</label><input class="aw-field" id="awNoteDate" type="date" value="${dayKey()}"></div>
-        <div class="full"><label class="aw-label">How did the workout feel?</label><textarea class="aw-field" id="awNoteText" rows="5" placeholder="Energy, soreness, difficult sets, sleep, anything worth remembering…"></textarea></div>
-        <button class="aw-submit">Save note</button>
-      </form>
-    `);
-  };
-  window.awSaveNote=(e)=>{
-    e.preventDefault();
-    const d=document.getElementById('awNoteDate').value,t=document.getElementById('awNoteText').value.trim();
-    if(!t)return;
-    db.notes[d]=t;save(db);awClose('awNote');toast('Workout note saved');
-  };
-
-  function addWorkoutLogButton(){
-    const btns=[...document.querySelectorAll('button,.go-btn')];
-    btns.forEach(b=>{
-      const t=(b.textContent||'').trim().toLowerCase();
-      if(t.includes('complete') && !b.dataset.awBound){
-        b.dataset.awBound='1';
-        b.addEventListener('click',()=>{const d=dayKey();db.completed[d]=(db.completed[d]||0)+1;save(db);setTimeout(renderAdvanced,100);toast('Workout logged ✓')});
-      }
-    });
-  }
-
-  function renderAdvanced(){
-    injectHomePanel();
-    const panel=document.querySelector('.aw-home-panel');
-    if(panel && document.querySelector('#app')) panel.innerHTML=dashboardHTML();
-    addWorkoutLogButton();
-  }
-
-  // Small persistent navigation helper.
-  function injectHelpers(){
-    if(!document.querySelector('.aw-timer-fab')){
-      const f=document.createElement('button');f.className='aw-timer-fab';f.textContent='⏱ Rest';f.onclick=awOpenTimer;document.body.appendChild(f);
-    }
-    if(!document.querySelector('.aw-toast')){const t=document.createElement('div');t.className='aw-toast';document.body.appendChild(t)}
-  }
-
-  // Observe app re-renders because the original app is single-page and dynamically replaces DOM.
-  const obs=new MutationObserver(()=>{injectHelpers();renderAdvanced()});
-  const start=()=>{
-    injectHelpers();renderAdvanced();
-    const app=document.getElementById('app'); if(app)obs.observe(app,{childList:true,subtree:true});
-  };
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
 
 </script>
