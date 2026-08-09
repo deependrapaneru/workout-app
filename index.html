@@ -94,6 +94,13 @@ h1{font-size:30px;margin:2px 0 0;text-transform:uppercase;line-height:1.05}
 .detail dd{margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .chip{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;border:1px solid var(--brd-soft2);color:var(--dim)}
+.chip-on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.food-list{max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.food-item{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:10px 4px;border:none;border-bottom:1px solid var(--shadow);background:transparent;color:var(--chalk)}
+.food-name{font-size:13.5px;font-weight:500}
+.food-macro{font-size:11.5px;color:var(--dim);flex-shrink:0;margin-left:8px}
+.food-per{opacity:.6;font-size:10px}
+.x-btn{border:none;background:transparent;color:var(--red);font-size:17px;font-weight:700;padding:0 2px 0 8px;cursor:pointer}
 .micon-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .micon{display:flex;flex-direction:column;align-items:center;gap:4px;width:58px}
 .micon img{width:52px;height:52px;border-radius:14px;border:2.5px solid;object-fit:cover;background:var(--sw)}
@@ -276,7 +283,7 @@ function actDaysPerWeek(){return DAYS.filter(function(dk){return dayType(dk)==='
 var KEY='training-week';
 var mem=null;
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
-function blank(){return {start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null};}
+function blank(){return {start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null,food:{}};}
 // ensure profile has containers for custom exercises / per-day edits
 function ensureProfileEdits(){if(!S.profile)return;
  if(!S.profile.custom)S.profile.custom={};
@@ -355,8 +362,186 @@ function signInGoogle(){
 function signOut(){var c=sbClient();if(c)c.auth.signOut();authUser=null;render();}
 function hasSession(){return !!authUser;}
 
+var FOODS=[
+{id:'roti',n:'Roti / Chapati',c:'Nepali',k:297,p:11,cb:50,f:7,fi:4,pn:'1 medium',pg:40},
+{id:'rice_w',n:'Steamed Rice',c:'Nepali',k:130,p:2.7,cb:28,f:0.3,fi:0.4,pn:'1 cup cooked',pg:158},
+{id:'dalbhat_dal',n:'Dal (lentil soup)',c:'Nepali',k:116,p:9,cb:20,f:0.4,fi:8,pn:'1 bowl',pg:200},
+{id:'bhat_jeera',n:'Jeera Rice',c:'Nepali',k:150,p:3,cb:29,f:2.5,fi:0.5,pn:'1 cup',pg:160},
+{id:'dhindo',n:'Dhido (millet/buckwheat)',c:'Nepali',k:120,p:3.5,cb:25,f:0.8,fi:3,pn:'1 serving',pg:180},
+{id:'sel_roti',n:'Sel Roti',c:'Nepali',k:380,p:5,cb:60,f:14,fi:1.5,pn:'1 ring',pg:70},
+{id:'momo_veg',n:'Momo (veg)',c:'Nepali',k:180,p:6,cb:26,f:6,fi:2,pn:'per piece',pg:35},
+{id:'momo_chicken',n:'Momo (chicken)',c:'Nepali',k:210,p:10,cb:22,f:9,fi:1.5,pn:'per piece',pg:38},
+{id:'momo_buff',n:'Momo (buff)',c:'Nepali',k:230,p:11,cb:22,f:11,fi:1.5,pn:'per piece',pg:40},
+{id:'chowmein',n:'Chow Mein (veg)',c:'Nepali',k:180,p:5,cb:27,f:6,fi:3,pn:'1 plate',pg:250},
+{id:'chowmein_ch',n:'Chow Mein (chicken)',c:'Nepali',k:210,p:10,cb:26,f:8,fi:2.5,pn:'1 plate',pg:260},
+{id:'thukpa',n:'Thukpa',c:'Nepali',k:120,p:7,cb:16,f:3,fi:2,pn:'1 bowl',pg:350},
+{id:'aloo_tama',n:'Aloo Tama (potato-bamboo)',c:'Nepali',k:95,p:3,cb:15,f:3,fi:4,pn:'1 bowl',pg:200},
+{id:'gundruk',n:'Gundruk soup',c:'Nepali',k:60,p:4,cb:8,f:1,fi:5,pn:'1 bowl',pg:180},
+{id:'saag',n:'Saag (leafy greens)',c:'Nepali',k:80,p:3,cb:7,f:5,fi:4,pn:'1 serving',pg:120},
+{id:'tarkari',n:'Mixed Veg Tarkari',c:'Nepali',k:110,p:3,cb:12,f:6,fi:4,pn:'1 serving',pg:150},
+{id:'aloo_dum',n:'Aloo Dum',c:'Nepali',k:140,p:3,cb:20,f:6,fi:3,pn:'1 serving',pg:150},
+{id:'chana_curry',n:'Chana (chickpea) curry',c:'Nepali',k:180,p:9,cb:22,f:6,fi:7,pn:'1 bowl',pg:200},
+{id:'rajma',n:'Rajma (kidney bean)',c:'Nepali',k:140,p:8,cb:20,f:3,fi:7,pn:'1 bowl',pg:200},
+{id:'kwati',n:'Kwati (mixed bean)',c:'Nepali',k:150,p:10,cb:22,f:3,fi:8,pn:'1 bowl',pg:200},
+{id:'chicken_curry',n:'Chicken Curry',c:'Nepali',k:180,p:18,cb:5,f:10,fi:1,pn:'1 serving',pg:180},
+{id:'mutton_curry',n:'Mutton Curry',c:'Nepali',k:250,p:20,cb:4,f:17,fi:1,pn:'1 serving',pg:180},
+{id:'fish_curry',n:'Fish Curry',c:'Nepali',k:150,p:17,cb:4,f:7,fi:0.5,pn:'1 serving',pg:180},
+{id:'buff_curry',n:'Buff Curry',c:'Nepali',k:210,p:20,cb:4,f:13,fi:0.8,pn:'1 serving',pg:180},
+{id:'egg_curry',n:'Egg Curry',c:'Nepali',k:160,p:10,cb:6,f:11,fi:1,pn:'1 serving',pg:150},
+{id:'chicken_choila',n:'Chicken Choila',c:'Nepali',k:190,p:22,cb:3,f:10,fi:1,pn:'1 serving',pg:120},
+{id:'buff_choila',n:'Buff Choila',c:'Nepali',k:230,p:21,cb:3,f:15,fi:1,pn:'1 serving',pg:120},
+{id:'sekuwa',n:'Sekuwa (grilled meat)',c:'Nepali',k:200,p:24,cb:2,f:11,fi:0.5,pn:'1 skewer',pg:100},
+{id:'aloo_chop',n:'Aloo Chop',c:'Nepali',k:250,p:4,cb:30,f:13,fi:3,pn:'per piece',pg:80},
+{id:'samosa',n:'Samosa',c:'Nepali',k:260,p:5,cb:32,f:13,fi:3,pn:'per piece',pg:60},
+{id:'pakora',n:'Pakora',c:'Nepali',k:280,p:7,cb:28,f:16,fi:4,pn:'1 serving',pg:80},
+{id:'bara',n:'Bara (lentil patty)',c:'Nepali',k:210,p:12,cb:20,f:10,fi:5,pn:'per piece',pg:90},
+{id:'chatamari',n:'Chatamari',c:'Nepali',k:190,p:8,cb:26,f:6,fi:2,pn:'per piece',pg:120},
+{id:'yomari',n:'Yomari',c:'Nepali',k:250,p:5,cb:45,f:6,fi:2,pn:'per piece',pg:90},
+{id:'dahi',n:'Dahi (yogurt)',c:'Nepali',k:60,p:3.5,cb:5,f:3,fi:0,pn:'1 bowl',pg:150},
+{id:'juju_dhau',n:'Juju Dhau (sweet yogurt)',c:'Nepali',k:110,p:4,cb:15,f:4,fi:0,pn:'1 bowl',pg:150},
+{id:'chiura',n:'Chiura (beaten rice)',c:'Nepali',k:350,p:7,cb:77,f:1,fi:3,pn:'1 cup',pg:90},
+{id:'bhatmas',n:'Bhatmas (fried soybean)',c:'Nepali',k:450,p:36,cb:30,f:22,fi:9,pn:'1 handful',pg:40},
+{id:'achar_tomato',n:'Tomato Achar',c:'Nepali',k:70,p:2,cb:9,f:3,fi:2,pn:'1 tbsp',pg:20},
+{id:'achar_mula',n:'Mula (radish) Achar',c:'Nepali',k:50,p:1.5,cb:7,f:2,fi:3,pn:'1 tbsp',pg:20},
+{id:'gorkhali_lamb',n:'Gorkhali Lamb',c:'Nepali',k:270,p:19,cb:6,f:19,fi:1,pn:'1 serving',pg:180},
+{id:'sukuti',n:'Sukuti (dried meat)',c:'Nepali',k:410,p:55,cb:3,f:20,fi:0,pn:'1 serving',pg:50},
+{id:'phapar_roti',n:'Buckwheat Roti',c:'Nepali',k:270,p:10,cb:50,f:3,fi:7,pn:'1 medium',pg:45},
+{id:'makai',n:'Boiled Corn',c:'Nepali',k:96,p:3.4,cb:21,f:1.5,fi:2.4,pn:'1 ear',pg:100},
+{id:'puri',n:'Puri (fried bread)',c:'Nepali',k:380,p:7,cb:45,f:19,fi:2,pn:'per piece',pg:30},
+{id:'halwa',n:'Suji Halwa',c:'Nepali',k:380,p:5,cb:50,f:18,fi:1,pn:'1 serving',pg:100},
+{id:'kheer',n:'Kheer (rice pudding)',c:'Nepali',k:150,p:4,cb:25,f:4,fi:0.5,pn:'1 bowl',pg:180},
+{id:'lassi',n:'Lassi',c:'Nepali',k:90,p:3,cb:14,f:2.5,fi:0,pn:'1 glass',pg:250},
+{id:'masu_bhat',n:'Masu Bhat (meat+rice plate)',c:'Nepali',k:210,p:12,cb:28,f:6,fi:2,pn:'1 plate',pg:400},
+{id:'veg_pulao',n:'Veg Pulao',c:'Nepali',k:170,p:4,cb:28,f:5,fi:2,pn:'1 cup',pg:180},
+{id:'paneer_curry',n:'Paneer Curry',c:'Nepali',k:240,p:12,cb:8,f:18,fi:1.5,pn:'1 serving',pg:150},
+{id:'naan',n:'Naan',c:'Nepali',k:310,p:9,cb:50,f:8,fi:2,pn:'1 piece',pg:90},
+{id:'biryani_ch',n:'Chicken Biryani',c:'Nepali',k:200,p:10,cb:25,f:7,fi:2,pn:'1 plate',pg:300},
+{id:'paneer_tikka',n:'Paneer Tikka',c:'Nepali',k:270,p:15,cb:8,f:20,fi:1,pn:'1 serving',pg:150},
+{id:'dal_makhani',n:'Dal Makhani',c:'Nepali',k:190,p:7,cb:18,f:10,fi:6,pn:'1 bowl',pg:200},
+{id:'gulab_jamun',n:'Gulab Jamun',c:'Nepali',k:340,p:4,cb:55,f:12,fi:0.5,pn:'per piece',pg:40},
+{id:'jalebi',n:'Jalebi',c:'Nepali',k:380,p:3,cb:65,f:12,fi:0.3,pn:'per piece',pg:25},
+{id:'raita',n:'Raita',c:'Nepali',k:60,p:2.5,cb:6,f:3,fi:0.5,pn:'1 bowl',pg:120},
+{id:'chicken_breast',n:'Chicken Breast (grilled)',c:'American',k:165,p:31,cb:0,f:3.6,fi:0,pn:'1 fillet',pg:120},
+{id:'chicken_thigh',n:'Chicken Thigh',c:'American',k:209,p:26,cb:0,f:11,fi:0,pn:'1 thigh',pg:110},
+{id:'ground_beef',n:'Ground Beef (85%)',c:'American',k:250,p:26,cb:0,f:15,fi:0,pn:'1 patty',pg:120},
+{id:'steak',n:'Sirloin Steak',c:'American',k:210,p:27,cb:0,f:11,fi:0,pn:'1 steak',pg:170},
+{id:'salmon',n:'Salmon',c:'American',k:208,p:20,cb:0,f:13,fi:0,pn:'1 fillet',pg:150},
+{id:'tuna_can',n:'Canned Tuna',c:'American',k:116,p:26,cb:0,f:1,fi:0,pn:'1 can',pg:100},
+{id:'shrimp',n:'Shrimp',c:'American',k:99,p:24,cb:0.2,f:0.3,fi:0,pn:'1 serving',pg:100},
+{id:'pork_chop',n:'Pork Chop',c:'American',k:231,p:25,cb:0,f:14,fi:0,pn:'1 chop',pg:130},
+{id:'bacon',n:'Bacon',c:'American',k:541,p:37,cb:1.4,f:42,fi:0,pn:'1 strip',pg:12},
+{id:'egg',n:'Egg (whole)',c:'American',k:143,p:13,cb:0.7,f:10,fi:0,pn:'1 large',pg:50},
+{id:'egg_white',n:'Egg White',c:'American',k:52,p:11,cb:0.7,f:0.2,fi:0,pn:'1 white',pg:33},
+{id:'oatmeal',n:'Oatmeal (cooked)',c:'American',k:71,p:2.5,cb:12,f:1.5,fi:1.7,pn:'1 cup',pg:234},
+{id:'white_bread',n:'White Bread',c:'American',k:265,p:9,cb:49,f:3.2,fi:2.7,pn:'1 slice',pg:28},
+{id:'wheat_bread',n:'Whole Wheat Bread',c:'American',k:247,p:13,cb:41,f:3.4,fi:7,pn:'1 slice',pg:28},
+{id:'bagel',n:'Bagel',c:'American',k:250,p:10,cb:48,f:1.5,fi:2,pn:'1 bagel',pg:100},
+{id:'pancake',n:'Pancakes',c:'American',k:227,p:6,cb:28,f:10,fi:1,pn:'1 pancake',pg:77},
+{id:'waffle',n:'Waffle',c:'American',k:291,p:8,cb:33,f:14,fi:2,pn:'1 waffle',pg:75},
+{id:'cereal',n:'Cereal (avg)',c:'American',k:379,p:8,cb:84,f:3,fi:7,pn:'1 cup',pg:40},
+{id:'greek_yogurt',n:'Greek Yogurt (plain)',c:'American',k:97,p:10,cb:3.6,f:5,fi:0,pn:'1 cup',pg:245},
+{id:'yogurt',n:'Yogurt (plain)',c:'American',k:59,p:10,cb:3.6,f:0.4,fi:0,pn:'1 cup',pg:245},
+{id:'milk',n:'Milk (2%)',c:'American',k:50,p:3.4,cb:4.8,f:2,fi:0,pn:'1 cup',pg:244},
+{id:'cheese_ch',n:'Cheddar Cheese',c:'American',k:403,p:25,cb:1.3,f:33,fi:0,pn:'1 slice',pg:28},
+{id:'cottage_cheese',n:'Cottage Cheese',c:'American',k:98,p:11,cb:3.4,f:4.3,fi:0,pn:'1/2 cup',pg:113},
+{id:'butter',n:'Butter',c:'American',k:717,p:0.9,cb:0.1,f:81,fi:0,pn:'1 tbsp',pg:14},
+{id:'peanut_butter',n:'Peanut Butter',c:'American',k:588,p:25,cb:20,f:50,fi:6,pn:'1 tbsp',pg:16},
+{id:'almond',n:'Almonds',c:'American',k:579,p:21,cb:22,f:50,fi:12,pn:'1 handful',pg:28},
+{id:'walnut',n:'Walnuts',c:'American',k:654,p:15,cb:14,f:65,fi:7,pn:'1 handful',pg:28},
+{id:'cashew',n:'Cashews',c:'American',k:553,p:18,cb:30,f:44,fi:3,pn:'1 handful',pg:28},
+{id:'banana',n:'Banana',c:'American',k:89,p:1.1,cb:23,f:0.3,fi:2.6,pn:'1 medium',pg:118},
+{id:'apple',n:'Apple',c:'American',k:52,p:0.3,cb:14,f:0.2,fi:2.4,pn:'1 medium',pg:182},
+{id:'orange',n:'Orange',c:'American',k:47,p:0.9,cb:12,f:0.1,fi:2.4,pn:'1 medium',pg:131},
+{id:'grapes',n:'Grapes',c:'American',k:69,p:0.7,cb:18,f:0.2,fi:0.9,pn:'1 cup',pg:151},
+{id:'strawberry',n:'Strawberries',c:'American',k:32,p:0.7,cb:7.7,f:0.3,fi:2,pn:'1 cup',pg:144},
+{id:'blueberry',n:'Blueberries',c:'American',k:57,p:0.7,cb:14,f:0.3,fi:2.4,pn:'1 cup',pg:148},
+{id:'mango',n:'Mango',c:'American',k:60,p:0.8,cb:15,f:0.4,fi:1.6,pn:'1 cup',pg:165},
+{id:'avocado',n:'Avocado',c:'American',k:160,p:2,cb:9,f:15,fi:7,pn:'1/2 fruit',pg:100},
+{id:'potato',n:'Potato (baked)',c:'American',k:93,p:2.5,cb:21,f:0.1,fi:2.2,pn:'1 medium',pg:173},
+{id:'sweet_potato',n:'Sweet Potato',c:'American',k:86,p:1.6,cb:20,f:0.1,fi:3,pn:'1 medium',pg:130},
+{id:'broccoli',n:'Broccoli',c:'American',k:34,p:2.8,cb:7,f:0.4,fi:2.6,pn:'1 cup',pg:91},
+{id:'spinach',n:'Spinach',c:'American',k:23,p:2.9,cb:3.6,f:0.4,fi:2.2,pn:'1 cup',pg:30},
+{id:'carrot',n:'Carrot',c:'American',k:41,p:0.9,cb:10,f:0.2,fi:2.8,pn:'1 medium',pg:61},
+{id:'tomato',n:'Tomato',c:'American',k:18,p:0.9,cb:3.9,f:0.2,fi:1.2,pn:'1 medium',pg:123},
+{id:'cucumber',n:'Cucumber',c:'American',k:15,p:0.7,cb:3.6,f:0.1,fi:0.5,pn:'1 cup',pg:104},
+{id:'lettuce',n:'Lettuce',c:'American',k:15,p:1.4,cb:2.9,f:0.2,fi:1.3,pn:'1 cup',pg:47},
+{id:'corn',n:'Corn',c:'American',k:86,p:3.2,cb:19,f:1.4,fi:2.7,pn:'1 cup',pg:154},
+{id:'green_beans',n:'Green Beans',c:'American',k:31,p:1.8,cb:7,f:0.2,fi:3.4,pn:'1 cup',pg:100},
+{id:'bell_pepper',n:'Bell Pepper',c:'American',k:31,p:1,cb:6,f:0.3,fi:2.1,pn:'1 medium',pg:119},
+{id:'white_rice',n:'White Rice (cooked)',c:'American',k:130,p:2.7,cb:28,f:0.3,fi:0.4,pn:'1 cup',pg:158},
+{id:'brown_rice',n:'Brown Rice (cooked)',c:'American',k:112,p:2.6,cb:24,f:0.9,fi:1.8,pn:'1 cup',pg:195},
+{id:'quinoa',n:'Quinoa (cooked)',c:'American',k:120,p:4.4,cb:21,f:1.9,fi:2.8,pn:'1 cup',pg:185},
+{id:'pasta',n:'Pasta (cooked)',c:'American',k:131,p:5,cb:25,f:1.1,fi:1.8,pn:'1 cup',pg:140},
+{id:'spaghetti',n:'Spaghetti + sauce',c:'American',k:158,p:6,cb:24,f:4,fi:3,pn:'1 plate',pg:250},
+{id:'mac_cheese',n:'Mac & Cheese',c:'American',k:164,p:6,cb:20,f:6,fi:1,pn:'1 cup',pg:200},
+{id:'pizza',n:'Pizza (cheese)',c:'American',k:266,p:11,cb:33,f:10,fi:2.3,pn:'1 slice',pg:107},
+{id:'burger',n:'Cheeseburger',c:'American',k:250,p:13,cb:29,f:10,fi:1.5,pn:'1 burger',pg:150},
+{id:'hotdog',n:'Hot Dog',c:'American',k:290,p:10,cb:25,f:17,fi:1,pn:'1 hotdog',pg:100},
+{id:'fries',n:'French Fries',c:'American',k:312,p:3.4,cb:41,f:15,fi:3.8,pn:'1 medium',pg:117},
+{id:'sandwich_turkey',n:'Turkey Sandwich',c:'American',k:210,p:14,cb:26,f:6,fi:3,pn:'1 sandwich',pg:180},
+{id:'burrito',n:'Burrito',c:'American',k:210,p:9,cb:25,f:8,fi:4,pn:'1 burrito',pg:240},
+{id:'taco',n:'Taco',c:'American',k:226,p:9,cb:20,f:12,fi:3,pn:'1 taco',pg:100},
+{id:'fried_chicken',n:'Fried Chicken',c:'American',k:320,p:19,cb:10,f:23,fi:0.5,pn:'1 piece',pg:120},
+{id:'nuggets',n:'Chicken Nuggets',c:'American',k:290,p:15,cb:18,f:18,fi:1,pn:'6 pieces',pg:96},
+{id:'caesar_salad',n:'Caesar Salad',c:'American',k:180,p:6,cb:8,f:14,fi:2,pn:'1 bowl',pg:200},
+{id:'french_toast',n:'French Toast',c:'American',k:229,p:8,cb:25,f:11,fi:1,pn:'1 slice',pg:65},
+{id:'donut',n:'Donut',c:'American',k:452,p:5,cb:51,f:25,fi:1.5,pn:'1 donut',pg:60},
+{id:'muffin',n:'Muffin',c:'American',k:377,p:6,cb:55,f:15,fi:2,pn:'1 muffin',pg:113},
+{id:'cookie',n:'Cookie',c:'American',k:480,p:5,cb:64,f:22,fi:2,pn:'1 cookie',pg:30},
+{id:'brownie',n:'Brownie',c:'American',k:466,p:6,cb:50,f:28,fi:2,pn:'1 piece',pg:56},
+{id:'ice_cream',n:'Ice Cream',c:'American',k:207,p:3.5,cb:24,f:11,fi:0.7,pn:'1 scoop',pg:66},
+{id:'chocolate',n:'Chocolate Bar',c:'American',k:535,p:8,cb:59,f:30,fi:3,pn:'1 bar',pg:44},
+{id:'chips',n:'Potato Chips',c:'American',k:536,p:7,cb:53,f:35,fi:4.5,pn:'1 bag',pg:28},
+{id:'popcorn',n:'Popcorn',c:'American',k:387,p:12,cb:78,f:4.5,fi:15,pn:'1 bowl',pg:30},
+{id:'granola_bar',n:'Granola Bar',c:'American',k:471,p:10,cb:64,f:20,fi:7,pn:'1 bar',pg:40},
+{id:'protein_bar',n:'Protein Bar',c:'American',k:350,p:30,cb:35,f:10,fi:5,pn:'1 bar',pg:60},
+{id:'protein_shake',n:'Protein Shake (whey)',c:'American',k:120,p:24,cb:3,f:1.5,fi:1,pn:'1 scoop',pg:32},
+{id:'hummus',n:'Hummus',c:'American',k:166,p:8,cb:14,f:10,fi:6,pn:'2 tbsp',pg:30},
+{id:'tofu',n:'Tofu',c:'American',k:76,p:8,cb:1.9,f:4.8,fi:0.3,pn:'1 serving',pg:120},
+{id:'tempeh',n:'Tempeh',c:'American',k:192,p:20,cb:8,f:11,fi:0,pn:'1 serving',pg:100},
+{id:'black_beans',n:'Black Beans',c:'American',k:132,p:9,cb:24,f:0.5,fi:8.7,pn:'1 cup',pg:172},
+{id:'lentils',n:'Lentils (cooked)',c:'American',k:116,p:9,cb:20,f:0.4,fi:8,pn:'1 cup',pg:198},
+{id:'edamame',n:'Edamame',c:'American',k:121,p:12,cb:9,f:5,fi:5,pn:'1 cup',pg:155},
+{id:'olive_oil',n:'Olive Oil',c:'American',k:884,p:0,cb:0,f:100,fi:0,pn:'1 tbsp',pg:14},
+{id:'honey',n:'Honey',c:'American',k:304,p:0.3,cb:82,f:0,fi:0.2,pn:'1 tbsp',pg:21},
+{id:'jam',n:'Jam / Jelly',c:'American',k:278,p:0.4,cb:69,f:0,fi:1,pn:'1 tbsp',pg:20},
+{id:'coffee',n:'Coffee (black)',c:'American',k:1,p:0.1,cb:0,f:0,fi:0,pn:'1 cup',pg:240},
+{id:'latte',n:'Latte',c:'American',k:63,p:3.3,cb:5,f:3.5,fi:0,pn:'1 cup',pg:240},
+{id:'orange_juice',n:'Orange Juice',c:'American',k:45,p:0.7,cb:10,f:0.2,fi:0.2,pn:'1 cup',pg:248},
+{id:'soda',n:'Soda (cola)',c:'American',k:42,p:0,cb:11,f:0,fi:0,pn:'1 can',pg:355},
+{id:'beer',n:'Beer',c:'American',k:43,p:0.5,cb:3.6,f:0,fi:0,pn:'1 can',pg:355},
+{id:'wine',n:'Wine',c:'American',k:83,p:0.1,cb:2.6,f:0,fi:0,pn:'1 glass',pg:147},
+{id:'energy_drink',n:'Energy Drink',c:'American',k:45,p:0,cb:11,f:0,fi:0,pn:'1 can',pg:250},
+{id:'smoothie',n:'Fruit Smoothie',c:'American',k:90,p:2,cb:20,f:1,fi:2,pn:'1 cup',pg:240}
+];
+// count: 150
+
 var S=load();
 hydrateCustom();
+
+// ===================== FOOD LOGGING =====================
+var FOOD_BY_ID={};FOODS.forEach(function(f){FOOD_BY_ID[f.id]=f;});
+var MEALS=['Breakfast','Lunch','Dinner','Snack'];
+// S.food = { 'YYYY-MM-DD': [ {fid, meal, mode:'portion'|'gram', qty, grams} ] }
+function foodLog(ds){return (S.food&&S.food[ds])||[];}
+function foodComputed(entry){ // returns {k,p,cb,f,fi,grams}
+ var f=FOOD_BY_ID[entry.fid];if(!f)return{k:0,p:0,cb:0,f:0,fi:0,grams:0};
+ var grams=entry.mode==='gram'?entry.grams:(entry.qty*f.pg);
+ var mult=grams/100;
+ return {k:Math.round(f.k*mult),p:+(f.p*mult).toFixed(1),cb:+(f.cb*mult).toFixed(1),
+  f:+(f.f*mult).toFixed(1),fi:+(f.fi*mult).toFixed(1),grams:Math.round(grams)};
+}
+function dayTotals(ds){var t={k:0,p:0,cb:0,f:0,fi:0};foodLog(ds).forEach(function(e){var c=foodComputed(e);
+ t.k+=c.k;t.p+=c.p;t.cb+=c.cb;t.f+=c.f;t.fi+=c.fi;});
+ t.p=Math.round(t.p);t.cb=Math.round(t.cb);t.f=Math.round(t.f);t.fi=Math.round(t.fi);return t;}
+function addFood(fid,meal,mode,val){
+ if(!S.food)S.food={};var ds=todayStr();if(!S.food[ds])S.food[ds]=[];
+ var entry={fid:fid,meal:meal,mode:mode};
+ if(mode==='gram')entry.grams=+val;else entry.qty=+val;
+ S.food[ds].push(entry);save();render();
+}
+function removeFood(ds,idx){if(S.food&&S.food[ds]){S.food[ds].splice(idx,1);save();render();}}
+
 
 // ===================== HELPERS =====================
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
@@ -522,6 +707,30 @@ function barChart(data,hex,w,h){w=w||340;h=h||90;var mx=Math.max.apply(null,data
 function ring(pct,hex){var r=20,c=2*Math.PI*r;
  return '<svg width="46" height="46" style="transform:rotate(-90deg)"><circle cx="23" cy="23" r="'+r+'" fill="none" stroke="'+trackCol()+'" stroke-width="5"/>'+
   '<circle cx="23" cy="23" r="'+r+'" fill="none" stroke="'+hex+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'"/></svg>';}
+
+// labeled progress ring: big number in center + caption below
+function ringStat(pct,hex,big,cap,sz){sz=sz||88;var sw=8,r=(sz-sw)/2,cx=sz/2,c=2*Math.PI*r;
+ pct=Math.max(0,Math.min(1,pct));
+ return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">'+
+  '<div style="position:relative;width:'+sz+'px;height:'+sz+'px">'+
+   '<svg width="'+sz+'" height="'+sz+'" style="transform:rotate(-90deg)">'+
+    '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+trackCol()+'" stroke-width="'+sw+'"/>'+
+    '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+hex+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'"/></svg>'+
+   '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+    '<span class="display" style="font-size:20px;color:var(--chalk);line-height:1">'+big+'</span></div></div>'+
+  '<span class="sub" style="font-weight:600">'+cap+'</span></div>';}
+
+// segmented stat pill: colored dot + value + label, in a rounded chip
+function statPill(hex,value,label){
+ return '<div style="flex:1;min-width:0;background:var(--card-up);border-radius:14px;padding:11px 8px;text-align:center">'+
+  '<div style="display:flex;align-items:center;justify-content:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:'+hex+';flex-shrink:0"></span>'+
+  '<span class="display" style="font-size:19px;color:var(--chalk)">'+value+'</span></div>'+
+  '<div class="sub" style="margin-top:2px;font-size:11px">'+label+'</div></div>';}
+
+// little colored icon tile (rounded square with a glyph)
+function iconTile(hex,glyph,sz){sz=sz||38;
+ return '<div style="width:'+sz+'px;height:'+sz+'px;border-radius:11px;background:'+hex+'1A;color:'+hex+';display:flex;align-items:center;justify-content:center;font-size:'+(sz*0.5)+'px;flex-shrink:0">'+glyph+'</div>';}
+
 
 // backup
 function exportData(){try{var b=new Blob([JSON.stringify(S)],{type:'application/json'});var a=document.createElement('a');
@@ -969,21 +1178,31 @@ function homeView(){
  if(bw){
   var down=bw.delta<0,flat=bw.delta===0;
   var arrow=flat?'\u2192':(down?'\u2193':'\u2191');
-  var bcol=flat?'var(--dim)':(down?'#22C36A':'#F0A626');
-  html+='<div class="card"><div class="eyebrow">Bodyweight</div>'+
+  var bcol=flat?'var(--dim)':(down?'#22C36A':'#F5A623');
+  html+='<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+iconTile('#3B6FF5','\u2696\ufe0f',32)+'<div class="eyebrow">Bodyweight</div></div>'+
    '<div class="display big">'+bw.latest+'<span style="font-size:14px"> lb</span></div>'+
    '<div class="sub" style="color:'+bcol+';font-weight:700">'+arrow+' '+Math.abs(bw.delta)+' lb / 30 d</div></div>';
  } else {
-  html+='<div class="card"><div class="eyebrow">Bodyweight</div><div class="display big">\u2014</div><div class="sub">log it in Body</div></div>';
+  html+='<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+iconTile('#3B6FF5','\u2696\ufe0f',32)+'<div class="eyebrow">Bodyweight</div></div><div class="display big">\u2014</div><div class="sub">log it in Body</div></div>';
  }
  // volume trend
- html+='<div class="card"><div class="eyebrow">Volume vs last wk</div>'+
+ html+='<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+iconTile('#F0603A','\ud83d\udcaa',32)+'<div class="eyebrow">Volume vs last wk</div></div>'+
   '<div class="display big">'+(vv.now?Math.round(vv.now/1000)+'k':'\u2014')+'</div>'+
-  '<div class="sub" style="color:'+(volDelta>=0?'#22C36A':'#E4573D')+';font-weight:700">'+(vv.prev?(volDelta>=0?'\u25b2 +':'\u25bc ')+volDelta+'%':'first week')+'</div></div>';
+  '<div class="sub" style="color:'+(volDelta>=0?'#22C36A':'#F0603A')+';font-weight:700">'+(vv.prev?(volDelta>=0?'\u25b2 +':'\u25bc ')+volDelta+'%':'first week')+'</div></div>';
  html+='</div>';
 
- // ---- CONSISTENCY: streak + heatmap combined ----
+ // ---- WEEKLY STATS as segmented pills ----
  var wd=weekDates(),lifts=wd.filter(liftDoneOn).length,pbs=wd.filter(function(d){return actDoneOn(d)||S.pb[d];}).length;
+ var wvol=weekVolume();
+ html+='<div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'+iconTile('#3B6FF5','\ud83d\udcca')+'<h3 style="margin:0">This week</h3></div>'+
+  '<div style="display:flex;gap:8px">'+
+   statPill('#F0603A',lifts+'/'+liftDaysPerWeek(),'Lifts')+
+   statPill('#22C36A',pbs+'/'+actDaysPerWeek(),'Activity')+
+   statPill('#3B6FF5',wvol?Math.round(wvol/1000)+'k':'0','Volume')+
+   statPill('#F5A623','\u2605 '+allPRs(),'PRs')+
+  '</div></div>';
+
+ // ---- CONSISTENCY: streak + heatmap combined ----
  var cells=heatCells();
  var svg='<svg class="spark" width="340" height="'+(7*13+2)+'">';
  cells.forEach(function(col,ci){col.forEach(function(c,ri){
@@ -991,21 +1210,23 @@ function homeView(){
   svg+='<rect x="'+(ci*13).toFixed(0)+'" y="'+(ri*13).toFixed(0)+'" width="11" height="11" rx="3" fill="'+color+'"/>';});});
  svg+='</svg>';
  html+='<div class="card">'+
-  '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'+
-   '<div><span class="display" style="font-size:24px">'+(streak>0?'\ud83d\udd25 '+streak:'\u2014')+'</span> <span class="sub">week'+(streak===1?'':'s')+' streak</span></div>'+
-   '<div class="sub">'+lifts+' lifts \u00b7 '+pbs+' activity this wk</div>'+
+  '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+   '<div style="display:flex;align-items:center;gap:10px">'+iconTile('#F0603A','\ud83d\udd25')+'<div><span class="display" style="font-size:22px">'+(streak>0?streak:'\u2014')+'</span> <span class="sub">week'+(streak===1?'':'s')+' streak</span></div></div>'+
   '</div>'+svg+
-  '<div class="chips" style="margin-top:8px"><span class="chip" style="border-color:#22C36A;color:#22C36A">Lift</span><span class="chip" style="border-color:#F0A626;color:#F0A626">Activity</span><span class="sub" style="align-self:center">last 12 weeks</span></div></div>';
+  '<div class="chips" style="margin-top:8px"><span class="chip" style="border-color:#22C36A;color:#22C36A">Lift</span><span class="chip" style="border-color:#F5A623;color:#F5A623">Activity</span><span class="sub" style="align-self:center">last 12 weeks</span></div></div>';
 
- // ---- NUTRITION targets (goal-aware) ----
- var T=targets();
- html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'+
-  '<h3 style="margin:0">Daily targets</h3><span class="sub">'+esc(T.note)+'</span></div>'+
-  '<div style="display:flex;gap:8px">'+
-   '<div style="flex:1;text-align:center"><div class="display" style="font-size:24px;color:'+hex+'">'+T.cal.toLocaleString()+'</div><div class="sub">calories</div></div>'+
-   '<div style="flex:1;text-align:center;border-left:1px solid var(--line);border-right:1px solid var(--line)"><div class="display" style="font-size:24px;color:'+hex+'">'+T.prot+'g</div><div class="sub">protein</div></div>'+
-   '<div style="flex:1;text-align:center"><div class="display" style="font-size:24px;color:'+hex+'">8–10k</div><div class="sub">steps</div></div>'+
-  '</div></div>';
+ // ---- NUTRITION targets (goal-aware, rings fill with today's intake) ----
+ var T=targets(),intake=dayTotals(todayStr());
+ var calP=T.cal?intake.k/T.cal:0,proP=T.prot?intake.p/T.prot:0;
+ html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
+  '<div style="display:flex;align-items:center;gap:10px">'+iconTile('#F0603A','\ud83c\udf74')+'<h3 style="margin:0">Today\u2019s nutrition</h3></div>'+
+  '<button class="ghost-btn" style="padding:6px 12px;color:var(--chalk)" onclick="setTab(\'food\')">Log food</button></div>'+
+  '<div style="display:flex;justify-content:space-around">'+
+   ringStat(calP,'#F0603A',intake.k,'/ '+(T.cal>=1000?(T.cal/1000).toFixed(1)+'k':T.cal)+' kcal')+
+   ringStat(proP,'#3B6FF5',intake.p+'g','/ '+T.prot+'g protein')+
+   ringStat(1,'#22C36A','8-10k','steps goal')+
+  '</div>'+
+  '<div class="sub" style="text-align:center;margin-top:8px">'+esc(T.note)+'</div></div>';
 
  // ---- weigh-in nudge (only when due) ----
  if(needsWeighIn()){
@@ -1073,9 +1294,94 @@ function dailyJoke(){
  return joke;
 }
 
+// ===================== FOOD VIEW =====================
+var foodSearch='',foodCat='all',foodMeal='Breakfast',foodPick=null,foodMode='portion';
+function setFoodSearch(v){foodSearch=v;renderFoodList();}
+function setFoodCat(c){foodCat=c;render();}
+function setFoodMeal(m){foodMeal=m;render();}
+function pickFood(fid){foodPick=fid;foodMode='portion';render();}
+function cancelPick(){foodPick=null;render();}
+function setFoodMode(m){foodMode=m;render();}
+function confirmAddFood(){
+ var f=FOOD_BY_ID[foodPick];if(!f)return;
+ var el=document.getElementById('food-amt');var val=el?+el.value:0;
+ if(!val||val<=0){alert('Enter an amount.');return;}
+ addFood(foodPick,foodMeal,foodMode,val);foodPick=null;foodSearch='';
+}
+function renderFoodList(){
+ var box=document.getElementById('food-results');if(!box)return;
+ var q=foodSearch.trim().toLowerCase();
+ var list=FOODS.filter(function(f){
+  if(foodCat!=='all'&&f.c!==foodCat)return false;
+  if(q&&f.n.toLowerCase().indexOf(q)<0)return false;return true;});
+ list=list.slice(0,40);
+ box.innerHTML=list.map(function(f){
+  return '<button class="food-item" onclick="pickFood(\''+f.id+'\')">'+
+   '<span class="food-name">'+esc(f.n)+'</span>'+
+   '<span class="food-macro">'+f.k+' kcal · '+f.p+'g P <span class="food-per">/100g</span></span></button>';
+ }).join('')||'<p class="sub" style="padding:10px">No matches. Try another term.</p>';
+}
+function foodView(){
+ var ds=todayStr(),T=targets(),tot=dayTotals(ds);
+ var hex=HEX[nextUp().type];
+ var html=headerHtml('Food','upper');
+ var calPct=T.cal?tot.k/T.cal:0,protPct=T.prot?tot.p/T.prot:0;
+ html+='<div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'+iconTile('#F0603A','\ud83c\udf74')+'<h3 style="margin:0">Today\u2019s intake</h3></div>'+
+  '<div style="display:flex;justify-content:space-around;margin-bottom:6px">'+
+   ringStat(calPct,'#F0603A',tot.k,'of '+T.cal.toLocaleString())+
+   ringStat(protPct,'#3B6FF5',tot.p+'g','of '+T.prot+'g')+
+  '</div>'+
+  '<div style="display:flex;gap:8px;margin-top:8px">'+
+   statPill('#F5A623',tot.cb+'g','Carbs')+
+   statPill('#8B5CF6',tot.f+'g','Fat')+
+   statPill('#22C36A',tot.fi+'g','Fiber')+
+  '</div></div>';
+ if(foodPick){
+  var f=FOOD_BY_ID[foodPick];
+  html+='<div class="card" style="border:1.5px solid '+hex+'"><div class="eyebrow" style="color:'+hex+'">Add to '+foodMeal+'</div>'+
+   '<div class="display" style="font-size:22px;margin:2px 0 8px">'+esc(f.n)+'</div>'+
+   '<div class="seg" style="margin-bottom:10px"><button class="'+(foodMode==='portion'?'on':'')+'" onclick="setFoodMode(\'portion\')">By portion</button>'+
+    '<button class="'+(foodMode==='gram'?'on':'')+'" onclick="setFoodMode(\'gram\')">By weight</button></div>';
+  if(foodMode==='portion'){
+   html+='<div class="row" style="align-items:center"><input id="food-amt" class="inp" type="number" inputmode="decimal" value="1" step="0.5" style="flex:1"><span class="sub" style="flex:2">\u00d7 '+esc(f.pn)+' ('+f.pg+'g each)</span></div>';
+  } else {
+   html+='<div class="row" style="align-items:center"><input id="food-amt" class="inp" type="number" inputmode="numeric" value="100" step="10" style="flex:1"><span class="sub" style="flex:2">grams</span></div>';
+  }
+  html+='<p class="sub" style="margin:10px 0 0">Per 100g: '+f.k+' kcal · '+f.p+'g protein · '+f.cb+'g carb · '+f.f+'g fat</p>'+
+   '<div class="row" style="margin-top:12px"><button class="go-btn" style="background:'+hex+'" onclick="confirmAddFood()">Add food</button>'+
+   '<button class="ghost-btn" style="color:var(--chalk);padding:0 18px" onclick="cancelPick()">Cancel</button></div></div>';
+ } else {
+  html+='<div class="card"><div class="seg" style="margin-bottom:10px">'+
+   MEALS.map(function(m){return '<button class="'+(foodMeal===m?'on':'')+'" onclick="setFoodMeal(\''+m+'\')">'+m+'</button>';}).join('')+'</div>'+
+   '<input id="food-search" class="inp" placeholder="Search 150+ foods\u2026" value="'+esc(foodSearch)+'" oninput="setFoodSearch(this.value)">'+
+   '<div class="chips" style="margin:10px 0 6px"><button class="chip'+(foodCat==='all'?' chip-on':'')+'" onclick="setFoodCat(\'all\')">All</button>'+
+    '<button class="chip'+(foodCat==='Nepali'?' chip-on':'')+'" onclick="setFoodCat(\'Nepali\')">Nepali</button>'+
+    '<button class="chip'+(foodCat==='American'?' chip-on':'')+'" onclick="setFoodCat(\'American\')">American</button></div>'+
+   '<div id="food-results" class="food-list"></div></div>';
+ }
+ var log=foodLog(ds);
+ if(log.length){
+  html+='<div class="card"><h3 style="margin:0 0 10px">Logged today</h3>';
+  MEALS.forEach(function(m){
+   var items=log.map(function(e,i){return {e:e,i:i};}).filter(function(x){return x.e.meal===m;});
+   if(!items.length)return;
+   html+='<div class="eyebrow" style="margin:10px 0 4px">'+m+'</div>';
+   items.forEach(function(x){var c=foodComputed(x.e),f=FOOD_BY_ID[x.e.fid];
+    var amt=x.e.mode==='gram'?(x.e.grams+'g'):(x.e.qty+'\u00d7 '+(f?f.pn:''));
+    html+='<div class="hist-row"><span>'+esc(f?f.n:'?')+' <span class="sub">('+amt+')</span></span>'+
+     '<span>'+c.k+' kcal \u00b7 '+c.p+'g P <button class="x-btn" onclick="removeFood(\''+ds+'\','+x.i+')">\u00d7</button></span></div>';
+   });
+  });
+  html+='</div>';
+ } else {
+  html+='<div class="note">No food logged yet today. Search above and tap a food to add it.</div>';
+ }
+ return html;
+}
+
 // ===================== RENDER =====================
-var TABS=[['home','◆','Home'],['today','▶','Workout'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard']];
-var VIEWS={home:homeView,today:todayView,history:historyView,body:bodyView,dash:dashView};
+var TABS=[['home','◆','Home'],['today','▶','Workout'],['food','🍴','Food'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard']];
+var VIEWS={home:homeView,today:todayView,food:foodView,history:historyView,body:bodyView,dash:dashView};
 
 function loginView(){
  return '<header style="padding-top:60px"><div class="eyebrow">Training Week</div>'+
@@ -1098,6 +1404,7 @@ function render(){
   if(!S.profile||editProf){app.innerHTML=onboardView();bar.innerHTML='';return;}
   var fn=VIEWS[tab]||todayView;
   app.innerHTML=fn();
+  if(tab==='food'&&!foodPick)renderFoodList();
   bar.innerHTML=TABS.map(function(t){return '<button class="'+(tab===t[0]?'on':'')+'" onclick="setTab(\''+t[0]+'\')"><span class="ic">'+t[1]+'</span>'+t[2]+'</button>';}).join('');
   renderTimer();
  }catch(err){
