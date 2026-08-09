@@ -1,9 +1,9 @@
 {
   "name": "FlexFuel",
   "short_name": "FlexFuel",
-  "description": "FlexFuel training, nutrition, and progress tracker.",
-  "theme_color": "#091109",
-  "background_color": "#091109",
+  "description": "FlexFuel training, fuel, and progress tracker.",
+  "theme_color": "#0B111A",
+  "background_color": "#0B111A",
   "display": "standalone",
   "start_url": "./",
   "icons": [
