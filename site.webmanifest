@@ -1,27 +1,23 @@
 {
   "name": "FlexFuel",
   "short_name": "FlexFuel",
-  "description": "FlexFuel training, fuel, and progress tracker.",
-  "theme_color": "#0B111A",
-  "background_color": "#0B111A",
-  "display": "standalone",
+  "description": "Train hard. Fuel smart.",
   "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F7F9F4",
+  "theme_color": "#10170F",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "maskable-icon-512.png",
-      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any maskable"
     }
   ]
 }

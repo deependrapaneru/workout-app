@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <meta name="application-name" content="FlexFuel">
-<meta name="msapplication-TileColor" content="#0B111A">
+<meta name="msapplication-TileColor" content="#091109">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 :root{--card:#FFFFFF;--card-up:#F1F4F9;--line:#E8ECF3;--chalk:#2A2F45;--dim:#8A90A6;--bg:#EEF1F7;
@@ -136,6 +136,8 @@ select.inp{appearance:none}
 .seg button.on{color:#FFF;border-color:transparent;font-weight:700}
 .plan-p{font-size:13.5px;line-height:1.55;margin:0}
 .note{margin:0 18px 12px;font-size:12px;color:var(--dim);line-height:1.5}
+.train-today-banner{display:flex;align-items:center;gap:12px;padding:13px 15px}
+.train-today-banner .tool-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
 
 /* =========================================================
    TRAINING WEEK — PREMIUM UI LAYER
@@ -899,14 +901,15 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 
 
 /* FlexFuel branding */
-.brand-mini{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.brand-mini{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .brand-mini-logo{height:26px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.08))}
+.brand-header-wordmark{display:block;width:auto;height:30px;max-width:174px;object-fit:contain;background:#fff;border:1px solid rgba(18,32,20,.08);border-radius:10px;padding:4px 8px;box-shadow:0 6px 18px rgba(7,18,8,.10)}
 .brand-mini-copy{display:flex;flex-direction:column;line-height:1.05}
 .brand-mini-copy b{font-size:13px;letter-spacing:-.02em;color:var(--chalk)}
 .brand-mini-copy span{font-size:9.5px;color:var(--dim)}
 .brand-login-head{text-align:center;padding-top:40px!important}
-.brand-login-mark{display:flex;justify-content:center;margin-bottom:14px}
-.brand-hero-logo{max-width:min(280px,72vw);height:auto;display:block;filter:drop-shadow(0 12px 30px rgba(120,199,41,.18))}
+.brand-login-mark{display:flex;justify-content:center;margin:0 auto 16px;padding:12px 18px;width:min(340px,88vw);background:#fff;border:1px solid rgba(18,32,20,.10);border-radius:22px;box-shadow:0 18px 44px rgba(7,18,8,.14)}
+.brand-hero-logo{width:100%;height:auto;display:block;object-fit:contain;filter:none}
 .brand-login-sub{max-width:320px;margin:8px auto 0}
 .brand-login-card{border-top:3px solid rgba(var(--accent-rgb),.28)}
 .go-btn{box-shadow:0 14px 32px rgba(var(--accent-rgb),.22)}
@@ -1042,8 +1045,8 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .profile-hero-brand{position:relative;overflow:hidden;padding:20px;border-radius:28px;margin:0 0 14px;background:linear-gradient(135deg,#0B150C 0%,#173117 52%,#2B7A35 100%);color:#F7FFF3;box-shadow:0 28px 80px rgba(52,184,71,.22)}
 .profile-hero-brand:before{content:'';position:absolute;right:-30px;top:-25px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(200,255,41,.26),transparent 65%)}
 .profile-hero-brand .profile-top{position:relative;z-index:1;align-items:flex-start}.profile-hero-brand .profile-avatar{background:rgba(255,255,255,.14)!important;color:#fff;border-color:rgba(255,255,255,.18)!important}
-.profile-brand-mark{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.16);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
-.profile-brand-mark img{height:18px;width:auto}
+.profile-brand-mark{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;background:#fff!important;color:#172116!important;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;border:1px solid rgba(18,32,20,.10)!important}
+.profile-brand-mark img{height:22px;width:auto;max-width:150px}
 .profile-hero-brand .profile-name{font-size:30px}.profile-hero-brand .profile-meta,.profile-hero-brand .profile-badge{color:rgba(255,255,255,.92)}
 .profile-hero-brand .profile-badge{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08)}
 .profile-kpi-deck{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px;position:relative;z-index:1}
@@ -1405,7 +1408,8 @@ header h1,.display{color:var(--chalk)!important}
 .fuel-hero .fuel-kcal,.fuel-hero b,.fuel-hero span,.fuel-hero .sub{color:#F8FFF5!important}
 .home-hero-premium .eyebrow,.profile-hero-brand .eyebrow,.fuel-hero .eyebrow{color:#DFFF86!important}
 .home-focus-card,.fuel-macro-tile,.profile-kpi-deck .profile-kpi{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.12)!important;color:#F8FFF5!important;box-shadow:none!important}
-.home-brand-pill,.home-focus-badge,.profile-brand-mark,.profile-badge{background:rgba(0,0,0,.20)!important;color:#F8FFF5!important;border-color:rgba(255,255,255,.10)!important}
+.home-brand-pill,.home-focus-badge,.profile-badge{background:rgba(0,0,0,.20)!important;color:#F8FFF5!important;border-color:rgba(255,255,255,.10)!important}
+.profile-brand-mark{background:#fff!important;color:#172116!important;border-color:rgba(18,32,20,.10)!important}
 .home-primary-actions .ghost-btn,.fuel-hero-actions .ghost-btn,.profile-hero-brand .ghost-btn{background:rgba(255,255,255,.10)!important;color:#F8FFF5!important;border-color:rgba(255,255,255,.14)!important}
 
 .food-cal-track,.food-mini-track,.mini-progress,.macro-row .track,.progress-track,.bar{background:var(--surface3)!important}
@@ -1419,126 +1423,6 @@ header h1,.display{color:var(--chalk)!important}
 
 @media(max-width:560px){.theme-grid-three{grid-template-columns:repeat(3,1fr)!important}}
 
-
-/* ===== FlexFuel pristine visibility reset ===== */
-:root{
-  --accent:#2F6BFF !important;
-  --accent2:#23B4FF !important;
-  --accent-rgb:47,107,255 !important;
-  --accent-soft:rgba(47,107,255,.12) !important;
-  --accent-softer:rgba(47,107,255,.07) !important;
-  --hero-grad:linear-gradient(135deg,#2F6BFF 0%, #23B4FF 58%, #FF8C42 100%) !important;
-  --ff-blue:#2F6BFF;
-  --ff-cyan:#23B4FF;
-  --ff-orange:#FF8C42;
-  --ff-orange-soft:rgba(255,140,66,.12);
-}
-:root[data-accent="green"],:root[data-accent="orange"],:root[data-accent="violet"],:root[data-accent="rose"],:root[data-accent="aqua"]{
-  --accent:#2F6BFF !important;
-  --accent2:#23B4FF !important;
-  --accent-rgb:47,107,255 !important;
-}
-:root[data-resolved-theme="light"]{
-  --card:#FFFFFF !important;
-  --card-up:#FBFCFE !important;
-  --line:#E4EAF4 !important;
-  --chalk:#121826 !important;
-  --dim:#5F6E85 !important;
-  --bg:#F5F7FB !important;
-  --glass:rgba(255,255,255,.92) !important;
-  --glass-brd:rgba(18,24,38,.08) !important;
-  --glass-in:#F8FAFD !important;
-  --glass-btn:#F2F5FA !important;
-  --glass-btn2:#F8FAFD !important;
-  --glass-sec:#EFF4FB !important;
-  --brd-soft:rgba(18,24,38,.10) !important;
-  --brd-soft2:rgba(18,24,38,.12) !important;
-  --brd-soft3:rgba(18,24,38,.08) !important;
-  --shadow:rgba(31,46,86,.09) !important;
-  --tab:rgba(255,255,255,.92) !important;
-  --sw:#E8EEF7 !important;
-  --surface:#FFFFFF !important;
-  --surface2:#F7F9FD !important;
-  --surface3:#EDF2FA !important;
-  --ink:#121826 !important;
-  --muted:#66758D !important;
-  --page:#F5F7FB !important;
-  --hair:rgba(18,24,38,.08) !important;
-}
-:root[data-resolved-theme="dark"]{
-  --card:#161D2A !important;
-  --card-up:#1B2433 !important;
-  --line:#2B3548 !important;
-  --chalk:#F5F7FB !important;
-  --dim:#B4BED1 !important;
-  --bg:#0B111A !important;
-  --glass:rgba(22,29,42,.90) !important;
-  --glass-brd:rgba(255,255,255,.08) !important;
-  --glass-in:#141C29 !important;
-  --glass-btn:#1B2433 !important;
-  --glass-btn2:#202A3C !important;
-  --glass-sec:#1B2433 !important;
-  --brd-soft:rgba(255,255,255,.09) !important;
-  --brd-soft2:rgba(255,255,255,.11) !important;
-  --brd-soft3:rgba(255,255,255,.07) !important;
-  --shadow:rgba(0,0,0,.28) !important;
-  --tab:rgba(11,17,26,.94) !important;
-  --sw:#1A2230 !important;
-  --surface:#161D2A !important;
-  --surface2:#1B2433 !important;
-  --surface3:#243044 !important;
-  --ink:#F5F7FB !important;
-  --muted:#AEB8CB !important;
-  --page:#0B111A !important;
-  --hair:rgba(255,255,255,.08) !important;
-}
-body{background:var(--page)!important;color:var(--chalk)!important;}
-body::before{background:var(--page)!important;}
-button:focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px;}
-a, .accent-link{color:var(--accent)!important;}
-.display,h1,h2,h3,.ex-title,.profile-name,.goal-value,.fuel-kcal{color:var(--chalk)!important;}
-.sub,.eyebrow,.ex-meta,.ex-last,.food-log-row small,.profile-kpi span,.profile-metric-card span,.food-mini-stat span,.food-quick-card small,.home-action-card span,.home-snapshot small,.fuel-target-note{color:var(--dim)!important;}
-.go-btn{background:var(--hero-grad)!important;color:#fff!important;box-shadow:0 14px 34px rgba(var(--accent-rgb),.26)!important;}
-.ghost-btn{border-color:var(--line)!important;color:var(--chalk)!important;background:var(--glass-btn)!important;}
-.inp, select, textarea{background:var(--surface2)!important;color:var(--chalk)!important;border-color:var(--hair)!important;}
-input::placeholder, textarea::placeholder{color:var(--muted)!important;}
-.card,.timer,.food-dashboard,.food-search-card,.food-library-card,.food-editor,.food-custom-form,.food-scanner,.home-snapshot,.food-mini-stat,.food-quick-card,.food-meal-card,.account-action-card,.profile-metric-card,.home-action-card,.home-snapshot,.fuel-quick-shell{background:var(--card)!important;border-color:var(--line)!important;box-shadow:0 10px 30px var(--shadow)!important;}
-.brand-login-card,.brand-card,.brand-shell{background:var(--card)!important;}
-.brand-hero-logo{filter:drop-shadow(0 14px 30px rgba(47,107,255,.18))!important;}
-.app-header-row .eyebrow,.brand-mini-copy span,.brand-mini-copy b{color:var(--chalk)!important;}
-.header-profile-btn,.profile-avatar,.header-avatar{box-shadow:0 10px 24px rgba(var(--accent-rgb),.16)!important;}
-.tabbar{background:var(--tab)!important;border-top-color:var(--line)!important;}
-.tabbar button{color:var(--dim)!important;}
-.tabbar button.on{color:var(--accent)!important;}
-.theme-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
-.home-hero-premium,.profile-hero-brand,.fuel-hero,.today-focus-banner{
-  color:#fff!important;
-  background:linear-gradient(135deg,#10203B 0%, #173C74 52%, #1F7CD7 78%, #FF8C42 100%)!important;
-  box-shadow:0 24px 70px rgba(19,46,94,.26)!important;
-}
-.home-hero-premium:before,.profile-hero-brand:before,.fuel-hero:before{
-  background:radial-gradient(circle,rgba(35,180,255,.24),transparent 68%)!important;
-}
-.home-hero-premium:after{background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%)!important;}
-.home-brand-pill,.profile-brand-mark,.home-focus-card,.profile-kpi-deck .profile-kpi,.fuel-macro-tile,.home-focus-badge{
-  background:rgba(255,255,255,.12)!important;
-  border:1px solid rgba(255,255,255,.14)!important;
-  color:#fff!important;
-}
-.home-brand-pill span,.profile-brand-mark span,.profile-hero-brand .profile-meta,.profile-hero-brand .profile-badge,.home-hero-sub,.home-focus-kicker,.home-focus-meta span,.fuel-macro-tile span,.fuel-macro-tile small,.fuel-hero-head .sub,.today-focus-banner .sub{color:rgba(255,255,255,.9)!important;}
-.today-focus-banner .display,.today-focus-banner .eyebrow{color:#fff!important;}
-.food-date-nav button,.food-date-center,.food-subnav button,.seg button,.timer-btns button,.food-meal-actions button{background:var(--surface2)!important;color:var(--chalk)!important;border-color:var(--line)!important;}
-.food-date-center b,.food-date-center span,.food-section-head h3,.settings-title h3,.modern-panel-title h3,.hist-row span,.hist-row .sub{color:var(--chalk)!important;}
-.food-fab{background:var(--hero-grad)!important;color:#fff!important;box-shadow:0 16px 34px rgba(var(--accent-rgb),.28)!important;}
-.progress-track,.bar,.mini-progress,.track{background:var(--surface3)!important;}
-.progress-track i,.bar div,.mini-progress i,.track i,.goal-ring,.fuel-hero-ring{background-image:none!important;}
-.progress-track i,.bar div,.mini-progress i,.track i{background:var(--hero-grad)!important;}
-.goal-ring{background:conic-gradient(var(--accent) var(--goal-pct,0%),var(--surface3) 0)!important;}
-.fuel-hero-ring{background:conic-gradient(var(--ff-cyan) var(--fuel-pct), rgba(255,255,255,.14) 0)!important;}
-.fuel-hero-ring i{background:rgba(9,17,26,.80)!important;color:#fff!important;}
-.card.today-focus-banner .sub{color:rgba(255,255,255,.92)!important;}
-.exercise-thumb-btn,.exercise-thumb{border-color:var(--line)!important;}
-
 </style>
 </head>
 <body>
@@ -1548,7 +1432,7 @@ input::placeholder, textarea::placeholder{color:var(--muted)!important;}
 <script>
 "use strict";
 // ===================== CONSTANTS =====================
-var HEX={upper:'#2F6BFF',lower:'#1AA8FF',pb:'#FF8C42',act:'#26BFA6',rest:'#7B879B'};
+var HEX={upper:'#B8FF2C',lower:'#46D05B',pb:'#89F83F',act:'#6EEB74',rest:'#6A7B68'};
 var DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 // Activity (cardio) types users can pick for non-lifting days
 var ACTIVITIES={
@@ -1690,12 +1574,12 @@ function actDaysPerWeek(){return DAYS.filter(function(dk){return dayType(dk)==='
 // ===================== STORAGE =====================
 var KEY='training-week';
 var mem=null;
-var APP_NAME='FlexFuel',APP_TAG='Train hard. Fuel smart.',APP_LOGO='flexfuel_glossy_energy_logo.png',APP_MARK='icon-192.png';
+var APP_NAME='FlexFuel',APP_TAG='Train hard. Fuel smart.',APP_LOGO='flexfuel_fitness_logo.png',APP_MARK='icon-192.png';
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
 function blank(){return {
  start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null,food:{},
  foodMeta:{favorites:{},recent:[],usual:{},savedMeals:{},customFoods:{},barcodes:{}},
- notes:{},goals:{weekly:4},templates:{},settings:{theme:'system',accent:'blue',largeText:false,reduceMotion:false,haptics:true,activityMultiplier:1.55,nutritionMode:'estimated',nutritionTargets:{cal:null,prot:null,cb:null,f:null,fi:null}}
+ notes:{},goals:{weekly:4},templates:{},settings:{theme:'system',accent:'green',largeText:false,reduceMotion:false,haptics:true,activityMultiplier:1.55,nutritionMode:'estimated',nutritionTargets:{cal:null,prot:null,cb:null,f:null,fi:null}}
 };}
 // ensure profile has containers for custom exercises / per-day edits
 function ensureProfileEdits(){if(!S.profile)return;
@@ -2306,7 +2190,7 @@ function foodWeeklyStats(endDs){
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
 function brandLogo(size,cls){return '<img src="'+APP_LOGO+'" alt="'+APP_NAME+' logo" class="'+(cls||'brand-logo')+'"'+(size?' style="height:'+size+'px"':'')+'>'; }
 function brandMark(size,cls){return '<img src="'+APP_MARK+'" alt="" class="'+(cls||'brand-mark')+'"'+(size?' style="height:'+size+'px;width:'+size+'px"':'')+'>'; }
-function brandMini(){return '<div class="brand-mini">'+brandMark(26,'brand-mini-logo')+'<div class="brand-mini-copy"><b>'+APP_NAME+'</b><span>'+APP_TAG+'</span></div></div>'; }
+function brandMini(){return '<div class="brand-mini">'+brandLogo(30,'brand-header-wordmark')+'</div>'; }
 function dayKeyOf(ds){return DAYS[(new Date(ds+'T12:00').getDay()+6)%7];}
 function slotEx(dk,i){var base=planEx(dk)[i];return (S.subs&&S.subs[dk+'-'+i])||base;}
 function firstName(){return S.profile&&S.profile.name?S.profile.name.split(' ')[0]:'there';}
@@ -2727,17 +2611,13 @@ function closeExerciseImage(){
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeExerciseImage();});
 
 function todayView(){
- var dk=dayKeyOf(todayStr()),type=dayType(dk),hex=HEX[type],isToday=true;
- viewDay=dk;
- var focusTitle=isTraining(dk)?dayLabel(dk):(dayType(dk)==='act'?activityName(dk):'Recovery day');
- var html=headerHtml('Today',type);
- html+='<div class="card today-focus-banner" style="border-color:'+hex+';background:linear-gradient(135deg, rgba(47,107,255,.08), rgba(255,140,66,.08))">'+
-   '<div class="eyebrow" style="color:'+hex+'">Today\'s focus</div>'+
-   '<div class="display" style="font-size:28px;margin-top:2px;color:var(--chalk)">'+esc(focusTitle)+'</div>'+
-   '<div class="sub" style="margin-top:6px">'+(isTraining(dk)?(planEx(dk).length+' exercises · ~'+estMin(dk)+' min planned'):(dayType(dk)==='act'?'Cardio / activity day':'Recovery, mobility, and recovery habits'))+'</div>'+
-  '</div>';
+ // Train is intentionally a focused Today surface. Weekly planning and history
+ // live under More and Progress, so this tab never drifts into another day.
+ var dk=dayKeyOf(todayStr());viewDay=dk;
+ var type=dayType(dk),hex=HEX[type],isToday=true;
+ var html=headerHtml(dayLabel(dk),type);
+ html+='<div class="card train-today-banner"><span class="tool-icon">'+appIcon('calendar',20)+'</span><div><div class="eyebrow">TODAY ONLY</div><b>'+new Date(todayStr()+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})+'</b></div><span class="pill" style="margin-left:auto;background:var(--accent-soft);color:var(--accent)">'+(isTraining(dk)?'Training':dayType(dk)==='act'?'Activity':'Recovery')+'</span></div>';
 
- // weekly weigh-in prompt
  // weekly weigh-in prompt
  if(isToday&&needsWeighIn()){
   html+='<div class="card" style="border-color:#2F7DE1"><div class="eyebrow" style="color:#2F7DE1">Weekly weigh-in</div>'+
@@ -3317,7 +3197,7 @@ function profileView(){
  html+='<section class="settings-section"><div class="modern-panel-title"><h3>Achievements</h3><span>Unlocked from your activity</span></div><div class="achievement-row">'+ach.map(function(a){return '<div class="achievement"><div class="ico">'+appIcon(a[0],23)+'</div><b>'+a[1]+'</b><span>'+a[2]+'</span></div>';}).join('')+'</div></section>';
 
  html+='<div class="profile-section-grid">'+
-   '<section class="settings-section"><div class="modern-panel-title"><h3>Appearance</h3><span>Pristine FlexFuel palette</span></div><div class="theme-grid theme-grid-three">'+[['system','System'],['light','Light'],['dark','Dark']].map(function(x){return '<button class="theme-choice '+(st.theme===x[0]?'on':'')+'" onclick="setTheme(\''+x[0]+'\')"><div class="theme-preview '+x[0]+'"></div>'+x[1]+'</button>';}).join('')+'</div><div class="sub" style="margin-top:12px">System follows your device appearance. FlexFuel now uses one clean blue-and-orange brand palette across Light and Dark for maximum visibility.</div></section>'+
+   '<section class="settings-section"><div class="modern-panel-title"><h3>Appearance</h3><span>FlexFuel green stays consistent</span></div><div class="theme-grid theme-grid-three">'+[['system','System'],['light','Light'],['dark','Dark']].map(function(x){return '<button class="theme-choice '+(st.theme===x[0]?'on':'')+'" onclick="setTheme(\''+x[0]+'\')"><div class="theme-preview '+x[0]+'"></div>'+x[1]+'</button>';}).join('')+'</div><div class="sub" style="margin-top:12px">System follows your device appearance. FlexFuel uses one brand-green accent in every theme for consistent contrast.</div></section>'+
    '<section class="settings-section"><div class="modern-panel-title"><h3>Experience</h3><span>Comfort & accessibility</span></div><div class="setting-stack">'+
       '<div class="setting-row"><div class="setting-label"><b>Haptics</b><span>Tap feedback</span></div><button class="toggle '+(st.haptics?'on':'')+'" onclick="toggleSetting(\'haptics\')"><i></i></button></div>'+
       '<div class="setting-row"><div class="setting-label"><b>Reduce motion</b><span>Fewer animations</span></div><button class="toggle '+(st.reduceMotion?'on':'')+'" onclick="toggleSetting(\'reduceMotion\')"><i></i></button></div>'+
@@ -3354,7 +3234,7 @@ var TABS=[['home','home','Home'],['today','workout','Train'],['progress','progre
 var VIEWS={home:homeView,today:todayView,progress:progressView,food:foodView,more:moreView,dash:dashView};
 
 function loginView(){
- return '<header class="brand-login-head"><div class="brand-login-mark">'+brandMark(92,'brand-login-icon')+'</div><div class="eyebrow">'+APP_NAME+'</div>'+
+ return '<header class="brand-login-head"><div class="brand-login-mark">'+brandLogo(0,'brand-hero-logo')+'</div><div class="eyebrow">'+APP_NAME+'</div>'+
   '<h1 class="display" style="color:var(--accent);font-size:38px">Welcome to '+APP_NAME+'</h1>'+
   '<p class="sub brand-login-sub">'+APP_TAG+'</p><div class="accent-bar" style="background:var(--hero-grad)"></div></header>'+
   '<div class="card brand-login-card" style="margin-top:20px">'+
