@@ -916,9 +916,15 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 .brand-mini-copy{display:flex;flex-direction:column;line-height:1.05}
 .brand-mini-copy b{font-size:13px;letter-spacing:-.02em;color:var(--chalk)}
 .brand-mini-copy span{font-size:9.5px;color:var(--dim)}
-.brand-login-head{text-align:center;padding-top:40px!important}
-.brand-login-mark{display:flex;justify-content:center;margin:0 auto 16px;padding:12px 18px;width:min(340px,88vw);background:#fff;border:1px solid rgba(18,32,20,.10);border-radius:22px;box-shadow:0 18px 44px rgba(7,18,8,.14)}
+.brand-login-head{text-align:center;padding-top:30px!important}
+.brand-login-mark,.signup-logo-wrap{display:flex;justify-content:center;margin:0 auto 14px;padding:0;width:min(190px,48vw);background:transparent!important;border:0!important;border-radius:0;box-shadow:none!important}
 .brand-hero-logo{width:100%;height:auto;display:block;object-fit:contain;filter:none}
+.signup-brand-head{text-align:center;padding:24px 18px 8px!important}
+.train-brand-header{padding:10px 18px 4px}
+.train-brand-row{position:relative;display:flex;align-items:center;justify-content:center;min-height:50px}
+.train-logo{display:block;width:min(190px,48vw);height:auto;object-fit:contain;background:transparent!important;border:0!important;padding:0;box-shadow:none!important;filter:drop-shadow(0 5px 10px rgba(17,24,19,.08))}
+.train-brand-row .header-profile-btn{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+:root[data-resolved-theme="dark"] .brand-hero-logo,:root[data-resolved-theme="dark"] .train-logo{content:url('flexfuel_fitness_logo_dark.png')}
 .brand-login-sub{max-width:320px;margin:8px auto 0}
 .brand-login-card{border-top:3px solid rgba(var(--accent-rgb),.28)}
 .go-btn{box-shadow:0 14px 32px rgba(var(--accent-rgb),.22)}
@@ -2273,7 +2279,7 @@ function recommend(id){
  return {sets:sets,w:w,goal:goal,tag:tag,dl:dl,ez:ez,why:why.join(' ')};
 }
 function tagChip(rec,hex){
- var M={first:['NEW',hex],up:['▲ UP','#22C36A'],hold:['HOLD','#F0A626'],reset:['▼ RESET','#E4573D'],same:['+1 REP','#857F71']};
+ var M={first:['NEW','#D9363E'],up:['▲ UP','#22C36A'],hold:['HOLD','#F0A626'],reset:['▼ RESET','#E4573D'],same:['+1 REP','#857F71']};
  var t=M[rec.tag],h='<span class="tag" style="background:'+t[1]+'22;color:'+t[1]+'">'+t[0]+'</span>';
  if(rec.dl)h+='<span class="tag" style="background:#2F7DE122;color:#2F7DE1">DELOAD</span>';
  if(rec.ez)h+='<span class="tag" style="background:#F0A62622;color:#F0A626">EASED</span>';
@@ -2597,10 +2603,14 @@ function headerHtml(title,type){
  return '<header><div class="app-header-row"><div>'+brandMini()+'<div class="eyebrow">'+eyebrow+'</div><h1 class="display" style="color:'+(HEX[type]||'var(--accent)')+'">'+esc(title)+'</h1></div>'+
   (S.profile?'<button class="header-profile-btn" onclick="openProfile()" aria-label="Profile"><span class="header-avatar">'+initials()+'</span></button>':'')+'</div></header>';
 }
+function trainHeaderHtml(){
+ return '<header class="train-brand-header"><div class="train-brand-row">'+brandLogo(0,'train-logo')+
+  (S.profile?'<button class="header-profile-btn" onclick="openProfile()" aria-label="Profile"><span class="header-avatar">'+initials()+'</span></button>':'')+'</div></header>';
+}
 
 function onboardView(){
  var pr=S.profile||{};if(obSplit==null||!obDraft)obInit();var d=obDraft,step=obStep||0;
- var html='<header style="padding-top:34px"><div class="eyebrow">'+APP_NAME+' · Step '+(step+1)+' of 3</div><h1 class="display" style="color:var(--accent)">'+(pr.name?'Edit profile':'Build your FlexFuel profile')+'</h1></header>'+
+ var html='<header class="signup-brand-head"><div class="signup-logo-wrap">'+brandLogo(0,'brand-hero-logo')+'</div><div class="eyebrow">Step '+(step+1)+' of 3</div><h1 class="display" style="color:var(--accent)">'+(pr.name?'Edit profile':'Build your profile')+'</h1></header>'+
   '<div class="setup-progress"><i class="'+(step>=0?'on':'')+'"></i><i class="'+(step>=1?'on':'')+'"></i><i class="'+(step>=2?'on':'')+'"></i></div>';
  if(step===0){html+='<div class="card"><div class="settings-title"><h3>About you</h3><span>Used for FlexFuel training & nutrition estimates</span></div><label class="profile-select-label">Name</label><input id="ob-name" class="inp" placeholder="Your name" value="'+esc(d.name||'')+'"><div class="row" style="margin-top:12px"><div style="flex:1"><label class="profile-select-label">Age</label><input id="ob-age" class="inp" type="number" inputmode="numeric" value="'+esc(d.age||'')+'" placeholder="Age"></div><div style="flex:1"><label class="profile-select-label">Sex</label><select id="ob-sex" class="inp"><option value="M"'+(d.sex!=='F'?' selected':'')+'>Male</option><option value="F"'+(d.sex==='F'?' selected':'')+'>Female</option></select></div></div><div class="row" style="margin-top:12px"><div style="flex:1.2"><label class="profile-select-label">Height</label><div class="row"><input id="ob-ft" class="inp" type="number" inputmode="numeric" placeholder="ft" value="'+esc(d.ft||'')+'"><input id="ob-in" class="inp" type="number" inputmode="numeric" placeholder="in" value="'+esc(d.inch||'')+'"></div></div><div style="flex:1"><label class="profile-select-label">Weight (lb)</label><input id="ob-w" class="inp" type="number" inputmode="decimal" value="'+esc(d.w||'')+'" placeholder="lb"></div></div><label class="profile-select-label" style="margin-top:12px">Training level</label><select id="ob-level" class="inp"><option value="beginner"'+(d.level==='beginner'?' selected':'')+'>Beginner</option><option value="intermediate"'+(d.level==='intermediate'?' selected':'')+'>Intermediate</option><option value="advanced"'+(d.level==='advanced'?' selected':'')+'>Advanced</option></select></div>';
  }
@@ -2648,7 +2658,7 @@ function todayView(){
  var dk=viewDay,type=dayType(dk),hex=HEX[type],isToday=dk===dayKeyOf(todayStr());
  var scheduledDate=trainViewDate||weekDates()[DAYS.indexOf(dk)];
  var scheduleType=isTraining(dk)?'Training':dayType(dk)==='act'?'Activity':'Recovery';
- var html=headerHtml(isToday?'Today':dayLabel(dk),type);
+ var html=trainHeaderHtml();
  html+='<div class="card train-day-browser">'+
   '<button class="train-day-arrow" onclick="shiftTrainDay(-1)" aria-label="Previous day">‹</button>'+
   '<div class="train-day-center"><div class="train-day-top">'+(isToday?'<span class="train-today-chip">Today</span>':'<button class="train-today-jump" onclick="trainGoToday()">Go to today</button>')+'</div><b>'+dayLabel(dk)+'</b><small>'+new Date(scheduledDate+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})+' · '+scheduleType+'</small></div>'+
@@ -2729,19 +2739,13 @@ function todayView(){
   var setsDone=entry?entry.sets.filter(function(s){return s&&(+s.w||+s.r);}).length:0;
   var done=setsDone>=rec.sets&&setsDone>0;
   var timeBased=ex.inc===0&&ex.rMin>=20;
-  var wu=BAR[id]?warmups(rec.w):[],pl=BAR[id]&&rec.w?plates(rec.w):'';
   html+='<div class="ex'+(open?' open':'')+(done?' done-ex':'')+'">'+
    '<div class="ex-head">'+
-   '<button class="exercise-thumb-btn" type="button" onclick="event.stopPropagation();showExerciseImage(\''+id+'\')" aria-label="View '+esc(ex.name)+' image">'+
-    '<img class="exercise-thumb" src="img/'+id+'.jpg" alt="" loading="lazy" onerror="this.closest(\'.exercise-thumb-btn\').style.display=\'none\'">'+
-   '</button>'+
    '<div style="flex:1;min-width:0"><div class="ex-title">'+(done?'✓ ':'')+esc(ex.name)+'</div>'+
-   '<div class="ex-meta">'+setsDone+'/'+rec.sets+' sets · '+rec.goal+(timeBased?' s':' reps')+' · rest '+ex.rest+'s</div>'+
-   (lastLog(id)&&lastLog(id).d!==t?'<div class="ex-last">Last: '+lastLog(id).sets.map(function(s){return s.w+'×'+s.r;}).slice(0,3).join(' · ')+'</div>':'')+'</div>'+
-   '<button class="chev" onclick="toggleEx('+i+')" aria-label="Details">▼</button></div>'+
-   '<div class="rec"><span class="display" style="font-size:22px;color:'+hex+'">'+(rec.w?rec.w+' lb':'')+'<span style="font-size:13px;color:var(--chalk)"> × '+rec.goal+(timeBased?' s':'')+'</span></span>'+
-   tagChip(rec,hex)+(pl?'<span class="sub">'+pl+'</span>':'')+(wu.length?'<span class="sub" style="width:100%">'+wu.map(function(s){return s.w+'×'+s.r;}).join(' → ')+'</span>':'')+'</div>';
-  if(isToday){
+   '<div class="ex-meta">'+setsDone+' of '+rec.sets+' sets complete</div></div>'+
+   '<button class="chev" onclick="toggleEx('+i+')" aria-label="'+(open?'Close':'Open')+' '+esc(ex.name)+'">▼</button></div>'+
+   '<div class="rec"><span><span class="eyebrow" style="margin-right:6px">Target</span><b style="color:var(--chalk)">'+(rec.w?rec.w+' lb':'Choose weight')+'</b><span class="sub"> · '+rec.goal+(timeBased?' sec':' reps')+'</span></span>'+tagChip(rec,hex)+'</div>';
+  if(isToday&&open){
    html+='<div class="sets">';
    var totalRows=Math.max(rec.sets,entry?entry.sets.length:0)+(extraSets[id]||0);var prior=logsOf(id).filter(function(l){return l.d<t;});var priorLog=prior.length?prior[prior.length-1]:null;
    for(var si=0;si<totalRows;si++){
@@ -2751,8 +2755,6 @@ function todayView(){
      '<input id="w-'+i+'-'+si+'" type="number" inputmode="decimal" placeholder="'+(priorSet&&priorSet.w?priorSet.w:(rec.w||'lb'))+'" value="'+(pv?pv.w:'')+'">'+
      '<span class="x">lb ×</span>'+
      '<input id="r-'+i+'-'+si+'" type="number" inputmode="numeric" placeholder="'+(priorSet&&priorSet.r?priorSet.r:(timeBased?'sec':'reps'))+'" value="'+(pv?pv.r:'')+'">'+
-     '<select id="rp-'+i+'-'+si+'" class="rpe-select" title="Rate of perceived exertion"><option value="">RPE</option>'+[6,7,8,9,10].map(function(x){return '<option value="'+x+'"'+(pv&&pv.rpe===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select>'+
-     '<button class="repeat-set-btn" onclick="fillSetFromPrevious(\''+id+'\','+i+','+si+')" aria-label="Repeat previous set">↺</button>'+
      '<button onclick="logSet(\''+id+'\','+i+','+si+','+ex.rest+')" aria-label="Log set" style="width:40px;height:40px;border-radius:9px;flex-shrink:0;border:2px solid '+(pv?'#22C36A':hex)+';background:'+(pv?'#22C36A':'transparent')+';color:'+(pv?'#fff':hex)+';font-weight:700">✓</button>'+
      (pr?'<span style="color:#22C36A;font-weight:700;font-size:12px">★</span>':'')+'</div>';
    }
@@ -2761,15 +2763,10 @@ function todayView(){
   if(open){
    var canSwap=EXDB[base]&&EXDB[base].alts&&EXDB[base].alts.length;
    html+='<div class="detail">'+
-    '<dd>'+esc(ex.cues)+'</dd>'+
-    '<div class="chips"><span class="chip">'+esc(ex.tempo)+'</span><span class="chip">'+esc(ex.rir)+'</span></div>'+
-    '<p class="sub" style="margin:10px 0 0">'+esc(rec.why)+'</p>'+
-    iconGrid(ex.pri,ex.sec,hex)+
-    '<button class="ghost-btn" style="width:100%;margin-top:12px;color:var(--chalk)" onclick="histEx=\''+id+'\';navTo(\'more\',\'history\')">View exercise history</button>'+
-    (canSwap?('<div class="eyebrow" style="margin:14px 0 4px">Swap (same pattern)</div>'+
+    '<div class="eyebrow" style="margin-bottom:5px">Form cue</div><dd>'+esc(ex.cues)+'</dd>'+
+    (canSwap?('<div class="eyebrow" style="margin:14px 0 4px">Swap exercise</div>'+
     '<div class="row"><select class="inp" id="sub-'+i+'">'+[base].concat(EXDB[base].alts).map(function(a){return '<option value="'+a+'"'+(a===id?' selected':'')+'>'+esc(EXDB[a].name)+'</option>';}).join('')+'</select>'+
     '<button class="ghost-btn" style="color:var(--chalk)" onclick="subEx('+i+',\''+dk+'\')">Swap</button></div>'):'')+
-    '<button class="ghost-btn" style="width:100%;margin-top:12px;color:#E4573D;border-color:rgba(228,87,61,.4)" onclick="deleteExercise(\''+dk+'\',\''+id+'\')">Remove from this day</button>'+
    '</div>';
   }
   html+='</div>';
@@ -3262,8 +3259,8 @@ var TABS=[['home','home','Home'],['today','workout','Train'],['progress','progre
 var VIEWS={home:homeView,today:todayView,progress:progressView,food:foodView,more:moreView,dash:dashView};
 
 function loginView(){
- return '<header class="brand-login-head"><div class="brand-login-mark">'+brandLogo(0,'brand-hero-logo')+'</div><div class="eyebrow">'+APP_NAME+'</div>'+
-  '<h1 class="display" style="color:var(--accent);font-size:38px">Welcome to '+APP_NAME+'</h1>'+
+ return '<header class="brand-login-head"><div class="brand-login-mark">'+brandLogo(0,'brand-hero-logo')+'</div>'+
+  '<h1 class="display" style="color:var(--accent);font-size:38px">Welcome</h1>'+
   '<p class="sub brand-login-sub">'+APP_TAG+'</p><div class="accent-bar" style="background:var(--hero-grad)"></div></header>'+
   '<div class="card brand-login-card" style="margin-top:20px">'+
   '<button class="go-btn" style="background:var(--hero-grad);display:flex;align-items:center;justify-content:center;gap:10px" onclick="signInGoogle()">'+
