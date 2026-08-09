@@ -1281,7 +1281,34 @@ function addExercise(dk){
 }
 function setHistEx(){var el=document.getElementById('hist-sel');if(el){histEx=el.value;render();}}
 function subEx(i,dk){var el=document.getElementById('sub-'+i);if(!el)return;S.subs[dk+'-'+i]=el.value;openEx=null;save();render();}
+function sundayKey(d){
+ d=d?new Date(d+'T12:00:00'):new Date();
+ var day=d.getDay();
+ d.setDate(d.getDate()-day);
+ return d.toISOString().slice(0,10);
+}
+function isSunday(){return new Date().getDay()===0;}
+function sundayWeighIn(d){
+ d=d||todayStr(); var key=sundayKey(d),found=null;
+ for(var i=0;i<S.body.length;i++){if(S.body[i].d===key&&S.body[i].w){found=S.body[i];break;}}
+ return found;
+}
+function latestSundayWeights(){
+ var map={};
+ S.body.forEach(function(b){if(b.w){var k=sundayKey(b.d);if(!map[k]||b.d>=map[k].d)map[k]={d:b.d,w:+b.w};}});
+ return Object.keys(map).sort().map(function(k){return map[k];});
+}
+function nextSundayLabel(){var d=new Date(),delta=(7-d.getDay())%7;if(delta===0)delta=7;d.setDate(d.getDate()+delta);return d.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});}
 function quickWeight(){var el=document.getElementById('qw');var w=el?+el.value:0;if(!w)return;S.body.push({d:todayStr(),w:w});save();render();}
+function addSundayWeight(){
+ var el=document.getElementById('sunday-bw'),w=el?+el.value:0;
+ if(!w){alert('Enter your body weight.');return;}
+ if(!isSunday()){alert('Weekly body-weight recording is scheduled for Sunday.');return;}
+ var key=todayStr(),existing=sundayWeighIn(key);
+ if(existing){S.body=S.body.map(function(b){return(b.d===key&&b.w)?Object.assign({},b,{w:w}):b;});}
+ else S.body.push({d:key,w:w});
+ save();render();
+}
 function addBody(){var w=+(document.getElementById('bw')||{}).value||null;var wa=+(document.getElementById('waist')||{}).value||null;
  if(!w&&!wa)return;S.body.push({d:todayStr(),w:w,wa:wa});save();render();}
 function editProfile(){editProf=true;obSplit=null;obSched=null;render();}
@@ -1562,18 +1589,18 @@ function historyView(){
 function bodyView(){
  var ws=S.body.filter(function(b){return b.w;}).map(function(b){return b.w;});
  var was=S.body.filter(function(b){return b.wa;}).map(function(b){return b.wa;});
- var html=headerHtml('Body','lower');
- html+='<div class="card"><h3>Log today</h3><div class="row" style="margin-top:8px">'+
-  '<input id="bw" class="inp" type="number" inputmode="decimal" placeholder="Weight (lb)">'+
-  '<input id="waist" class="inp" type="number" inputmode="decimal" placeholder="Waist (in)"></div>'+
-  '<button class="go-btn" style="background:#2F7DE1;margin-top:10px" onclick="addBody()">Save entry</button>'+
-  '<p class="sub" style="margin:10px 0 0">Mornings, 2–3×/wk · waist weekly at navel · trust 2-week trends · photos every 2 wks stay in your Photos app.</p></div>';
- html+='<div class="grid2"><div class="card"><div class="eyebrow">Weight</div><div class="display big">'+(ws.length?ws[ws.length-1]+' lb':'—')+'</div>'+spark(ws,'#3B6FF5')+'</div>'+
-  '<div class="card"><div class="eyebrow">Waist</div><div class="display big">'+(was.length?was[was.length-1]+' in':'—')+'</div>'+spark(was,'#22C36A')+'</div></div>';
- if(S.body.length)html+='<div class="card"><h3>Entries</h3>'+S.body.slice().reverse().slice(0,14).map(function(b){return '<div class="hist-row"><span class="sub">'+b.d+'</span><span>'+(b.w?b.w+' lb':'')+(b.wa?' · '+b.wa+' in':'')+'</span></div>';}).join('')+'</div>';
+ var sundays=latestSundayWeights(),todaySunday=sundayWeighIn(todayStr()),html=headerHtml('Body','lower');
+ var sundayTitle=isSunday()?(todaySunday?'Sunday weigh-in complete ✓':'Sunday weigh-in'):'Next Sunday weigh-in';
+ var sundaySub=isSunday()?(todaySunday?'This week is recorded. You can update it today if needed.':'Take your weight this morning, before breakfast, under similar conditions each week.'):'Your weekly check-in is scheduled for '+nextSundayLabel()+'.';
+ html+='<div class="card" style="border:1px solid '+(isSunday()&&!todaySunday?'#2F7DE1':'var(--premium-border)')+' !important;box-shadow:0 16px 42px rgba(47,125,225,.10) !important">'+
+  '<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><div class="eyebrow" style="color:#2F7DE1">WEEKLY CHECK-IN</div><h3 style="font-size:22px;margin:3px 0 4px">'+sundayTitle+'</h3><p class="sub" style="margin:0">'+sundaySub+'</p></div>'+iconTile('#2F7DE1','⚖️',46)+'</div>'+
+  (isSunday()?'<div class="row" style="margin-top:16px"><input id="sunday-bw" class="inp" type="number" step="0.1" inputmode="decimal" placeholder="Body weight (lb)" value="'+(todaySunday?todaySunday.w:'')+'"><button class="go-btn" style="background:#2F7DE1;min-width:150px" onclick="addSundayWeight()">RECORD</button></div>':'<div class="sub" style="margin-top:14px;padding:11px 12px;border-radius:12px;background:var(--card-up)">Keep the scale entry weekly on Sunday for a cleaner trend.</div>')+
+  '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><span class="sub">Sunday entries</span><b>'+sundays.length+'</b></div></div>';
+ html+='<div class="grid2"><div class="card"><div class="eyebrow">Latest weight</div><div class="display big">'+(ws.length?ws[ws.length-1]+' lb':'—')+'</div>'+spark(ws,'#3B6FF5')+'</div><div class="card"><div class="eyebrow">Waist</div><div class="display big">'+(was.length?was[was.length-1]+' in':'—')+'</div>'+spark(was,'#22C36A')+'</div></div>';
+ if(sundays.length){html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="margin:0">Sunday trend</h3><span class="sub">last '+Math.min(8,sundays.length)+' weeks</span></div>';sundays.slice(-8).reverse().forEach(function(b,i){var prev=sundays[sundays.length-2-i],delta=prev?+(b.w-prev.w).toFixed(1):null;html+='<div class="hist-row"><span class="sub">'+b.d+'</span><span><b>'+b.w+' lb</b>'+(delta!==null?' <span class="sub">'+(delta>0?'+':'')+delta+' lb</span>':'')+'</span></div>';});html+='</div>';}
+ if(S.body.length)html+='<div class="card"><details><summary style="cursor:pointer;font-weight:700">Other body entries</summary><div style="margin-top:8px">'+S.body.slice().reverse().slice(0,20).map(function(b){return '<div class="hist-row"><span class="sub">'+b.d+'</span><span>'+(b.w?b.w+' lb':'')+(b.wa?' · '+b.wa+' in':'')+'</span></div>';}).join('')+'</div></details></div>';
  return html;
 }
-
 function dashView(){
  var wd=weekDates(),ph=phase();
  var lifts=wd.filter(liftDoneOn).length,pbs=wd.filter(function(d){return actDoneOn(d)||S.pb[d];}).length,vol=weekVolume();
@@ -1679,6 +1706,11 @@ function homeView(){
   '<div class="sub" style="color:'+(volDelta>=0?'#22C36A':'#F0603A')+';font-weight:700">'+(vv.prev?(volDelta>=0?'\u25b2 +':'\u25bc ')+volDelta+'%':'first week')+'</div></div>';
  html+='</div>';
 
+ // ---- SUNDAY BODYWEIGHT PROMPT ----
+ var sw=sundayWeighIn(todayStr());
+ if(isSunday()){
+  html+='<div class="card" style="border-color:#2F7DE1 !important"><div style="display:flex;align-items:center;gap:10px">'+iconTile('#2F7DE1','⚖️',38)+'<div style="flex:1"><div class="eyebrow" style="color:#2F7DE1">SUNDAY CHECK-IN</div><h3 style="margin:2px 0">'+(sw?'Weight recorded ✓':'Record your weekly body weight')+'</h3><div class="sub">'+(sw?sw.w+' lb · weekly check-in complete.':'A consistent Sunday weigh-in makes your trend easier to read.')+'</div></div><button class="ghost-btn" style="color:#2F7DE1" onclick="setTab(\'body\')">'+(sw?'Review':'Record')+'</button></div></div>';
+ }
  // ---- WEEKLY STATS as segmented pills ----
  var wd=weekDates(),lifts=wd.filter(liftDoneOn).length,pbs=wd.filter(function(d){return actDoneOn(d)||S.pb[d];}).length;
  var wvol=weekVolume();
