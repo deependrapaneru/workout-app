@@ -477,8 +477,16 @@ function targets(){
  var kg=bw*0.4536,cm=(pr.heightIn||69)*2.54,age=pr.age||33;
  var bmr=10*kg+6.25*cm-5*age+(pr.sex==='F'?-161:5);
  var tdee=bmr*1.55,minor=age<18;
- return {bw:bw,minor:minor,cal:Math.round((minor?tdee:tdee-500)/50)*50,prot:Math.round(bw*0.9/5)*5,
-  lo:Math.max(0.5,bw*0.005).toFixed(1),hi:(bw*0.01).toFixed(1)};
+ var goal=pr.goal||'lose'; // lose | maintain | gain
+ var cal,protPerLb,note;
+ if(minor){cal=tdee;protPerLb=0.8;note='maintenance (under 18)';}
+ else if(goal==='maintain'){cal=tdee;protPerLb=0.8;note='maintain weight';}
+ else if(goal==='gain'){cal=tdee+300;protPerLb=0.9;note='lean gain';}
+ else {cal=tdee-500;protPerLb=0.9;note='fat loss';} // lose (default)
+ return {bw:bw,minor:minor,goal:goal,note:note,
+  cal:Math.round(cal/50)*50,
+  prot:Math.round(bw*protPerLb/5)*5,
+  tdee:Math.round(tdee/50)*50};
 }
 function needsWeighIn(){var last=null;for(var i=S.body.length-1;i>=0;i--)if(S.body[i].w){last=S.body[i].d;break;}
  if(!last)return true;return (new Date(todayStr())-new Date(last))/864e5>=7;}
@@ -640,7 +648,9 @@ function saveProfile(){
  DAYS.forEach(function(dk){var el=document.getElementById('sd-'+dk);if(el)obSched[dk]=el.value;});
  var first=!S.profile;
  var prevActs=(S.profile&&S.profile.acts)||{};
- S.profile={name:name,age:age,sex:sex,heightIn:ft*12+inch,weight:w,split:obSplit||'ul',sched:obSched||DEFAULT_SCHED.ul,acts:prevActs};
+ var goalEl=document.getElementById('ob-goal');
+ var goal=goalEl?goalEl.value:((S.profile&&S.profile.goal)||'lose');
+ S.profile={name:name,age:age,sex:sex,heightIn:ft*12+inch,weight:w,goal:goal,split:obSplit||'ul',sched:obSched||DEFAULT_SCHED.ul,acts:prevActs};
  if(first)S.body.push({d:todayStr(),w:w});
 ensureProfileEdits();hydrateCustom();editProf=false;save();render();
 }
@@ -671,8 +681,13 @@ function onboardView(){
     '<div style="flex:1.2"><div class="eyebrow" style="margin-bottom:6px">Height</div><div class="row"><input id="ob-ft" class="inp" type="number" inputmode="numeric" placeholder="ft" value="'+(pr.heightIn?Math.floor(pr.heightIn/12):'')+'"><input id="ob-in" class="inp" type="number" inputmode="numeric" placeholder="in" value="'+(pr.heightIn?pr.heightIn%12:'')+'"></div></div>'+
     '<div style="flex:1"><div class="eyebrow" style="margin-bottom:6px">Weight (lb)</div><input id="ob-w" class="inp" type="number" inputmode="decimal" value="'+(pr.weight||'')+'" placeholder="lb"></div>'+
    '</div>'+
+   '<div style="margin-top:12px"><div class="eyebrow" style="margin-bottom:6px">Goal</div>'+
+   '<select id="ob-goal" class="inp">'+
+    '<option value="lose"'+((pr.goal||'lose')==='lose'?' selected':'')+'>Lose fat</option>'+
+    '<option value="maintain"'+(pr.goal==='maintain'?' selected':'')+'>Maintain weight</option>'+
+    '<option value="gain"'+(pr.goal==='gain'?' selected':'')+'>Build muscle (lean gain)</option>'+
+   '</select></div>'+
   '</div>';
- // split picker
  html+='<div class="card"><div class="eyebrow" style="margin-bottom:8px">Training split</div>'+
   Object.keys(SPLITS).map(function(sp){var on=obSplit===sp,d=SPLITS[sp];
    return '<button onclick="obPickSplit(\''+sp+'\')" style="width:100%;text-align:left;margin-bottom:8px;padding:11px 12px;border-radius:12px;border:1.5px solid '+(on?'#E4573D':'rgba(35,40,58,.15)')+';background:'+(on?'rgba(228,87,61,.08)':'transparent')+';color:var(--chalk)">'+
@@ -936,12 +951,9 @@ function homeView(){
  var dayName=dayNames[now.getDay()];
  var dateStr=monNames[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
  var html='<header style="padding:22px 18px 6px">'+
-  '<div class="sub" style="margin-bottom:6px">'+greet()+', <b style="color:var(--chalk)">'+esc(firstName())+'</b></div>'+
-  '<h1 class="display" style="font-size:40px;color:'+hex+';line-height:1">'+dayName+'</h1>'+
-  '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px">'+
-   '<span class="display" style="font-size:22px;color:var(--chalk)">'+dateStr+'</span>'+
-   '<span class="display" id="home-clock" style="font-size:30px;color:var(--chalk)">'+clockStr()+'</span>'+
-  '</div>'+
+  '<div class="sub" style="margin-bottom:4px">'+greet()+'</div>'+
+  '<h1 class="display" style="font-size:40px;color:'+hex+';line-height:1">'+esc(firstName())+'</h1>'+
+  '<div class="sub" style="margin-top:6px">'+dayName+' · '+dateStr+'</div>'+
   '<div class="accent-bar" style="background:'+hex+';margin-top:10px"></div></header>';
 
  // ---- HERO: today's focus (big, with exercise preview) ----
@@ -1002,12 +1014,26 @@ function homeView(){
   '</div>'+svg+
   '<div class="chips" style="margin-top:8px"><span class="chip" style="border-color:#1FA463;color:#1FA463">Lift</span><span class="chip" style="border-color:#F0A626;color:#F0A626">Activity</span><span class="sub" style="align-self:center">last 12 weeks</span></div></div>';
 
+ // ---- NUTRITION targets (goal-aware) ----
+ var T=targets();
+ html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'+
+  '<h3 style="margin:0">Daily targets</h3><span class="sub">'+esc(T.note)+'</span></div>'+
+  '<div style="display:flex;gap:8px">'+
+   '<div style="flex:1;text-align:center"><div class="display" style="font-size:24px;color:'+hex+'">'+T.cal.toLocaleString()+'</div><div class="sub">calories</div></div>'+
+   '<div style="flex:1;text-align:center;border-left:1px solid var(--line);border-right:1px solid var(--line)"><div class="display" style="font-size:24px;color:'+hex+'">'+T.prot+'g</div><div class="sub">protein</div></div>'+
+   '<div style="flex:1;text-align:center"><div class="display" style="font-size:24px;color:'+hex+'">8–10k</div><div class="sub">steps</div></div>'+
+  '</div></div>';
+
  // ---- weigh-in nudge (only when due) ----
  if(needsWeighIn()){
   html+='<div class="card" style="border-color:#2F7DE1"><div class="eyebrow" style="color:#2F7DE1">Weekly weigh-in due</div>'+
    '<div class="row" style="margin-top:8px"><input id="qw" class="inp" type="number" inputmode="decimal" placeholder="Weight (lb)">'+
    '<button class="go-btn" style="background:#2F7DE1;width:auto;padding:0 20px" onclick="quickWeight()">Save</button></div></div>';
  }
+
+ // ---- account footer ----
+ html+='<div class="card" style="padding:10px 14px"><div class="row"><button class="ghost-btn" style="flex:1;padding:10px 0" onclick="editProfile()">Edit profile</button>'+
+  '<button class="ghost-btn" style="flex:1;padding:10px 0;color:var(--chalk)" onclick="signOut()">Sign out</button></div></div>';
 
  // ---- joke footer (light touch) ----
  html+='<div class="note" style="text-align:center;font-style:italic;padding:2px 24px 0">\u201c'+esc(dailyJoke())+'\u201d</div>';
@@ -1065,8 +1091,8 @@ function dailyJoke(){
 }
 
 // ===================== RENDER =====================
-var TABS=[['home','◆','Home'],['today','▶','Workout'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard'],['plan','✱','Plan']];
-var VIEWS={home:homeView,today:todayView,history:historyView,body:bodyView,dash:dashView,plan:planView};
+var TABS=[['home','◆','Home'],['today','▶','Workout'],['history','☰','History'],['body','⚖','Body'],['dash','▦','Dashboard']];
+var VIEWS={home:homeView,today:todayView,history:historyView,body:bodyView,dash:dashView};
 
 function loginView(){
  return '<header style="padding-top:60px"><div class="eyebrow">Training Week</div>'+
