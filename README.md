@@ -14,6 +14,3 @@ This build focuses on the mobile experience without changing the core training d
 - Overscroll and touch behavior tuned for installed/mobile use
 - Existing themes, Supabase sync, workouts, food, body tracking, templates and progress remain intact
 - Service worker cache bumped to training-week-ios-polish-v3
-
-## Mobile behavior
-For best iOS behavior, deploy all files together and open the app once in Safari after updating. If installed to the Home Screen, relaunch it after the site refreshes so the new service-worker cache takes effect.
