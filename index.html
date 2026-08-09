@@ -1044,12 +1044,14 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .home-action-card b{display:block;font-size:13px}
 .home-action-card span{display:block;font-size:11px;color:var(--dim);margin-top:2px}
 .home-split-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin:0 14px 16px}
-.home-clean-head{margin:16px 18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.home-clean-head{margin:14px 18px 14px;display:flex;flex-direction:column;align-items:stretch;gap:12px;text-align:left}
 .home-logo-wrap{display:flex;align-items:center;justify-content:center;width:100%;min-width:0}
-.home-logo-large{display:block;width:min(340px,calc(100vw - 42px));max-width:100%;height:auto;object-fit:contain;background:transparent!important;border:0!important;border-radius:0;padding:0;box-shadow:none!important;filter:drop-shadow(0 8px 16px rgba(17,24,19,.10))}
+.home-logo-large{display:block;width:min(240px,60vw);max-width:100%;height:auto;object-fit:contain;background:transparent!important;border:0!important;border-radius:0;padding:0;box-shadow:none!important;filter:drop-shadow(0 6px 12px rgba(17,24,19,.09))}
 :root[data-resolved-theme="dark"] .home-logo-large{content:url('flexfuel_fitness_logo_dark.png');filter:drop-shadow(0 8px 18px rgba(0,0,0,.32))}
-.home-clean-date{text-align:center;color:var(--dim);font-size:11px;line-height:1.4}
-.home-clean-date b{display:block;color:var(--chalk);font-size:14px;margin-bottom:1px}
+.home-clean-date{text-align:left;color:var(--dim);line-height:1.25}
+.home-clean-date>span{display:block;font-size:12px;font-weight:650;color:var(--dim)}
+.home-clean-date b{display:block;color:var(--chalk);font-size:28px;line-height:1.05;margin:2px 0 5px;letter-spacing:-.035em}
+.home-clean-date small{display:block;color:var(--dim);font-size:12px}
 .home-today-card{padding:18px!important}
 .home-today-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .home-today-title{font-size:27px;line-height:1.05;margin:4px 0 6px}
@@ -2919,7 +2921,7 @@ function homeView(){
  var calPct=Math.max(0,Math.min(100,Math.round((tot.k/Math.max(1,T.cal))*100)));
  var mission=isTraining(nu.dk)?nu.label:(dayType(nu.dk)==='act'?activityName(nu.dk):'Recovery day');
  var missionMeta=isTraining(nu.dk)?(exCount+' exercises · about '+estMin(nu.dk)+' min'):dayType(nu.dk)==='act'?'Activity scheduled for today':'Rest, recover, and prepare for the next session';
- var html='<section class="home-clean-head"><div class="home-logo-wrap">'+brandLogo(0,'home-logo-large')+'</div><div class="home-clean-date"><b>'+greet()+', '+esc(firstName())+'</b>'+dayName+'<br>'+dateStr+'</div></section>';
+ var html='<section class="home-clean-head"><div class="home-logo-wrap">'+brandLogo(0,'home-logo-large')+'</div><div class="home-clean-date"><span>'+greet()+'</span><b>'+esc(firstName())+'</b><small>'+dayName+' · '+dateStr+'</small></div></section>';
  html+='<section class="card home-today-card"><div class="home-today-top"><div><div class="eyebrow">Today</div><div class="display home-today-title">'+esc(mission)+(done?' ✓':'')+'</div><div class="home-today-meta">'+missionMeta+'</div></div><span class="home-week-chip">Week '+weekNum()+'</span></div>'+
   '<div class="home-clean-actions"><button class="go-btn" onclick="setTab(\'today\')">'+(done?'Review today':isTraining(nu.dk)?'Start training':'Open today')+'</button><button class="ghost-btn" onclick="setTab(\'food\')">Fuel</button></div></section>';
  html+='<div class="home-essential-grid"><div class="home-essential-card"><span>Weekly goal</span><b>'+lifts+' / '+goal+'</b><small>'+weekPct+'% complete</small><div class="mini-progress"><i style="width:'+weekPct+'%"></i></div></div>'+
