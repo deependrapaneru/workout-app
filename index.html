@@ -885,6 +885,13 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 .setup-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 18px 14px}.setup-progress i{height:5px;border-radius:99px;background:var(--surface3)}.setup-progress i.on{background:var(--accent)}.setup-choice{width:100%;text-align:left;border:1px solid var(--hair);background:var(--surface2);color:var(--chalk);border-radius:15px;padding:12px;margin-top:8px}.setup-choice.on{border-color:var(--accent);background:var(--accent-soft)}.setup-choice b,.setup-choice span{display:block}.setup-choice b{font-size:13px}.setup-choice span{font-size:10px;color:var(--dim);margin-top:3px}.setup-day{align-items:center;margin-top:8px}.setup-day>b{width:38px;font-size:12px}.setup-actions{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);gap:8px;margin:0 18px 12px}.setup-actions .ghost-btn,.setup-actions .go-btn{min-height:48px}
 @media(max-width:560px){.setup-progress,.setup-actions{margin-left:14px;margin-right:14px}}
 
+
+/* ===== HOME FOOD SEARCH + MY FOODS LIBRARY ===== */
+.home-food-actions{display:flex;gap:7px;align-items:center}.home-food-actions .ghost-btn{min-height:38px!important;padding:7px 10px!important;color:var(--chalk)!important;display:flex;align-items:center;gap:5px;white-space:nowrap}.home-food-actions .app-icon{width:15px;height:15px;color:var(--accent)}
+.food-library-card{padding:14px 16px!important}.food-library-copy{display:flex;align-items:center;gap:11px}.food-library-copy>div{min-width:0}.food-library-copy b{display:block;font-size:13px}.food-library-copy small{display:block;color:var(--dim);font-size:10px;line-height:1.4;margin-top:2px}.food-library-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px}.food-library-actions button{border:1px solid var(--hair);background:var(--surface2);color:var(--chalk);border-radius:12px;min-height:42px;padding:7px 6px;font-size:9.5px;font-weight:750}.food-library-actions button b{color:var(--accent)}
+.my-food-badge{font-style:normal;font-size:7.5px;letter-spacing:.06em;background:var(--accent-soft);color:var(--accent);padding:3px 5px;border-radius:999px;vertical-align:2px;margin-left:4px;white-space:nowrap}.food-manage{width:40px;min-width:40px;border:0;background:transparent;color:var(--dim);font-size:16px}.food-sync-note{display:flex;align-items:flex-start;gap:7px;background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:10px 11px;font-size:9.5px;line-height:1.4;margin:5px 0 2px}.food-sync-note .app-icon{flex:0 0 16px;margin-top:1px}.my-food-manage-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.my-food-manage-row button{border:1px solid var(--hair);background:var(--surface2);color:var(--chalk);border-radius:11px;min-height:40px;font-size:10px;font-weight:750}.my-food-manage-row button.danger{color:var(--red)}
+@media(max-width:420px){.home-food-actions{gap:5px}.home-food-actions .ghost-btn{padding:7px 8px!important;font-size:10px!important}.food-library-actions{grid-template-columns:1fr}.food-library-actions button{font-size:10px}.food-library-copy small{font-size:9.5px}}
+
 </style>
 </head>
 <body>
@@ -1545,9 +1552,10 @@ function getFood(fid){
  var m=ensureFoodMeta();return m.customFoods[fid]||null;
 }
 function allFoods(){
- var m=ensureFoodMeta(),custom=Object.keys(m.customFoods).map(function(id){return m.customFoods[id];});
+ var m=ensureFoodMeta(),custom=Object.keys(m.customFoods).map(function(id){return m.customFoods[id];}).filter(function(f){return f&&!f.archived;});
  return FOODS.concat(custom);
 }
+function customFoodCount(){var m=ensureFoodMeta(),n=0;Object.keys(m.customFoods).forEach(function(id){if(m.customFoods[id]&&!m.customFoods[id].archived)n++;});return n;}
 function foodLog(ds){return (S.food&&S.food[ds])||[];}
 function foodComputed(entry){
  var f=getFood(entry.fid);if(!f)return{k:0,p:0,cb:0,f:0,fi:0,grams:0};
@@ -1862,7 +1870,7 @@ function setProgressRange(n){progressWeeks=n==='all'?Math.min(52,Math.max(8,week
 
 
 // ===================== ACTIONS =====================
-function setTab(t){var same=tab===t;if(tab==='food'&&t!=='food'&&typeof stopBarcodeScanner==='function')stopBarcodeScanner();tab=t;openEx=null;addingTo=null;haptic(same?7:10);render();try{window.scrollTo({top:0,behavior:(S.settings&&S.settings.reduceMotion)?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}}
+function setTab(t){var same=tab===t;if(tab==='food'&&t!=='food'&&typeof stopBarcodeScanner==='function')stopBarcodeScanner();if(t!=='food'&&typeof foodSearchOrigin!=='undefined')foodSearchOrigin='food';tab=t;openEx=null;addingTo=null;haptic(same?7:10);render();try{window.scrollTo({top:0,behavior:(S.settings&&S.settings.reduceMotion)?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}}
 function setDay(k){viewDay=k;openEx=null;addingTo=null;render();}
 function toggleEx(i){openEx=openEx===i?null:i;render();}
 function setCheckin(v){S.checkin[todayStr()]=v;save();render();}
@@ -1993,6 +2001,7 @@ function appIcon(name,size){
   workout:'<path d="M6 8v8M3.5 10v4M18 8v8M20.5 10v4M6 12h12"/>',
   progress:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
   food:'<path d="M7 3v7M4 3v5c0 2 1.3 3 3 3s3-1 3-3V3M7 11v10M17 3v18M17 3c3 2 4 6 4 9h-4"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
   more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4.5 21c.8-4 3.3-6 7.5-6s6.7 2 7.5 6"/>',
   scale:'<path d="M5 5h14a2 2 0 0 1 2 2v12H3V7a2 2 0 0 1 2-2Z"/><path d="M8.5 10a3.5 3.5 0 0 1 7 0"/><path d="m12 10 2-2"/>',
@@ -2403,7 +2412,7 @@ function homeView(){
  var calP=T.cal?intake.k/T.cal:0,proP=T.prot?intake.p/T.prot:0;
  html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
   '<div style="display:flex;align-items:center;gap:10px">'+iconTile('#F0603A','\ud83c\udf74')+'<h3 style="margin:0">Today\u2019s nutrition</h3></div>'+
-  '<button class="ghost-btn" style="padding:6px 12px;color:var(--chalk)" onclick="setTab(\'food\')">Log food</button></div>'+
+  '<div class="home-food-actions"><button class="ghost-btn" onclick="openHomeFoodSearch()">'+appIcon('search',16)+' Food Search</button><button class="ghost-btn" onclick="setTab(\'food\')">Log food</button></div></div>'+
   '<div style="display:flex;justify-content:space-around">'+
    ringStat(calP,'#F0603A',intake.k,'/ '+(T.cal>=1000?(T.cal/1000).toFixed(1)+'k':T.cal)+' kcal')+
    ringStat(proP,'#3B6FF5',intake.p+'g','/ '+T.prot+'g protein')+
@@ -2468,16 +2477,19 @@ function dailyJoke(){
 // ===================== FOOD VIEW =====================
 var foodSearch='',foodFilter='all',foodMeal='Breakfast',foodPick=null,foodMode='portion',foodDate=todayStr();
 var foodEdit=null,foodPanel='main',foodMealMenu=null,barcodeStream=null,barcodeRAF=null,foodScanStatus='';
+var foodSearchOrigin='food',customFoodEditId=null;
 
 function setFoodSearch(v){foodSearch=v;renderFoodList();}
 function setFoodFilter(c){foodFilter=c;render();}
 function setFoodMeal(m){foodMeal=m;render();}
 function setFoodMode(m){foodMode=m;render();setTimeout(updateFoodPreview,20);}
-function foodShiftDate(n){stopBarcodeScanner();foodDate=datePlus(foodDate,n);foodPick=null;foodEdit=null;foodPanel='main';foodMealMenu=null;render();}
-function foodGoToday(){foodDate=todayStr();foodPick=null;foodEdit=null;foodPanel='main';foodMealMenu=null;render();}
-function openFoodSearch(meal){stopBarcodeScanner();if(meal)foodMeal=meal;foodPick=null;foodEdit=null;foodPanel='search';foodSearch='';foodFilter='all';render();}
-function openFoodPanel(p){stopBarcodeScanner();foodPick=null;foodEdit=null;foodPanel=p;render();if(p==='barcode')setTimeout(startBarcodeScanner,100);}
-function foodBack(){stopBarcodeScanner();foodPick=null;foodEdit=null;foodPanel='main';render();}
+function foodShiftDate(n){stopBarcodeScanner();foodDate=datePlus(foodDate,n);foodPick=null;foodEdit=null;foodPanel='main';foodMealMenu=null;foodSearchOrigin='food';render();}
+function foodGoToday(){foodDate=todayStr();foodPick=null;foodEdit=null;foodPanel='main';foodMealMenu=null;foodSearchOrigin='food';render();}
+function openFoodSearch(meal){stopBarcodeScanner();foodSearchOrigin='food';if(meal)foodMeal=meal;foodPick=null;foodEdit=null;customFoodEditId=null;foodPanel='search';foodSearch='';foodFilter='all';render();}
+function openHomeFoodSearch(){stopBarcodeScanner();foodSearchOrigin='home';tab='food';foodPick=null;foodEdit=null;customFoodEditId=null;foodPanel='search';foodSearch='';foodFilter='all';haptic(10);render();try{window.scrollTo({top:0,behavior:(S.settings&&S.settings.reduceMotion)?'auto':'smooth'});}catch(e){window.scrollTo(0,0);}}
+function returnToFoodSearch(){stopBarcodeScanner();foodPick=null;foodEdit=null;customFoodEditId=null;foodPanel='search';render();}
+function openFoodPanel(p){stopBarcodeScanner();foodPick=null;foodEdit=null;if(p==='custom')customFoodEditId=null;foodPanel=p;render();if(p==='barcode')setTimeout(startBarcodeScanner,100);}
+function foodBack(){stopBarcodeScanner();foodPick=null;foodEdit=null;customFoodEditId=null;if(foodSearchOrigin==='home'){foodSearchOrigin='food';foodPanel='main';tab='home';render();try{window.scrollTo(0,0);}catch(e){};return;}foodPanel='main';render();}
 function cancelPick(){foodPick=null;foodEdit=null;foodPanel='search';render();}
 function quickFood(fid){pickFood(fid);}
 function quickAddUsual(fid){
@@ -2488,6 +2500,9 @@ function pickFood(fid){
  var f=getFood(fid);if(!f)return;foodPick=fid;foodEdit=null;foodPanel='add';
  var u=ensureFoodMeta().usual[fid];foodMode=u?u.mode:'portion';render();setTimeout(updateFoodPreview,20);
 }
+function editCustomFood(fid){var f=getFood(fid);if(!f||f.c!=='Custom')return;customFoodEditId=fid;foodPick=null;foodEdit=null;foodPanel='custom';render();}
+function archiveCustomFood(fid){var m=ensureFoodMeta(),f=m.customFoods[fid];if(!f)return;if(!confirm('Remove this food from My Foods? Existing food logs will still keep this food for history.'))return;pushUndo('My Food');f.archived=true;f.updatedAt=Date.now();delete m.favorites[fid];m.recent=m.recent.filter(function(x){return x!==fid;});save();foodPick=null;customFoodEditId=null;foodPanel='search';render();showUndoToast('Removed from My Foods');}
+
 function editFood(ds,idx){
  var e=foodLog(ds)[idx];if(!e)return;foodDate=ds;foodPick=e.fid;foodMeal=e.meal;foodMode=e.mode;foodEdit={ds:ds,idx:idx};foodPanel='add';render();setTimeout(updateFoodPreview,20);
 }
@@ -2537,9 +2552,10 @@ function renderFoodList(){
  });
  list=list.slice(0,60);
  box.innerHTML=list.map(function(f){
-  var fav=isFoodFavorite(f.id),usual=ensureFoodMeta().usual[f.id],serve=usual?(usual.mode==='gram'?usual.val+'g':usual.val+'× '+f.pn):f.pn;
+  var fav=isFoodFavorite(f.id),usual=ensureFoodMeta().usual[f.id],serve=usual?(usual.mode==='gram'?usual.val+'g':usual.val+'× '+f.pn):f.pn,isMine=f.c==='Custom';
   return '<div class="food-search-row">'+
-   '<button class="food-search-main" onclick="pickFood(\''+f.id+'\')"><span class="food-avatar">'+foodInitials(f.n)+'</span><span class="food-search-copy"><b>'+esc(f.n)+'</b><small>'+esc(serve||'Serving')+' · '+Math.round(f.k)+' kcal/100g · '+Math.round(f.p)+'g P</small></span></button>'+
+   '<button class="food-search-main" onclick="pickFood(\''+f.id+'\')"><span class="food-avatar">'+foodInitials(f.n)+'</span><span class="food-search-copy"><b>'+esc(f.n)+(isMine?' <em class="my-food-badge">MY FOOD</em>':'')+'</b><small>'+esc(serve||'Serving')+' · '+Math.round(f.k)+' kcal/100g · '+Math.round(f.p)+'g P</small></span></button>'+
+   (isMine?'<button class="food-manage" aria-label="Edit custom food" onclick="editCustomFood(\''+f.id+'\')">•••</button>':'')+
    '<button class="food-heart'+(fav?' on':'')+'" aria-label="Favorite" onclick="toggleFoodFavorite(\''+f.id+'\')">'+(fav?'♥':'♡')+'</button></div>';
  }).join('')||'<div class="food-empty">No matches. Try a shorter name or another filter.</div>';
 }
@@ -2585,9 +2601,11 @@ function saveCustomFood(){
  var g=function(id){var el=document.getElementById(id);return el?el.value:'';},name=g('cf-name').trim(),serv=g('cf-serving').trim()||'1 serving';
  var grams=+g('cf-grams'),k=+g('cf-k'),p=+g('cf-p'),cb=+g('cf-cb'),fat=+g('cf-f'),fi=+g('cf-fi')||0;
  if(!name||!grams||grams<=0||k<0){alert('Enter a name, serving weight, and nutrition.');return;}
- var mult=100/grams,id='cf_'+Date.now().toString(36),m=ensureFoodMeta();
- m.customFoods[id]={id:id,n:name,c:'Custom',k:+(k*mult).toFixed(1),p:+(p*mult).toFixed(1),cb:+(cb*mult).toFixed(1),f:+(fat*mult).toFixed(1),fi:+(fi*mult).toFixed(1),pn:serv,pg:grams,aliases:g('cf-alias')};
- save();foodPick=id;foodMode='portion';foodPanel='add';render();setTimeout(updateFoodPreview,20);
+ var mult=100/grams,m=ensureFoodMeta(),id=customFoodEditId||('cf_'+Date.now().toString(36)),prev=m.customFoods[id]||{},now=Date.now();
+ pushUndo('My Food');
+ m.customFoods[id]={id:id,n:name,c:'Custom',k:+(k*mult).toFixed(1),p:+(p*mult).toFixed(1),cb:+(cb*mult).toFixed(1),f:+(fat*mult).toFixed(1),fi:+(fi*mult).toFixed(1),pn:serv,pg:grams,aliases:g('cf-alias'),source:prev.source||'manual',barcode:prev.barcode||null,createdAt:prev.createdAt||now,updatedAt:now,archived:false};
+ if(prev.barcode)m.barcodes[prev.barcode]=id;
+ save();foodPick=id;customFoodEditId=null;foodMode='portion';foodPanel='add';render();setTimeout(updateFoodPreview,20);showUndoToast(prev.id?'My Food updated':'Saved to My Foods');
 }
 
 function scannerStatus(msg){foodScanStatus=msg;var el=document.getElementById('food-scan-status');if(el)el.textContent=msg;}
@@ -2620,18 +2638,19 @@ async function lookupBarcode(code){
   var k=+(n['energy-kcal_100g']||0),pro=+(n.proteins_100g||0),carb=+(n.carbohydrates_100g||0),fat=+(n.fat_100g||0),fiber=+(n.fiber_100g||0);
   if(!k&&!pro&&!carb&&!fat)throw new Error('Nutrition facts are missing for this product');
   var id='bc_'+code,m=ensureFoodMeta();
-  m.customFoods[id]={id:id,n:name,c:'Custom',k:k,p:pro,cb:carb,f:fat,fi:fiber,pn:p.serving_size||'1 serving',pg:grams,aliases:(p.brands||'')+' barcode '+code,barcode:code};
+  var now=Date.now();m.customFoods[id]={id:id,n:name,c:'Custom',k:k,p:pro,cb:carb,f:fat,fi:fiber,pn:p.serving_size||'1 serving',pg:grams,aliases:(p.brands||'')+' barcode '+code,barcode:code,source:'barcode',createdAt:(m.customFoods[id]&&m.customFoods[id].createdAt)||now,updatedAt:now,archived:false};
   m.barcodes[code]=id;save();foodPick=id;foodMode='portion';foodPanel='add';foodScanStatus='';render();setTimeout(updateFoodPreview,20);
  }catch(e){scannerStatus((e&&e.message?e.message:'Product lookup failed')+'. You can add it as a custom food instead.');}
 }
 function manualBarcode(){var el=document.getElementById('food-barcode');lookupBarcode(el?el.value:'');}
 
 function foodSearchPanel(){
- var filters=[['all','All'],['recent','Recent'],['favorites','Favorites'],['protein','Protein'],['carbs','Carbs'],['fruit','Fruit'],['veg','Vegetables'],['dairy','Dairy'],['drink','Drinks'],['Nepali','Nepali'],['American','American'],['Custom','My foods']];
- return '<div class="food-subnav"><button onclick="foodBack()">‹</button><div><b>Add food</b><small>'+foodMeal+' · '+foodDayLabel(foodDate)+'</small></div><span></span></div>'+
-  '<div class="card food-search-card"><div class="food-search-tools"><input id="food-search" class="inp" placeholder="Search foods…" value="'+esc(foodSearch)+'" oninput="setFoodSearch(this.value)">'+
-   '<button onclick="openFoodPanel(\'barcode\')" aria-label="Scan barcode">▣</button><button onclick="openFoodPanel(\'custom\')" aria-label="Custom food">＋</button></div>'+
-   '<div class="food-filter-scroll">'+filters.map(function(x){return '<button class="'+(foodFilter===x[0]?'on':'')+'" onclick="setFoodFilter(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+'</div>'+
+ var filters=[['all','All'],['recent','Recent'],['favorites','Favorites'],['protein','Protein'],['carbs','Carbs'],['fruit','Fruit'],['veg','Vegetables'],['dairy','Dairy'],['drink','Drinks'],['Nepali','Nepali'],['American','American'],['Custom','My foods']],mine=customFoodCount(),fromHome=foodSearchOrigin==='home';
+ return '<div class="food-subnav"><button onclick="foodBack()">‹</button><div><b>'+(fromHome?'Food Search':'Add food')+'</b><small>'+(fromHome?('Search your food library · '+mine+' My Foods'):(foodMeal+' · '+foodDayLabel(foodDate)))+'</small></div><span></span></div>'+ 
+  '<div class="card food-library-card"><div class="food-library-copy"><span class="food-avatar">'+appIcon('search',18)+'</span><div><b>Build your food database</b><small>Custom foods and barcode imports are stored in My Foods and included in your account sync.</small></div></div><div class="food-library-actions"><button onclick="setFoodFilter(\'Custom\')">My Foods <b>'+mine+'</b></button><button onclick="openFoodPanel(\'custom\')">＋ New custom</button><button onclick="openFoodPanel(\'barcode\')">▣ Scan barcode</button></div></div>'+ 
+  '<div class="card food-search-card"><div class="food-search-tools"><input id="food-search" class="inp" placeholder="Search foods, meals or aliases…" value="'+esc(foodSearch)+'" oninput="setFoodSearch(this.value)">'+
+   '<button onclick="openFoodPanel(\'barcode\')" aria-label="Scan barcode">▣</button><button onclick="openFoodPanel(\'custom\')" aria-label="Create custom food">＋</button></div>'+ 
+   '<div class="food-filter-scroll">'+filters.map(function(x){return '<button class="'+(foodFilter===x[0]?'on':'')+'" onclick="setFoodFilter(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+'</div>'+ 
    '<div id="food-results" class="food-results"></div></div>';
 }
 function foodAddPanel(){
@@ -2644,19 +2663,23 @@ function foodAddPanel(){
    '<div id="food-live-preview" class="food-live-preview"><b>'+c.k+' kcal</b><span>'+c.p+'g protein</span><span>'+c.cb+'g carbs</span><span>'+c.f+'g fat</span><span>'+c.fi+'g fiber</span></div>'+
    '<label class="food-editor-label">Meal</label><div class="food-meal-picker">'+MEALS.map(function(m){return '<button class="'+(foodMeal===m?'on':'')+'" onclick="foodMeal=\''+m+'\';render()">'+m+'</button>';}).join('')+'</div>'+
    '<button class="go-btn food-primary" onclick="confirmAddFood()">'+(foodEdit?'Save changes':'Add to '+foodMeal)+'</button>'+
+   (f.c==='Custom'?'<div class="my-food-manage-row"><button onclick="editCustomFood(\''+f.id+'\')">Edit My Food</button><button class="danger" onclick="archiveCustomFood(\''+f.id+'\')">Remove from My Foods</button></div>':'')+
    (foodEdit?'<button class="food-delete" onclick="deleteEditingFood()">Remove food</button>':'')+'</div>';
 }
 function customFoodPanel(){
- return '<div class="food-subnav"><button onclick="openFoodSearch(foodMeal)">‹</button><div><b>Custom food</b><small>Save once, reuse anytime</small></div><span></span></div>'+
-  '<div class="card food-custom-form"><label>Name<input id="cf-name" class="inp" placeholder="e.g. Homemade chicken curry"></label>'+
-   '<div class="food-form-grid"><label>Serving name<input id="cf-serving" class="inp" placeholder="1 bowl"></label><label>Serving grams<input id="cf-grams" class="inp" type="number" inputmode="decimal" placeholder="250"></label></div>'+
-   '<div class="food-form-grid"><label>Calories<input id="cf-k" class="inp" type="number" inputmode="decimal" placeholder="420"></label><label>Protein (g)<input id="cf-p" class="inp" type="number" inputmode="decimal" placeholder="35"></label></div>'+
-   '<div class="food-form-grid"><label>Carbs (g)<input id="cf-cb" class="inp" type="number" inputmode="decimal" placeholder="40"></label><label>Fat (g)<input id="cf-f" class="inp" type="number" inputmode="decimal" placeholder="12"></label></div>'+
-   '<div class="food-form-grid"><label>Fiber (g)<input id="cf-fi" class="inp" type="number" inputmode="decimal" placeholder="6"></label><label>Search aliases<input id="cf-alias" class="inp" placeholder="curry chicken"></label></div>'+
-   '<button class="go-btn food-primary" onclick="saveCustomFood()">Save custom food</button></div>';
+ var f=customFoodEditId?getFood(customFoodEditId):null,grams=f?+f.pg||100:'',mult=f?(grams/100):0;
+ function v(x){return x==null?'':x;}
+ return '<div class="food-subnav"><button onclick="returnToFoodSearch()">‹</button><div><b>'+(f?'Edit My Food':'Custom food')+'</b><small>'+(f?'Changes sync with your account':'Save once, reuse anytime')+'</small></div><span></span></div>'+ 
+  '<div class="card food-custom-form"><label>Name<input id="cf-name" class="inp" placeholder="e.g. Homemade chicken curry" value="'+esc(f?f.n:'')+'"></label>'+ 
+   '<div class="food-form-grid"><label>Serving name<input id="cf-serving" class="inp" placeholder="1 bowl" value="'+esc(f?f.pn:'')+'"></label><label>Serving grams<input id="cf-grams" class="inp" type="number" inputmode="decimal" placeholder="250" value="'+v(f?grams:'')+'"></label></div>'+ 
+   '<div class="food-form-grid"><label>Calories<input id="cf-k" class="inp" type="number" inputmode="decimal" placeholder="420" value="'+v(f?Math.round(f.k*mult):'')+'"></label><label>Protein (g)<input id="cf-p" class="inp" type="number" inputmode="decimal" placeholder="35" value="'+v(f?+(f.p*mult).toFixed(1):'')+'"></label></div>'+ 
+   '<div class="food-form-grid"><label>Carbs (g)<input id="cf-cb" class="inp" type="number" inputmode="decimal" placeholder="40" value="'+v(f?+(f.cb*mult).toFixed(1):'')+'"></label><label>Fat (g)<input id="cf-f" class="inp" type="number" inputmode="decimal" placeholder="12" value="'+v(f?+(f.f*mult).toFixed(1):'')+'"></label></div>'+ 
+   '<div class="food-form-grid"><label>Fiber (g)<input id="cf-fi" class="inp" type="number" inputmode="decimal" placeholder="6" value="'+v(f?+(f.fi*mult).toFixed(1):'')+'"></label><label>Search aliases<input id="cf-alias" class="inp" placeholder="curry chicken" value="'+esc(f?f.aliases||'':'')+'"></label></div>'+ 
+   '<div class="food-sync-note">'+appIcon('check',16)+' <span>This food is saved inside your Training Week data and syncs through your signed-in account.</span></div>'+ 
+   '<button class="go-btn food-primary" onclick="saveCustomFood()">'+(f?'Save My Food':'Save to My Foods')+'</button></div>';
 }
 function barcodePanel(){
- return '<div class="food-subnav"><button onclick="openFoodSearch(foodMeal)">‹</button><div><b>Scan barcode</b><small>Packaged foods</small></div><span></span></div>'+
+ return '<div class="food-subnav"><button onclick="returnToFoodSearch()">‹</button><div><b>Scan barcode</b><small>Packaged foods</small></div><span></span></div>'+
   '<div class="card food-scanner"><div class="food-video-wrap"><video id="food-scan-video" playsinline muted></video><div class="food-scan-frame"></div></div>'+
    '<p id="food-scan-status" class="sub">'+esc(foodScanStatus||'Starting camera…')+'</p>'+
    '<div class="row"><input id="food-barcode" class="inp" inputmode="numeric" placeholder="Or enter UPC / EAN"><button class="ghost-btn" style="color:var(--chalk)" onclick="manualBarcode()">Look up</button></div>'+
