@@ -1,4 +1,4 @@
-# Training Week — iOS Mobile Polish
+Training Week WebApp
 
 This build focuses on the mobile experience without changing the core training data model.
 
