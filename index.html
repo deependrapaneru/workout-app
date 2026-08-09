@@ -1833,7 +1833,7 @@ function todayView(){
   if(open){
    var canSwap=EXDB[base]&&EXDB[base].alts&&EXDB[base].alts.length;
    html+='<div class="detail">'+
-    '<img class="eximg" src="img/'+id+'.gif" alt="'+esc(ex.name)+'" loading="lazy" data-alt="img/'+id+'.jpg" onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=\'\';}else{this.style.display=\'none\';}">'+
+    '<img class="eximg" src="img/'+id+'.jpg" alt="'+esc(ex.name)+'" loading="lazy" decoding="async" onerror="this.style.display=\'none\';">'+
     '<dd>'+esc(ex.cues)+'</dd>'+
     '<div class="chips"><span class="chip">'+esc(ex.tempo)+'</span><span class="chip">'+esc(ex.rir)+'</span></div>'+
     '<p class="sub" style="margin:10px 0 0">'+esc(rec.why)+'</p>'+
