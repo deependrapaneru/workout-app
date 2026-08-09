@@ -920,9 +920,10 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 .brand-login-mark,.signup-logo-wrap{display:flex;justify-content:center;margin:0 auto 14px;padding:0;width:min(190px,48vw);background:transparent!important;border:0!important;border-radius:0;box-shadow:none!important}
 .brand-hero-logo{width:100%;height:auto;display:block;object-fit:contain;filter:none}
 .signup-brand-head{text-align:center;padding:24px 18px 8px!important}
-.train-brand-header{padding:2px 18px 0}
-.train-brand-row{position:relative;display:flex;align-items:center;justify-content:center;min-height:42px}
+.train-brand-header{padding:0 18px!important}
+.train-brand-row{position:relative;display:flex;align-items:center;justify-content:center;min-height:40px}
 .train-logo{display:block;width:min(190px,48vw);height:auto;object-fit:contain;background:transparent!important;border:0!important;padding:0;box-shadow:none!important;filter:drop-shadow(0 5px 10px rgba(17,24,19,.08))}
+.train-logo.subpage-logo{width:min(222px,56vw)}
 .train-brand-row .header-profile-btn{position:absolute;right:0;top:50%;transform:translateY(-50%)}
 :root[data-resolved-theme="dark"] .brand-hero-logo,:root[data-resolved-theme="dark"] .train-logo{content:url('flexfuel_fitness_logo_dark.png')}
 .brand-login-sub{max-width:320px;margin:8px auto 0}
@@ -1050,20 +1051,21 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .home-action-card b{display:block;font-size:13px}
 .home-action-card span{display:block;font-size:11px;color:var(--dim);margin-top:2px}
 .home-split-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin:0 14px 16px}
-.home-clean-page{min-height:calc(100vh - 82px);min-height:calc(100svh - 82px);display:grid;grid-template-rows:auto minmax(300px,1fr) auto;align-content:stretch;padding:0 0 6px}
-.home-clean-head{margin:4px 18px 5px;display:flex;flex-direction:column;align-items:stretch;gap:2px;text-align:left}
+.home-clean-page{min-height:calc(100vh - 82px);min-height:calc(100svh - 82px);display:grid;grid-template-rows:auto auto auto;align-content:space-between;padding:0 0 6px}
+.home-clean-head{margin:0 18px 4px;display:flex;flex-direction:column;align-items:stretch;gap:2px;text-align:left}
 .home-logo-wrap{display:flex;align-items:center;justify-content:center;width:100%;min-width:0}
 .home-logo-large{display:block;width:min(190px,48vw);max-width:100%;height:auto;object-fit:contain;background:transparent!important;border:0!important;border-radius:0;padding:0;box-shadow:none!important;filter:drop-shadow(0 5px 10px rgba(17,24,19,.08))}
 :root[data-resolved-theme="dark"] .home-logo-large{content:url('flexfuel_fitness_logo_dark.png');filter:drop-shadow(0 8px 18px rgba(0,0,0,.32))}
 .home-clean-date{text-align:left;color:var(--dim);line-height:1.25}
 .home-clean-date>span{display:block;font-size:12px;font-weight:650;color:var(--dim)}
 .home-clean-date b{display:block;color:var(--chalk);font-size:29px;line-height:1.03;margin:1px 0 0;letter-spacing:-.035em}
-.home-today-card{min-height:300px;padding:20px!important;display:flex;flex-direction:column;justify-content:space-between;margin-bottom:10px!important}
+.home-today-card{min-height:0;padding:18px!important;display:flex;flex-direction:column;justify-content:space-between;margin-top:18px!important;margin-bottom:10px!important}
 .home-today-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .home-today-title{font-size:27px;line-height:1.05;margin:4px 0 6px}
 .home-today-meta{font-size:12.5px;color:var(--dim)}
 .home-week-chip{flex:0 0 auto;padding:6px 9px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);color:var(--dim);font-size:10px;font-weight:750}
-.home-clean-actions{display:grid;grid-template-columns:1.35fr .85fr;gap:9px;margin-top:auto;padding-top:24px}
+.home-schedule-image{display:block;width:100%;height:112px;object-fit:cover;object-position:center;border-radius:15px;margin:14px 0 0;border:1px solid var(--line)}
+.home-clean-actions{display:grid;grid-template-columns:1.35fr .85fr;gap:9px;margin-top:0;padding-top:12px}
 .home-clean-actions button{min-height:46px;border-radius:14px}
 .home-clean-actions .go-btn{background:var(--chalk)!important;color:var(--page)!important;box-shadow:none!important}
 .home-essential-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 18px 4px}
@@ -1071,6 +1073,9 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .home-essential-card span{display:block;font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 .home-essential-card b{display:block;margin-top:5px;font-size:22px;color:var(--chalk)}
 .home-essential-card small{display:block;margin-top:3px;font-size:11px;color:var(--dim)}
+.home-essential-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.home-essential-visual{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:var(--surface2);color:var(--accent);overflow:hidden}
+.home-essential-visual img{width:100%;height:100%;display:block;object-fit:cover}
 .home-essential-card .mini-progress{height:6px;margin-top:10px;border-radius:999px;overflow:hidden;background:var(--surface3)}
 .home-essential-card .mini-progress i{display:block;height:100%;border-radius:999px;background:var(--accent)}
 .momentum-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
@@ -1133,7 +1138,17 @@ button:hover,.ghost-btn:hover,.tool-card:hover,.day-btn:hover{transform:translat
 .profile-clean-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0 18px 12px}
 .profile-clean-stat{padding:13px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--elev);text-align:center}
 .profile-clean-stat b{display:block;color:var(--chalk);font-size:20px}.profile-clean-stat span{display:block;color:var(--dim);font-size:10px;margin-top:4px}
+.profile-clean-stat.editable{width:100%;font:inherit;cursor:pointer;color:inherit}
+.profile-clean-stat.editable small{display:block;color:var(--accent);font-size:9px;margin-top:4px}
+.profile-preferences{padding:0!important;overflow:hidden}
+.profile-preferences summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;font-weight:800;color:var(--chalk)}
+.profile-preferences summary::-webkit-details-marker{display:none}
+.profile-preferences summary span{font-size:11px;font-weight:650;color:var(--dim)}
+.profile-preferences[open] summary{border-bottom:1px solid var(--line)}
+.profile-preferences .setting-stack{padding:12px 16px 16px}
 .profile-clean-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.food-filter-scroll button.muted{opacity:.48}
+.food-filter-scroll button.muted.on{opacity:1}
 .modern-panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.modern-panel-title h3{margin:0}.modern-panel-title span{font-size:12px;color:var(--dim)}
 .profile-account-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.account-action-card{padding:16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(180,246,61,.08)}.account-action-card b{display:block;font-size:15px}.account-action-card span{display:block;font-size:12px;color:var(--dim);margin-top:6px}.account-action-card .ghost-btn{width:100%;margin-top:12px}
 @media(max-width:820px){.home-split-grid,.profile-section-grid,.food-top-strip,.food-meal-grid{grid-template-columns:1fr}.profile-metrics-grid{grid-template-columns:repeat(2,1fr)}.profile-kpi-deck,.fuel-macro-tiles,.fuel-hero-actions{grid-template-columns:repeat(2,1fr)}.home-primary-actions,.home-premium-grid,.home-action-grid{grid-template-columns:1fr 1fr}.food-quick-scroll{grid-template-columns:1fr 1fr}}
@@ -2534,6 +2549,14 @@ function quickWeight(){var el=document.getElementById('qw'),w=el?+el.value:0;if(
 function addSundayWeight(){var el=document.getElementById('sunday-bw'),w=el?+el.value:0;if(!w){alert('Enter your body weight.');return;}if(!isSunday()){alert('Weekly body-weight recording is scheduled for Sunday.');return;}pushUndo('Sunday weight');var key=todayStr(),found=false;S.body=S.body.map(function(b){if(b.d===key&&b.w){found=true;return Object.assign({},b,{id:b.id||recordId('body'),w:w,updatedAt:Date.now()});}return b;});if(!found)S.body.push({id:recordId('body'),d:key,w:w,updatedAt:Date.now()});save();haptic(22);render();showUndoToast('Sunday weight recorded');}
 function addBody(){var w=+(document.getElementById('bw')||{}).value||null,wa=+(document.getElementById('waist')||{}).value||null;if(!w&&!wa)return;pushUndo('Measurement');S.body.push({id:recordId('body'),d:todayStr(),w:w,wa:wa,updatedAt:Date.now()});save();render();showUndoToast('Measurement recorded');}
 function editProfile(){editProf=true;obSplit=null;obSched=null;obDraft=null;obStep=0;render();}
+function editTargetWeight(){
+ if(!S.profile)return;
+ var raw=prompt('Target weight (lb)',S.profile.targetWeight||'');
+ if(raw===null)return;
+ var value=+raw;
+ if(!value||value<=0){alert('Enter a valid target weight.');return;}
+ S.profile.targetWeight=Math.round(value*10)/10;save();render();showActionToast('Target weight updated',null,null,2200);
+}
 function startSession(){pushUndo('Training');S.session={d:todayStr(),start:Date.now(),ended:null,pausedAt:null,pausedTotal:0};save();render();showUndoToast('Training started');}
 function finishSession(){if(!S.session||S.session.d!==todayStr())return;if(!confirm('Finish this workout?'))return;pushUndo('Training');if(S.session.pausedAt){S.session.pausedTotal=(S.session.pausedTotal||0)+(Date.now()-S.session.pausedAt);S.session.pausedAt=null;}S.session.ended=Date.now();save();render();showUndoToast('Training finished');}
 function activeSession(){return S.session&&S.session.d===todayStr()&&!S.session.ended?S.session:null;}
@@ -2622,8 +2645,8 @@ function headerHtml(title,type){
  return '<header><div class="app-header-row"><div>'+brandMini()+'<div class="eyebrow">'+eyebrow+'</div><h1 class="display" style="color:'+(HEX[type]||'var(--accent)')+'">'+esc(title)+'</h1></div>'+
   (S.profile?'<button class="header-profile-btn" onclick="openProfile()" aria-label="Profile"><span class="header-avatar">'+initials()+'</span></button>':'')+'</div></header>';
 }
-function trainHeaderHtml(){
- return '<header class="train-brand-header"><div class="train-brand-row">'+brandLogo(0,'train-logo')+'</div></header>';
+function trainHeaderHtml(large){
+ return '<header class="train-brand-header"><div class="train-brand-row">'+brandLogo(0,'train-logo'+(large?' subpage-logo':''))+'</div></header>';
 }
 function moreSubhead(title){
  return '<div class="more-subhead"><button class="section-back" onclick="moreBack()">'+appIcon('back',18)+' More</button><h2>'+esc(title)+'</h2></div>';
@@ -2833,7 +2856,7 @@ function todayView(){
 
 function historyView(){
  var ids=Object.keys(EXDB),logs=logsOf(histEx),ex=EXDB[histEx];
- var html=trainHeaderHtml()+moreSubhead('History');
+ var html=trainHeaderHtml(true)+moreSubhead('History');
  html+='<div class="card"><h3>Exercise</h3><select id="hist-sel" class="inp" style="margin-top:6px" onchange="setHistEx()">'+
   ids.map(function(id){return '<option value="'+id+'"'+(id===histEx?' selected':'')+'>'+esc(EXDB[id].name)+(logsOf(id).length?' · '+logsOf(id).length:'')+'</option>';}).join('')+'</select></div>';
  html+='<div class="card"><h3>'+esc(ex.name)+'</h3>';
@@ -2850,14 +2873,13 @@ function historyView(){
 function bodyView(){
  var ws=S.body.filter(function(b){return b.w;}).map(function(b){return b.w;});
  var was=S.body.filter(function(b){return b.wa;}).map(function(b){return b.wa;});
- var sundays=latestSundayWeights(),todaySunday=sundayWeighIn(todayStr()),html=trainHeaderHtml()+moreSubhead('Body');
+ var sundays=latestSundayWeights(),todaySunday=sundayWeighIn(todayStr()),html=trainHeaderHtml(true)+moreSubhead('Body');
  var sundayTitle=isSunday()?(todaySunday?'Sunday weigh-in complete ✓':'Sunday weigh-in'):'Next Sunday weigh-in';
  var lastB=S.body.length?S.body[S.body.length-1]:{};
- var sundaySub=isSunday()?(todaySunday?'This week is recorded. You can update it today if needed.':'Take your weight this morning, before breakfast, under similar conditions each week.'):'Your weekly check-in is scheduled for '+nextSundayLabel()+'.';
- html+='<div class="card" style="border:1px solid '+(isSunday()&&!todaySunday?'#2F7DE1':'var(--premium-border)')+' !important;box-shadow:0 16px 42px rgba(47,125,225,.10) !important">'+
-  '<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><div class="eyebrow" style="color:#2F7DE1">WEEKLY CHECK-IN</div><h3 style="font-size:22px;margin:3px 0 4px">'+sundayTitle+'</h3><p class="sub" style="margin:0">'+sundaySub+'</p></div>'+iconTile('#2F7DE1','⚖️',46)+'</div>'+
-  (isSunday()?'<div class="row" style="margin-top:16px"><input id="sunday-bw" class="inp" type="number" step="0.1" inputmode="decimal" placeholder="Body weight (lb)" value="'+(todaySunday?todaySunday.w:'')+'"><button class="go-btn" style="background:#2F7DE1;min-width:150px" onclick="addSundayWeight()">RECORD</button></div>':'<div class="sub" style="margin-top:14px;padding:11px 12px;border-radius:12px;background:var(--card-up)">Keep the scale entry weekly on Sunday for a cleaner trend.</div>')+
-  '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><span class="sub">Sunday entries</span><b>'+sundays.length+'</b></div></div>';
+ var sundaySub=isSunday()?(todaySunday?'Recorded for this week. Tap save to update it.':'Record your morning weight for a consistent trend.'):'Scheduled for '+nextSundayLabel()+'.';
+ html+='<div class="card" style="border:1px solid '+(isSunday()&&!todaySunday?'#2F7DE1':'var(--premium-border)')+' !important">'+
+  '<div class="eyebrow" style="color:#2F7DE1">WEEKLY CHECK-IN</div><h3 style="font-size:21px;margin:3px 0 4px">'+sundayTitle+'</h3><p class="sub" style="margin:0">'+sundaySub+'</p>'+
+  (isSunday()?'<div class="row" style="margin-top:14px"><input id="sunday-bw" class="inp" type="number" step="0.1" inputmode="decimal" placeholder="Weight (lb)" value="'+(todaySunday?todaySunday.w:'')+'"><button class="go-btn" style="min-width:96px" onclick="addSundayWeight()">Save</button></div>':'')+'</div>';
  html+='<div class="card"><div class="card-headline"><h3>Measurements</h3><span class="sub">Log anytime</span></div><div class="row" style="margin-top:10px"><div style="flex:1"><div class="eyebrow" style="margin-bottom:5px">Weight (lb)</div><input id="bw" class="inp" type="number" step="0.1" inputmode="decimal" placeholder="'+(lastB.w||'Weight')+'"></div><div style="flex:1"><div class="eyebrow" style="margin-bottom:5px">Waist (in)</div><input id="waist" class="inp" type="number" step="0.1" inputmode="decimal" placeholder="'+(lastB.wa||'Waist')+'"></div></div><button class="go-btn" style="background:var(--accent);margin-top:10px" onclick="addBody()">Record measurement</button></div>';
  html+='<div class="grid2"><div class="card"><div class="eyebrow">Latest weight</div><div class="display big">'+(ws.length?ws[ws.length-1]+' lb':'—')+'</div>'+spark(ws,'#3B6FF5')+'</div><div class="card"><div class="eyebrow">Waist</div><div class="display big">'+(was.length?was[was.length-1]+' in':'—')+'</div>'+spark(was,'#22C36A')+'</div></div>';
  if(sundays.length){html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="margin:0">Sunday trend</h3><span class="sub">last '+Math.min(8,sundays.length)+' weeks</span></div>';sundays.slice(-8).reverse().forEach(function(b,i){var prev=sundays[sundays.length-2-i],delta=prev?+(b.w-prev.w).toFixed(1):null;html+='<div class="hist-row"><span class="sub">'+b.d+'</span><span><b>'+b.w+' lb</b>'+(delta!==null?' <span class="sub">'+(delta>0?'+':'')+delta+' lb</span>':'')+'</span></div>';});html+='</div>';}
@@ -2898,13 +2920,10 @@ function dashView(){
 }
 
 function planView(){
- var T=targets(),html=trainHeaderHtml()+moreSubhead('Plan'),goalMetric=T.minor?'Maintain':(T.goal==='lose'?(T.lo+'–'+T.hi+' lb/wk'):(T.goal==='gain'?'Small surplus':'Stable'));
- html+='<div class="card"><p class="plan-p sub">'+splitDef().name+' · '+liftDaysPerWeek()+' lifting days + '+actDaysPerWeek()+' activity days. Progression, deloads, swaps and recovery adjustments apply automatically.</p></div>';
- html+='<div class="grid2"><div class="card"><div class="eyebrow">Calories</div><div class="display big">'+T.cal.toLocaleString()+'</div><div class="sub">per day</div></div><div class="card"><div class="eyebrow">Protein</div><div class="display big">'+T.prot+' g</div><div class="sub">daily target</div></div><div class="card"><div class="eyebrow">Steps</div><div class="display big">8–10k</div><div class="sub">daily</div></div><div class="card"><div class="eyebrow">Goal pace</div><div class="display big" style="font-size:21px">'+goalMetric+'</div><div class="sub">estimated</div></div></div>';
- html+='<div class="note" style="margin-top:-4px">Computed for '+esc(firstName())+' at '+T.bw+' lb · '+T.note+'. Nutrition targets can be customized in Profile.</div>';
- html+='<div class="card"><h3>Progression</h3><p class="plan-p sub" style="margin:4px 0 0">Top of range on all sets → weight up. Under the floor twice → ~10% reset. Compounds keep 2–3 reps in reserve; isolations go closer to failure.</p></div>';
- html+='<div class="card"><h3>12-week structure</h3><p class="plan-p sub" style="margin:4px 0 0">Weeks 1–5 build · 6 deload · 7–11 push · 12 deload + reassess. Deloads apply automatically.</p></div>';
- html+='<div class="card"><h3>Recovery rules</h3><p class="plan-p sub" style="margin:4px 0 0">A Rough recovery check reduces the day automatically. Joint discomfort → swap the movement. Missed day → continue the schedule instead of stacking sessions.</p></div>';
+ var pr=S.profile||{},sched=pr.sched||{},html=trainHeaderHtml(true)+moreSubhead('Plan');
+ html+='<section class="card"><div class="eyebrow">Current split</div><h3 style="font-size:23px;margin:4px 0">'+esc(splitDef().name)+'</h3><p class="sub" style="margin:0">'+liftDaysPerWeek()+' lifting days · '+actDaysPerWeek()+' activity days</p></section>';
+ html+='<section class="card"><div class="modern-panel-title"><h3>Weekly schedule</h3><span>Tap edit to change</span></div>'+DAYS.map(function(dk){var assignment=sched[dk]||dayAssign(dk),label=dayLabel(dk);return '<div class="hist-row"><b>'+dk+'</b><span class="sub">'+esc(label)+'</span></div>';}).join('')+'</section>';
+ html+='<section class="card"><div class="modern-panel-title"><h3>Progression</h3><span>Automatic</span></div><p class="plan-p sub" style="margin:0">Complete the top of a rep range to move weight up. Planned deloads and recovery adjustments are applied automatically.</p></section>';
  html+='<div class="card"><button class="ghost-btn" style="width:100%;padding:11px 0" onclick="editProfile()">Edit training schedule</button></div>';
  return html;
 }
@@ -2936,11 +2955,14 @@ function homeView(){
  var calPct=Math.max(0,Math.min(100,Math.round((tot.k/Math.max(1,T.cal))*100)));
  var mission=isTraining(nu.dk)?nu.label:(dayType(nu.dk)==='act'?activityName(nu.dk):'Recovery day');
  var missionMeta=isTraining(nu.dk)?(exCount+' exercises · about '+estMin(nu.dk)+' min'):dayType(nu.dk)==='act'?'Activity scheduled for today':'Rest, recover, and prepare for the next session';
+ var scheduleImage=isTraining(nu.dk)?'home-workout.webp':(dayType(nu.dk)==='act'?'home-activity.webp':'home-recovery.webp');
+ var scheduleAlt=isTraining(nu.dk)?'Strength workout':(dayType(nu.dk)==='act'?'Outdoor activity':'Mobility and recovery');
  var html='<main class="home-clean-page"><section class="home-clean-head"><div class="home-logo-wrap">'+brandLogo(0,'home-logo-large')+'</div><div class="home-clean-date"><span>'+greet()+'</span><b>'+esc(firstName())+'</b></div></section>';
  html+='<section class="card home-today-card"><div class="home-today-top"><div><div class="eyebrow">Today</div><div class="display home-today-title">'+esc(mission)+(done?' ✓':'')+'</div><div class="home-today-meta">'+missionMeta+'</div></div><span class="home-week-chip">Week '+weekNum()+'</span></div>'+
+  '<img class="home-schedule-image" src="'+scheduleImage+'" alt="'+scheduleAlt+'">'+
   '<div class="home-clean-actions"><button class="go-btn" onclick="setTab(\'today\')">'+(done?'Review today':isTraining(nu.dk)?'Start training':'Open today')+'</button><button class="ghost-btn" onclick="setTab(\'food\')">Fuel</button></div></section>';
- html+='<div class="home-essential-grid"><div class="home-essential-card"><span>Weekly goal</span><b>'+lifts+' / '+goal+'</b><small>'+weekPct+'% complete</small><div class="mini-progress"><i style="width:'+weekPct+'%"></i></div></div>'+
-  '<div class="home-essential-card"><span>Calories left</span><b>'+Math.abs(remaining).toLocaleString()+'</b><small>'+(remaining>=0?'Remaining today':'Over target')+'</small><div class="mini-progress"><i style="width:'+calPct+'%"></i></div></div></div></main>';
+ html+='<div class="home-essential-grid"><div class="home-essential-card"><div class="home-essential-head"><span>Weekly goal</span><span class="home-essential-visual"><img src="home-workout.webp" alt=""></span></div><b>'+lifts+' / '+goal+'</b><small>'+weekPct+'% complete</small><div class="mini-progress"><i style="width:'+weekPct+'%"></i></div></div>'+
+  '<div class="home-essential-card"><div class="home-essential-head"><span>Calories left</span><span class="home-essential-visual"><img src="home-fuel.webp" alt=""></span></div><b>'+Math.abs(remaining).toLocaleString()+'</b><small>'+(remaining>=0?'Remaining today':'Over target')+'</small><div class="mini-progress"><i style="width:'+calPct+'%"></i></div></div></div></main>';
  return html;
 }
 
@@ -3137,7 +3159,7 @@ function foodSearchPanel(){
  return '<div class="food-subnav"><button onclick="foodBack()">‹</button><div><b>'+(fromHome?'Fuel Search':'Add food')+'</b><small>'+(fromHome?('Search your fuel library · '+mine+' My Foods'):(foodMeal+' · '+foodDayLabel(foodDate)))+'</small></div><span></span></div>'+ 
   '<div class="card food-search-card"><div class="food-search-tools"><input id="food-search" class="inp" placeholder="Search foods, meals or aliases…" value="'+esc(foodSearch)+'" oninput="setFoodSearch(this.value)">'+
    '<button onclick="openFoodPanel(\'barcode\')" aria-label="Scan barcode">▣</button><button onclick="openFoodPanel(\'custom\')" aria-label="Create custom food">＋</button></div>'+ 
-   '<div class="food-filter-scroll">'+filters.map(function(x){return '<button class="'+(foodFilter===x[0]?'on':'')+'" onclick="setFoodFilter(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+'</div>'+ 
+   '<div class="food-filter-scroll">'+filters.map(function(x){var muted=(x[0]==='recent'||x[0]==='favorites')?' muted':'';return '<button class="'+(foodFilter===x[0]?'on':'')+muted+'" onclick="setFoodFilter(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+'</div>'+ 
    '<div id="food-results" class="food-results"></div></div>';
 }
 function foodAddPanel(){
@@ -3188,7 +3210,7 @@ function foodView(){
  var ds=foodDate,T=foodTargets(),tot=dayTotals(ds),remaining=T.cal-tot.k;
  var pct=Math.max(0,Math.min(100,Math.round((tot.k/Math.max(1,T.cal))*100)));
  html+='<div class="food-date-nav"><button onclick="foodShiftDate(-1)">‹</button><button class="food-date-center" onclick="foodGoToday()"><b>'+foodDayLabel(ds)+'</b><span>'+new Date(ds+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})+'</span></button><button onclick="foodShiftDate(1)">›</button></div>';
- html+='<section class="card food-summary-clean"><div class="food-summary-head"><div class="food-summary-main"><span>'+(remaining>=0?'Calories left':'Calories over')+'</span><b>'+Math.abs(remaining).toLocaleString()+'</b><small>'+tot.k.toLocaleString()+' of '+T.cal.toLocaleString()+' kcal</small></div><div class="food-summary-protein"><span>Protein</span><b>'+Math.round(tot.p)+'g</b><small class="sub">of '+Math.round(T.prot||0)+'g</small></div></div><div class="progress-track"><i style="width:'+pct+'%"></i></div><button class="go-btn food-add-primary" onclick="openFoodSearch(foodMeal)">Add food</button></section>';
+ html+='<section class="card food-summary-clean"><div class="food-summary-head"><div class="food-summary-main"><span>'+(remaining>=0?'Calories left':'Calories over')+'</span><b>'+Math.abs(remaining).toLocaleString()+'</b><small>'+tot.k.toLocaleString()+' of '+T.cal.toLocaleString()+' kcal</small></div><div class="food-summary-protein"><span>Protein</span><b>'+Math.round(tot.p)+'g</b><small class="sub">of '+Math.round(T.prot||0)+'g</small></div></div><div class="progress-track"><i style="width:'+pct+'%"></i></div><button class="go-btn food-add-primary" onclick="openFoodSearch(foodMeal)">Log food</button></section>';
 
  html+='<div class="food-meal-grid-clean">'+MEALS.map(function(m){return mealCard(ds,m);}).join('')+'</div>';
  return html;
@@ -3250,14 +3272,14 @@ function profileViewClean(){
  var pr=S.profile||{},st=S.settings||blank().settings,bw=lastWeight(),target=pr.targetWeight||null;
  var goal=(S.goals&&S.goals.weekly)||4,lifts=weekDates().filter(liftDoneOn).length,email=authUser&&authUser.email?authUser.email:'';
  var mode=st.nutritionMode||'estimated',nt=st.nutritionTargets||{};
- var html=trainHeaderHtml()+moreSubhead('Profile');
+ var html=trainHeaderHtml(true)+moreSubhead('Profile');
  html+='<section class="card profile-clean-identity"><div><div class="profile-clean-name">'+esc(pr.name||'Athlete')+'</div><div class="profile-clean-meta">'+levelLabel()+' · '+goalLabel()+(email?'<br>'+esc(email):'')+'</div></div><button class="ghost-btn" onclick="editProfile()">Edit</button></section>';
- html+='<div class="profile-clean-stats"><div class="profile-clean-stat"><b>'+(bw?bw+' lb':'—')+'</b><span>Current weight</span></div><div class="profile-clean-stat"><b>'+(target?target+' lb':'—')+'</b><span>Target weight</span></div><div class="profile-clean-stat"><b>'+lifts+' / '+goal+'</b><span>This week</span></div></div>';
- html+='<section class="card"><div class="modern-panel-title"><h3>Preferences</h3><span>System theme</span></div><div class="setting-stack">'+
+ html+='<div class="profile-clean-stats"><div class="profile-clean-stat"><b>'+(bw?bw+' lb':'—')+'</b><span>Current weight</span></div><button class="profile-clean-stat editable" onclick="editTargetWeight()" aria-label="Edit target weight"><b>'+(target?target+' lb':'—')+'</b><span>Target weight</span><small>Tap to edit</small></button><div class="profile-clean-stat"><b>'+lifts+' / '+goal+'</b><span>This week</span></div></div>';
+ html+='<section class="card"><div class="modern-panel-title"><h3>Nutrition targets</h3><span>'+(mode==='custom'?'Custom':'Estimated')+'</span></div><div class="seg"><button class="'+(mode==='estimated'?'on':'')+'" onclick="setNutritionMode(\'estimated\')">Estimated</button><button class="'+(mode==='custom'?'on':'')+'" onclick="setNutritionMode(\'custom\')">Custom</button></div><label class="profile-select-label" style="margin-top:14px">Activity level</label><select id="activity-level" class="inp"><option value="1.2"'+((+st.activityMultiplier||1.55)===1.2?' selected':'')+'>Mostly sedentary</option><option value="1.375"'+((+st.activityMultiplier||1.55)===1.375?' selected':'')+'>Lightly active</option><option value="1.55"'+((+st.activityMultiplier||1.55)===1.55?' selected':'')+'>Moderately active</option><option value="1.725"'+((+st.activityMultiplier||1.55)===1.725?' selected':'')+'>Very active</option></select>'+(mode==='custom'?'<div class="nutrition-target-grid"><input id="nt-cal" class="inp" type="number" placeholder="Calories" value="'+(nt.cal||'')+'"><input id="nt-prot" class="inp" type="number" placeholder="Protein g" value="'+(nt.prot||'')+'"><input id="nt-cb" class="inp" type="number" placeholder="Carbs g" value="'+(nt.cb||'')+'"><input id="nt-fat" class="inp" type="number" placeholder="Fat g" value="'+(nt.f||'')+'"><input id="nt-fiber" class="inp" type="number" placeholder="Fiber g" value="'+(nt.fi||'')+'"></div>':'')+'<button class="ghost-btn" style="width:100%;margin-top:10px" onclick="saveNutritionSettings()">Save nutrition</button></section>';
+ html+='<details class="card profile-preferences"><summary><b>Preferences</b><span>System theme · tap to open</span></summary><div class="setting-stack">'+
   '<div class="setting-row"><div class="setting-label"><b>Haptics</b><span>Tap feedback</span></div><button class="toggle '+(st.haptics?'on':'')+'" onclick="toggleSetting(\'haptics\')"><i></i></button></div>'+
   '<div class="setting-row"><div class="setting-label"><b>Reduce motion</b><span>Fewer animations</span></div><button class="toggle '+(st.reduceMotion?'on':'')+'" onclick="toggleSetting(\'reduceMotion\')"><i></i></button></div>'+
-  '<div class="setting-row"><div class="setting-label"><b>Larger text</b><span>Bigger interface text</span></div><button class="toggle '+(st.largeText?'on':'')+'" onclick="toggleSetting(\'largeText\')"><i></i></button></div></div></section>';
- html+='<section class="card"><div class="modern-panel-title"><h3>Nutrition targets</h3><span>'+(mode==='custom'?'Custom':'Estimated')+'</span></div><div class="seg"><button class="'+(mode==='estimated'?'on':'')+'" onclick="setNutritionMode(\'estimated\')">Estimated</button><button class="'+(mode==='custom'?'on':'')+'" onclick="setNutritionMode(\'custom\')">Custom</button></div><label class="profile-select-label" style="margin-top:14px">Activity level</label><select id="activity-level" class="inp"><option value="1.2"'+((+st.activityMultiplier||1.55)===1.2?' selected':'')+'>Mostly sedentary</option><option value="1.375"'+((+st.activityMultiplier||1.55)===1.375?' selected':'')+'>Lightly active</option><option value="1.55"'+((+st.activityMultiplier||1.55)===1.55?' selected':'')+'>Moderately active</option><option value="1.725"'+((+st.activityMultiplier||1.55)===1.725?' selected':'')+'>Very active</option></select>'+(mode==='custom'?'<div class="nutrition-target-grid"><input id="nt-cal" class="inp" type="number" placeholder="Calories" value="'+(nt.cal||'')+'"><input id="nt-prot" class="inp" type="number" placeholder="Protein g" value="'+(nt.prot||'')+'"><input id="nt-cb" class="inp" type="number" placeholder="Carbs g" value="'+(nt.cb||'')+'"><input id="nt-fat" class="inp" type="number" placeholder="Fat g" value="'+(nt.f||'')+'"><input id="nt-fiber" class="inp" type="number" placeholder="Fiber g" value="'+(nt.fi||'')+'"></div>':'')+'<button class="ghost-btn" style="width:100%;margin-top:10px" onclick="saveNutritionSettings()">Save nutrition</button></section>';
+  '<div class="setting-row"><div class="setting-label"><b>Larger text</b><span>Bigger interface text</span></div><button class="toggle '+(st.largeText?'on':'')+'" onclick="toggleSetting(\'largeText\')"><i></i></button></div></div></details>';
  html+='<section class="card"><div class="modern-panel-title"><h3>Account & data</h3><span>Sync and backup</span></div>'+syncStatusHtml()+'<div class="profile-clean-actions"><button class="ghost-btn" onclick="exportData()">Export</button><label class="ghost-btn" style="text-align:center;display:grid;place-items:center">Restore<input type="file" accept=".json" style="display:none" onchange="importData(this)"></label></div><button class="ghost-btn" style="width:100%;margin-top:9px" onclick="signOut()">Sign out</button></section>';
  return html;
 }
