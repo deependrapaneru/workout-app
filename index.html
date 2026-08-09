@@ -714,6 +714,67 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 @media(prefers-reduced-motion:reduce){.sync-dot.saving,.sync-dot.pulling{animation:none}}
 :root[data-motion="reduced"] .sync-dot.saving,:root[data-motion="reduced"] .sync-dot.pulling{animation:none}
 
+
+
+/* =========================================================
+   WORKOUT EXERCISE PHOTO THUMBNAILS + iOS IMAGE VIEWER
+   ========================================================= */
+.exercise-thumb-btn{
+  width:52px;height:52px;min-width:52px;min-height:52px;padding:0;border:0;
+  border-radius:15px;overflow:hidden;background:var(--surface3);position:relative;
+  box-shadow:inset 0 0 0 1px var(--hair);flex:0 0 52px;
+  transition:transform .18s var(--spring),box-shadow .18s ease;
+}
+.exercise-thumb-btn:active{transform:scale(.94)}
+.exercise-thumb-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.exercise-thumb{
+  display:block;width:100%;height:100%;object-fit:cover;background:var(--surface3);
+}
+.exercise-thumb-btn:after{
+  content:'';position:absolute;right:5px;bottom:5px;width:15px;height:15px;border-radius:6px;
+  background:rgba(10,13,20,.64) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H5a2 2 0 0 0-2 2v3'/%3E%3Cpath d='M16 3h3a2 2 0 0 1 2 2v3'/%3E%3Cpath d='M8 21H5a2 2 0 0 1-2-2v-3'/%3E%3Cpath d='M16 21h3a2 2 0 0 0 2-2v-3'/%3E%3C/svg%3E") center/11px 11px no-repeat;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);pointer-events:none;
+}
+.exercise-image-viewer{
+  position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  padding:max(18px,env(safe-area-inset-top)) 14px max(18px,env(safe-area-inset-bottom));
+  background:rgba(5,8,14,.72);backdrop-filter:blur(20px) saturate(130%);
+  -webkit-backdrop-filter:blur(20px) saturate(130%);opacity:0;visibility:hidden;
+  transition:opacity .22s ease,visibility .22s ease;
+}
+.exercise-image-viewer.open{opacity:1;visibility:visible}
+.exercise-image-sheet{
+  width:min(720px,100%);max-height:calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  border-radius:26px;overflow:hidden;background:var(--surface);border:1px solid var(--glass-brd);
+  box-shadow:0 32px 90px rgba(0,0,0,.38);transform:scale(.94) translateY(10px);
+  transition:transform .25s var(--spring);position:relative;
+}
+.exercise-image-viewer.open .exercise-image-sheet{transform:scale(1) translateY(0)}
+.exercise-image-large{
+  width:100%;max-height:76dvh;display:block;object-fit:contain;background:#0c0f15;
+}
+.exercise-image-caption{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px 15px;
+  color:var(--chalk);font-size:14px;font-weight:750;
+}
+.exercise-image-close{
+  position:absolute;z-index:2;top:10px;right:10px;width:44px;height:44px;min-height:44px;
+  border:1px solid rgba(255,255,255,.22);border-radius:50%;background:rgba(8,11,17,.68);
+  color:#fff;font-size:25px;line-height:1;display:grid;place-items:center;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.exercise-image-close:active{transform:scale(.92)}
+@media(max-width:560px){
+  .ex-head{gap:10px!important}
+  .exercise-thumb-btn{width:50px;height:50px;min-width:50px;min-height:50px;border-radius:14px}
+  .exercise-image-viewer{padding-left:10px;padding-right:10px}
+  .exercise-image-sheet{border-radius:22px}
+  .exercise-image-caption{padding:12px 14px 14px;font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .exercise-image-viewer,.exercise-image-sheet,.exercise-thumb-btn{transition:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -1787,6 +1848,38 @@ function onboardView(){
  return html;
 }
 
+
+
+// ===================== EXERCISE IMAGE VIEWER =====================
+function showExerciseImage(id){
+ var ex=EXDB[id];if(!ex)return;
+ var viewer=document.getElementById('exercise-image-viewer');
+ if(!viewer){
+  viewer=document.createElement('div');
+  viewer.id='exercise-image-viewer';viewer.className='exercise-image-viewer';
+  viewer.setAttribute('aria-hidden','true');
+  viewer.innerHTML='<div class="exercise-image-sheet" role="dialog" aria-modal="true" aria-labelledby="exercise-image-caption">'+
+   '<button class="exercise-image-close" type="button" aria-label="Close exercise image" onclick="closeExerciseImage()">×</button>'+
+   '<img id="exercise-image-large" class="exercise-image-large" alt="">'+
+   '<div id="exercise-image-caption" class="exercise-image-caption"></div></div>';
+  viewer.addEventListener('click',function(e){if(e.target===viewer)closeExerciseImage();});
+  document.body.appendChild(viewer);
+ }
+ var img=document.getElementById('exercise-image-large'),cap=document.getElementById('exercise-image-caption');
+ img.src='img/'+id+'.jpg';img.alt=ex.name;img.onerror=function(){closeExerciseImage();};
+ cap.textContent=ex.name;
+ viewer.classList.add('open');viewer.setAttribute('aria-hidden','false');
+ document.body.style.overflow='hidden';
+ if(S.settings&&S.settings.haptics&&navigator.vibrate)navigator.vibrate(8);
+ setTimeout(function(){var b=viewer.querySelector('.exercise-image-close');if(b)b.focus();},40);
+}
+function closeExerciseImage(){
+ var viewer=document.getElementById('exercise-image-viewer');if(!viewer)return;
+ viewer.classList.remove('open');viewer.setAttribute('aria-hidden','true');
+ document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeExerciseImage();});
+
 function todayView(){
  var dk=viewDay,type=dayType(dk),hex=HEX[type],isToday=dk===dayKeyOf(todayStr());
  var html=headerHtml(dayLabel(dk),type);
@@ -1874,9 +1967,12 @@ function todayView(){
   var timeBased=ex.inc===0&&ex.rMin>=20;
   var wu=BAR[id]?warmups(rec.w):[],pl=BAR[id]&&rec.w?plates(rec.w):'';
   html+='<div class="ex'+(open?' open':'')+(done?' done-ex':'')+'">'+
-   '<div class="ex-head"><div style="flex:1;min-width:0"><div class="ex-title">'+(done?'✓ ':'')+esc(ex.name)+'</div>'+
+   '<div class="ex-head">'+
+   '<button class="exercise-thumb-btn" type="button" onclick="event.stopPropagation();showExerciseImage(\''+id+'\')" aria-label="View '+esc(ex.name)+' image">'+
+    '<img class="exercise-thumb" src="img/'+id+'.jpg" alt="" loading="lazy" onerror="this.closest(\'.exercise-thumb-btn\').style.display=\'none\'">'+
+   '</button>'+
+   '<div style="flex:1;min-width:0"><div class="ex-title">'+(done?'✓ ':'')+esc(ex.name)+'</div>'+
    '<div class="ex-meta">'+setsDone+'/'+rec.sets+' sets · '+rec.goal+(timeBased?' s':' reps')+' · rest '+ex.rest+'s</div></div>'+
-   '<span class="mini-wrap">'+miniIcons(ex.pri,hex)+'</span>'+
    '<button class="chev" onclick="toggleEx('+i+')" aria-label="Details">▼</button></div>'+
    '<div class="rec"><span class="display" style="font-size:22px;color:'+hex+'">'+(rec.w?rec.w+' lb':'')+'<span style="font-size:13px;color:var(--chalk)"> × '+rec.goal+(timeBased?' s':'')+'</span></span>'+
    tagChip(rec,hex)+(pl?'<span class="sub">'+pl+'</span>':'')+(wu.length?'<span class="sub" style="width:100%">'+wu.map(function(s){return s.w+'×'+s.r;}).join(' → ')+'</span>':'')+'</div>';
@@ -1898,7 +1994,6 @@ function todayView(){
   if(open){
    var canSwap=EXDB[base]&&EXDB[base].alts&&EXDB[base].alts.length;
    html+='<div class="detail">'+
-    '<img class="eximg" src="img/'+id+'.jpg" alt="'+esc(ex.name)+'" loading="lazy" onerror="this.style.display=\'none\'">'+
     '<dd>'+esc(ex.cues)+'</dd>'+
     '<div class="chips"><span class="chip">'+esc(ex.tempo)+'</span><span class="chip">'+esc(ex.rir)+'</span></div>'+
     '<p class="sub" style="margin:10px 0 0">'+esc(rec.why)+'</p>'+
