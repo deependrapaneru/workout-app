@@ -4,22 +4,22 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Training Week</title>
+<title>FlexFuel</title>
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Training" />
-<meta name="theme-color" content="#F4F7FB" />
+<meta name="apple-mobile-web-app-title" content="FlexFuel" />
+<meta name="theme-color" content="#F6FAF2" />
 <meta name="format-detection" content="telephone=no" />
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23E4573D'/%3E%3Crect x='30' y='78' width='120' height='24' rx='6' fill='%23FFFFFF'/%3E%3Crect x='22' y='58' width='20' height='64' rx='6' fill='%23F0A626'/%3E%3Crect x='138' y='58' width='20' height='64' rx='6' fill='%232F7DE1'/%3E%3C/svg%3E" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 :root{--card:#FFFFFF;--card-up:#F1F4F9;--line:#E8ECF3;--chalk:#2A2F45;--dim:#8A90A6;--bg:#EEF1F7;
---red:#F0603A;--blue:#3B6FF5;--yellow:#F5A623;--green:#22C36A;
---grad1:#3B6FF5;--grad2:#5B8DEF;--grad-warm1:#FF7A45;--grad-warm2:#F0603A;
+--red:#F0603A;--blue:#78C729;--yellow:#F5A623;--green:#43C95A;
+--grad1:#78C729;--grad2:#43C95A;--grad-warm1:#8BD629;--grad-warm2:#43C95A;
 --glass:#FFFFFF;--glass-brd:#FFFFFF;--glass-in:#F1F4F9;
 --glass-btn:#F1F4F9;--glass-btn2:#F5F7FB;--glass-sec:#F1F4F9;
 --brd-soft:rgba(42,47,69,.10);--brd-soft2:rgba(42,47,69,.12);--brd-soft3:rgba(42,47,69,.08);
---shadow:rgba(59,111,245,.10);--tab:rgba(255,255,255,.92);--sw:#EAEEF5;}
+--shadow:rgba(120,199,41,.14);--tab:rgba(255,255,255,.92);--sw:#EAEEF5;}
 @media (prefers-color-scheme: dark){
 :root{--card:#1B1E28;--card-up:#232838;--line:#2E3346;--chalk:#ECEEF4;--dim:#9AA0B4;--bg:#12141C;
 --glass:#1B1E28;--glass-brd:rgba(255,255,255,.08);--glass-in:#232838;
@@ -144,19 +144,19 @@ select.inp{appearance:none}
   --premium-bg:#F5F7FB;
   --premium-surface:rgba(255,255,255,.86);
   --premium-border:rgba(17,24,39,.08);
-  --premium-blue:#315CFF;
-  --premium-violet:#7657FF;
-  --premium-cyan:#14B8A6;
-  --premium-orange:#FF6B35;
-  --premium-green:#16B364;
+  --premium-blue:#78C729;
+  --premium-violet:#43C95A;
+  --premium-cyan:#2DBD6A;
+  --premium-orange:#8BD629;
+  --premium-green:#3BCB62;
   --premium-shadow:0 14px 40px rgba(31,41,55,.08);
 }
 
 body{
   max-width:none !important;
   background:
-    radial-gradient(circle at 8% 0%, rgba(49,92,255,.10), transparent 30%),
-    radial-gradient(circle at 92% 8%, rgba(118,87,255,.08), transparent 28%),
+    radial-gradient(circle at 8% 0%, rgba(120,199,41,.12), transparent 30%),
+    radial-gradient(circle at 92% 8%, rgba(67,201,90,.10), transparent 28%),
     var(--premium-bg);
   color:var(--premium-ink);
 }
@@ -446,8 +446,8 @@ header h1{
 @media (prefers-color-scheme:dark){
   body{
     background:
-      radial-gradient(circle at 8% 0%,rgba(49,92,255,.16),transparent 30%),
-      radial-gradient(circle at 92% 8%,rgba(118,87,255,.12),transparent 28%),
+      radial-gradient(circle at 8% 0%,rgba(120,199,41,.18),transparent 30%),
+      radial-gradient(circle at 92% 8%,rgba(67,201,90,.14),transparent 28%),
       #0E1118;
   }
   .tabbar{
@@ -491,7 +491,7 @@ header h1{
    Explicit appearance settings, adaptive accent, accessible contrast.
    ========================================================= */
 :root{
-  --accent:#315CFF;--accent2:#6D5DFB;--accent-rgb:49,92,255;
+  --accent:#78C729;--accent2:#43C95A;--accent-rgb:120,199,41;
   --accent-soft:rgba(var(--accent-rgb),.12);--accent-softer:rgba(var(--accent-rgb),.07);
   --surface:#FFFFFF;--surface2:#F7F9FC;--surface3:#EEF2F8;
   --ink:#151A2D;--muted:#747C91;--page:#F4F7FB;--hair:rgba(21,26,45,.08);
@@ -499,15 +499,15 @@ header h1{
   --elev:0 14px 40px rgba(30,42,73,.09);
   --elev-lg:0 24px 70px rgba(30,42,73,.13);
 }
-:root[data-accent="green"]{--accent:#16A36A;--accent2:#33C28A;--accent-rgb:22,163,106}
-:root[data-accent="orange"]{--accent:#F0643B;--accent2:#FF9A42;--accent-rgb:240,100,59}
-:root[data-accent="violet"]{--accent:#7357F6;--accent2:#A45AF7;--accent-rgb:115,87,246}
-:root[data-accent="rose"]{--accent:#E64C7D;--accent2:#FF7A88;--accent-rgb:230,76,125}
-:root[data-accent="aqua"]{--accent:#0E9FAA;--accent2:#39C6B8;--accent-rgb:14,159,170}
+:root[data-accent="green"]{--accent:#3EBC58;--accent2:#78D954;--accent-rgb:62,188,88}
+:root[data-accent="orange"]{--accent:#89B82D;--accent2:#B2D946;--accent-rgb:137,184,45}
+:root[data-accent="violet"]{--accent:#4BAE45;--accent2:#76D268;--accent-rgb:75,174,69}
+:root[data-accent="rose"]{--accent:#2DBD6A;--accent2:#6FD66C;--accent-rgb:45,189,106}
+:root[data-accent="aqua"]{--accent:#2C9250;--accent2:#54C16E;--accent-rgb:44,146,80}
 
 :root[data-resolved-theme="light"]{
-  --card:#FFFFFF;--card-up:#F2F5FA;--line:#E4E9F1;--chalk:#151A2D;--dim:#747C91;--bg:#F4F7FB;
-  --glass:rgba(255,255,255,.88);--glass-brd:rgba(21,26,45,.07);--glass-in:#F5F7FB;
+  --card:#FFFFFF;--card-up:#F4F8F0;--line:#E6EDD9;--chalk:#141B12;--dim:#6F7C69;--bg:#F6FAF2;
+  --glass:rgba(255,255,255,.90);--glass-brd:rgba(20,27,18,.07);--glass-in:#F5F8F0;
   --glass-btn:#F0F3F8;--glass-btn2:#F5F7FB;--glass-sec:#F0F3F8;
   --brd-soft:rgba(21,26,45,.10);--brd-soft2:rgba(21,26,45,.12);--brd-soft3:rgba(21,26,45,.08);
   --shadow:rgba(30,42,73,.09);--tab:rgba(255,255,255,.88);--sw:#E9EDF5;
@@ -892,6 +892,23 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 .my-food-badge{font-style:normal;font-size:7.5px;letter-spacing:.06em;background:var(--accent-soft);color:var(--accent);padding:3px 5px;border-radius:999px;vertical-align:2px;margin-left:4px;white-space:nowrap}.food-manage{width:40px;min-width:40px;border:0;background:transparent;color:var(--dim);font-size:16px}.food-sync-note{display:flex;align-items:flex-start;gap:7px;background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:10px 11px;font-size:9.5px;line-height:1.4;margin:5px 0 2px}.food-sync-note .app-icon{flex:0 0 16px;margin-top:1px}.my-food-manage-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.my-food-manage-row button{border:1px solid var(--hair);background:var(--surface2);color:var(--chalk);border-radius:11px;min-height:40px;font-size:10px;font-weight:750}.my-food-manage-row button.danger{color:var(--red)}
 @media(max-width:420px){.home-food-actions{gap:5px}.home-food-actions .ghost-btn{padding:7px 8px!important;font-size:10px!important}.food-library-actions{grid-template-columns:1fr}.food-library-actions button{font-size:10px}.food-library-copy small{font-size:9.5px}}
 
+
+/* FlexFuel branding */
+.brand-mini{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.brand-mini-logo{height:26px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.08))}
+.brand-mini-copy{display:flex;flex-direction:column;line-height:1.05}
+.brand-mini-copy b{font-size:13px;letter-spacing:-.02em;color:var(--chalk)}
+.brand-mini-copy span{font-size:9.5px;color:var(--dim)}
+.brand-login-head{text-align:center;padding-top:40px!important}
+.brand-login-mark{display:flex;justify-content:center;margin-bottom:14px}
+.brand-hero-logo{max-width:min(280px,72vw);height:auto;display:block;filter:drop-shadow(0 12px 30px rgba(120,199,41,.18))}
+.brand-login-sub{max-width:320px;margin:8px auto 0}
+.brand-login-card{border-top:3px solid rgba(var(--accent-rgb),.28)}
+.go-btn{box-shadow:0 14px 32px rgba(var(--accent-rgb),.22)}
+.accent-dot.on{box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18),0 10px 22px rgba(var(--accent-rgb),.22)}
+.header-profile-btn,.profile-avatar,.header-avatar{box-shadow:0 10px 24px rgba(var(--accent-rgb),.18)}
+@media(max-width:700px){.brand-mini-copy span{display:none}.brand-mini-logo{height:24px}}
+
 </style>
 </head>
 <body>
@@ -1041,8 +1058,9 @@ function liftDaysPerWeek(){return DAYS.filter(isWorkout).length;}
 function actDaysPerWeek(){return DAYS.filter(function(dk){return dayType(dk)==='act';}).length;}
 
 // ===================== STORAGE =====================
-var KEY='training-week';
+var KEY='flexfuel';
 var mem=null;
+var APP_NAME='FlexFuel',APP_TAG='Train hard. Fuel smart.',APP_LOGO='flexfuel_fitness_logo.png';
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
 function blank(){return {
  start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null,food:{},
@@ -1512,10 +1530,10 @@ function applyAppearance(){
  root.setAttribute('data-text',st.largeText?'large':'normal');
  root.setAttribute('data-motion',st.reduceMotion?'reduced':'full');
  var meta=document.querySelector('meta[name="theme-color"]');
- if(meta){meta.setAttribute('content',resolvedTheme()==='light'?'#F4F7FB':(resolvedTheme()==='amoled'?'#000000':'#0D1118'));}
+ if(meta){meta.setAttribute('content',resolvedTheme()==='light'?'#F6FAF2':(resolvedTheme()==='amoled'?'#000000':'#0E1510'));}
  var ios=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');if(ios)ios.setAttribute('content',resolvedTheme()==='light'?'default':'black-translucent');
 }
-function initials(){var n=S.profile&&S.profile.name||'TW';return n.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x.charAt(0).toUpperCase();}).join('')||'TW';}
+function initials(){var n=S.profile&&S.profile.name||'FF';return n.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x.charAt(0).toUpperCase();}).join('')||'FF';}
 function goalLabel(){var g=S.profile&&S.profile.goal||'lose';return g==='gain'?'Build muscle':g==='maintain'?'Maintain':'Lose fat';}
 function levelLabel(){var l=S.profile&&S.profile.level||'intermediate';return l.charAt(0).toUpperCase()+l.slice(1);}
 function setTheme(v){if(!S.settings)S.settings=blank().settings;S.settings.theme=v;applyAppearance();haptic(10);save();render();}
@@ -1653,6 +1671,8 @@ function foodWeeklyStats(endDs){
 
 // ===================== HELPERS =====================
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function brandLogo(size,cls){return '<img src="'+APP_LOGO+'" alt="'+APP_NAME+' logo" class="'+(cls||'brand-logo')+'"'+(size?' style="height:'+size+'px"':'')+'>'; }
+function brandMini(){return '<div class="brand-mini">'+brandLogo(26,'brand-mini-logo')+'<div class="brand-mini-copy"><b>'+APP_NAME+'</b><span>'+APP_TAG+'</span></div></div>'; }
 function dayKeyOf(ds){return DAYS[(new Date(ds+'T12:00').getDay()+6)%7];}
 function slotEx(dk,i){var base=planEx(dk)[i];return (S.subs&&S.subs[dk+'-'+i])||base;}
 function firstName(){return S.profile&&S.profile.name?S.profile.name.split(' ')[0]:'there';}
@@ -2021,13 +2041,14 @@ function appIcon(name,size){
 
 // ===================== VIEWS =====================
 function headerHtml(title,type){
- return '<header><div class="app-header-row"><div><div class="eyebrow">'+(title==='Home'?greet()+', '+esc(firstName()):'Week '+weekNum())+'</div><h1 class="display" style="color:'+(HEX[type]||'var(--accent)')+'">'+esc(title)+'</h1></div>'+
+ var eyebrow=(title==='Home'?greet()+', '+esc(firstName()):APP_NAME+' · Week '+weekNum());
+ return '<header><div class="app-header-row"><div>'+brandMini()+'<div class="eyebrow">'+eyebrow+'</div><h1 class="display" style="color:'+(HEX[type]||'var(--accent)')+'">'+esc(title)+'</h1></div>'+
   (S.profile?'<button class="header-profile-btn" onclick="openProfile()" aria-label="Profile"><span class="header-avatar">'+initials()+'</span></button>':'')+'</div></header>';
 }
 
 function onboardView(){
  var pr=S.profile||{};if(obSplit==null||!obDraft)obInit();var d=obDraft,step=obStep||0;
- var html='<header style="padding-top:34px"><div class="eyebrow">Training Week · Step '+(step+1)+' of 3</div><h1 class="display" style="color:var(--accent)">'+(pr.name?'Edit profile':'Set up your training')+'</h1></header>'+
+ var html='<header style="padding-top:34px"><div class="eyebrow">'+APP_NAME+' · Step '+(step+1)+' of 3</div><h1 class="display" style="color:var(--accent)">'+(pr.name?'Edit profile':'Set up your training')+'</h1></header>'+
   '<div class="setup-progress"><i class="'+(step>=0?'on':'')+'"></i><i class="'+(step>=1?'on':'')+'"></i><i class="'+(step>=2?'on':'')+'"></i></div>';
  if(step===0){html+='<div class="card"><div class="settings-title"><h3>About you</h3><span>Used for training & nutrition estimates</span></div><label class="profile-select-label">Name</label><input id="ob-name" class="inp" placeholder="Your name" value="'+esc(d.name||'')+'"><div class="row" style="margin-top:12px"><div style="flex:1"><label class="profile-select-label">Age</label><input id="ob-age" class="inp" type="number" inputmode="numeric" value="'+esc(d.age||'')+'" placeholder="Age"></div><div style="flex:1"><label class="profile-select-label">Sex</label><select id="ob-sex" class="inp"><option value="M"'+(d.sex!=='F'?' selected':'')+'>Male</option><option value="F"'+(d.sex==='F'?' selected':'')+'>Female</option></select></div></div><div class="row" style="margin-top:12px"><div style="flex:1.2"><label class="profile-select-label">Height</label><div class="row"><input id="ob-ft" class="inp" type="number" inputmode="numeric" placeholder="ft" value="'+esc(d.ft||'')+'"><input id="ob-in" class="inp" type="number" inputmode="numeric" placeholder="in" value="'+esc(d.inch||'')+'"></div></div><div style="flex:1"><label class="profile-select-label">Weight (lb)</label><input id="ob-w" class="inp" type="number" inputmode="decimal" value="'+esc(d.w||'')+'" placeholder="lb"></div></div><label class="profile-select-label" style="margin-top:12px">Training level</label><select id="ob-level" class="inp"><option value="beginner"'+(d.level==='beginner'?' selected':'')+'>Beginner</option><option value="intermediate"'+(d.level==='intermediate'?' selected':'')+'>Intermediate</option><option value="advanced"'+(d.level==='advanced'?' selected':'')+'>Advanced</option></select></div>';
  }
@@ -2675,7 +2696,7 @@ function customFoodPanel(){
    '<div class="food-form-grid"><label>Calories<input id="cf-k" class="inp" type="number" inputmode="decimal" placeholder="420" value="'+v(f?Math.round(f.k*mult):'')+'"></label><label>Protein (g)<input id="cf-p" class="inp" type="number" inputmode="decimal" placeholder="35" value="'+v(f?+(f.p*mult).toFixed(1):'')+'"></label></div>'+ 
    '<div class="food-form-grid"><label>Carbs (g)<input id="cf-cb" class="inp" type="number" inputmode="decimal" placeholder="40" value="'+v(f?+(f.cb*mult).toFixed(1):'')+'"></label><label>Fat (g)<input id="cf-f" class="inp" type="number" inputmode="decimal" placeholder="12" value="'+v(f?+(f.f*mult).toFixed(1):'')+'"></label></div>'+ 
    '<div class="food-form-grid"><label>Fiber (g)<input id="cf-fi" class="inp" type="number" inputmode="decimal" placeholder="6" value="'+v(f?+(f.fi*mult).toFixed(1):'')+'"></label><label>Search aliases<input id="cf-alias" class="inp" placeholder="curry chicken" value="'+esc(f?f.aliases||'':'')+'"></label></div>'+ 
-   '<div class="food-sync-note">'+appIcon('check',16)+' <span>This food is saved inside your Training Week data and syncs through your signed-in account.</span></div>'+ 
+   '<div class="food-sync-note">'+appIcon('check',16)+' <span>This food is saved inside your FlexFuel data and syncs through your signed-in account.</span></div>'+ 
    '<button class="go-btn food-primary" onclick="saveCustomFood()">'+(f?'Save My Food':'Save to My Foods')+'</button></div>';
 }
 function barcodePanel(){
@@ -2727,9 +2748,9 @@ function profileView(){
  if(completed>=4)ach.push(['check','Consistent',completed+' strong weeks']);
  if((S.notes&&Object.keys(S.notes).length)>=5)ach.push(['note','Reflective','5+ workout notes']);
  if(!ach.length)ach.push(['target','Getting started','Log workouts to unlock badges']);
- var colors=[['blue','#315CFF'],['green','#16A36A'],['orange','#F0643B'],['violet','#7357F6'],['rose','#E64C7D'],['aqua','#0E9FAA']];
+ var colors=[['blue','#78C729'],['green','#3EBC58'],['orange','#89B82D'],['violet','#4BAE45'],['rose','#2DBD6A'],['aqua','#2C9250']];
  var html='<button class="section-back" onclick="moreBack()">'+appIcon('back',18)+' More</button>'+headerHtml('Profile','accent');
- html+='<section class="profile-hero"><div class="profile-top"><div class="profile-avatar">'+initials()+'</div><div><div class="profile-name">'+esc(pr.name||'Training Athlete')+'</div><div class="profile-meta">'+levelLabel()+' · '+goalLabel()+(email?' · '+esc(email):'')+'</div><div class="profile-badges"><span class="profile-badge">Week '+weekNum()+'</span><span class="profile-badge">'+esc(phase().name)+'</span><span class="profile-badge">'+goal+' workouts/week</span></div></div><div class="profile-actions"><button onclick="editProfile()">Edit</button></div></div>'+
+ html+='<section class="profile-hero"><div class="profile-top"><div class="profile-avatar">'+initials()+'</div><div><div class="profile-name">'+esc(pr.name||'FlexFuel Athlete')+'</div><div class="profile-meta">'+levelLabel()+' · '+goalLabel()+(email?' · '+esc(email):'')+'</div><div class="profile-badges"><span class="profile-badge">Week '+weekNum()+'</span><span class="profile-badge">'+esc(phase().name)+'</span><span class="profile-badge">'+goal+' workouts/week</span></div></div><div class="profile-actions"><button onclick="editProfile()">Edit</button></div></div>'+
   '<div class="profile-kpis"><div class="profile-kpi"><b>'+bw+' lb</b><span>CURRENT</span></div><div class="profile-kpi"><b>'+(target?target+' lb':'—')+'</b><span>GOAL WEIGHT</span></div><div class="profile-kpi"><b>'+streak+'</b><span>WEEK STREAK</span></div><div class="profile-kpi"><b>'+prs+'</b><span>PR SESSIONS</span></div></div></section>';
  html+='<section class="settings-section"><div class="settings-title"><h3>Goal</h3><span>'+lifts+' / '+goal+' this week</span></div><div class="goal-card"><div><div class="goal-value">'+pct+'%</div><div class="sub">Weekly target</div><div class="bar" style="height:7px;background:var(--surface3);border-radius:99px;overflow:hidden;margin-top:10px"><div style="height:100%;width:'+pct+'%;background:var(--accent);border-radius:99px"></div></div></div><div class="goal-ring" style="--goal-pct:'+goalPct+'%"><span>'+(target?goalPct+'%':'Set goal')+'</span></div></div></section>';
  html+='<section class="settings-section"><div class="settings-title"><h3>Achievements</h3></div><div class="achievement-row">'+ach.map(function(a){return '<div class="achievement"><div class="ico">'+appIcon(a[0],23)+'</div><b>'+a[1]+'</b><span>'+a[2]+'</span></div>';}).join('')+'</div></section>';
@@ -2766,15 +2787,16 @@ var TABS=[['home','home','Home'],['today','workout','Workout'],['progress','prog
 var VIEWS={home:homeView,today:todayView,progress:progressView,food:foodView,more:moreView,dash:dashView};
 
 function loginView(){
- return '<header style="padding-top:60px"><div class="eyebrow">Training Week</div>'+
-  '<h1 class="display" style="color:var(--accent);font-size:38px">Welcome</h1>'+
-  '<div class="accent-bar" style="background:var(--accent)"></div></header>'+
-  '<div class="card" style="margin-top:20px">'+
-  '<button class="go-btn" style="background:var(--accent);display:flex;align-items:center;justify-content:center;gap:10px" onclick="signInGoogle()">'+
+ return '<header class="brand-login-head"><div class="brand-login-mark">'+brandLogo(92,'brand-hero-logo')+'</div><div class="eyebrow">'+APP_NAME+'</div>'+
+  '<h1 class="display" style="color:var(--accent);font-size:38px">Welcome to '+APP_NAME+'</h1>'+
+  '<p class="sub brand-login-sub">'+APP_TAG+'</p><div class="accent-bar" style="background:var(--hero-grad)"></div></header>'+
+  '<div class="card brand-login-card" style="margin-top:20px">'+
+  '<button class="go-btn" style="background:var(--hero-grad);display:flex;align-items:center;justify-content:center;gap:10px" onclick="signInGoogle()">'+
    '<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.2 35 26.7 36 24 36c-5.3 0-9.7-3.1-11.3-7.5l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C41.4 36.3 44 30.7 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>'+
    'Sign in with Google</button>'+
-  (syncStatus?'<p class="sub" style="margin:12px 0 0;text-align:center">'+esc(syncStatus)+'</p>':'')+'</div>'+
-  '<div class="note">Syncs securely and works offline after sign-in.</div>';
+  (syncStatus?'<p class="sub" style="margin:12px 0 0;text-align:center">'+esc(syncStatus)+'</p>':'')+
+  '<p class="sub" style="text-align:center;margin:12px 0 0">Sync your training, nutrition, and progress with your '+APP_NAME+' account.</p></div>'+
+  '<div class="note">Your custom foods and workouts stay connected to your signed-in '+APP_NAME+' profile.</div>';
 }
 
 function render(){
@@ -2818,7 +2840,7 @@ initAuth(function(){render();});
     var active=document.querySelector('#tabbar button.on');
     if(active){
       var label=(active.textContent||'Training').trim();
-      document.title='Training Week · '+label;
+      document.title='FlexFuel · '+label;
     }
 
     // Improve keyboard behavior for desktop users.
