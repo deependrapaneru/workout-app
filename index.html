@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="FlexFuel" />
-<meta name="theme-color" content="#091109" />
+<meta name="theme-color" content="#F7F9F4" />
 <meta name="format-detection" content="telephone=no" />
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -1316,6 +1316,109 @@ input::placeholder,textarea::placeholder,.inp::placeholder{color:var(--dim)!impo
 :root[data-resolved-theme="light"]{color-scheme:light}
 :root[data-resolved-theme="dark"],:root[data-resolved-theme="amoled"]{color-scheme:dark}
 
+
+/* =========================================================
+   FLEXFUEL FINAL THEME SYSTEM
+   One brand palette. Three appearance modes only:
+   System / Light / Dark.
+   ========================================================= */
+.theme-grid-three{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.theme-preview.system{background:linear-gradient(90deg,#F7F9F4 0 50%,#0B120C 50%)!important}
+.theme-preview.light{background:#F7F9F4!important;color:#122014!important}
+.theme-preview.dark{background:#0B120C!important;color:#F4F8F1!important}
+.theme-preview.amoled,.accent-row{display:none!important}
+
+:root[data-resolved-theme="light"]{
+  --page:#F7F9F4;--bg:#F7F9F4;
+  --card:#FFFFFF;--card-up:#F0F4EC;--surface:#FFFFFF;--surface2:#F3F6F0;--surface3:#E9EFE5;
+  --glass:rgba(255,255,255,.94);--glass-in:#F3F6F0;--glass-btn:#EDF2E9;--glass-btn2:#F5F8F3;--glass-sec:#EDF2E9;
+  --chalk:#122014;--ink:#122014;--dim:#5D6B5C;--muted:#5D6B5C;
+  --line:#DCE5D7;--hair:rgba(18,32,20,.10);--glass-brd:rgba(18,32,20,.08);
+  --brd-soft:rgba(18,32,20,.10);--brd-soft2:rgba(18,32,20,.12);--brd-soft3:rgba(18,32,20,.08);
+  --tab:rgba(255,255,255,.94);--sw:#E1E9DD;--shadow:rgba(31,71,37,.10);
+  --accent:#246F32;--accent2:#4E9E43;--accent-rgb:36,111,50;
+  --accent-soft:rgba(36,111,50,.12);--accent-softer:rgba(36,111,50,.07);
+  --hero-grad:linear-gradient(135deg,#B7ED3E 0%,#62C85B 100%);
+  --elev:0 14px 38px rgba(32,63,34,.08);--elev-lg:0 22px 60px rgba(32,63,34,.12);
+}
+:root[data-resolved-theme="dark"]{
+  --page:#0B120C;--bg:#0B120C;
+  --card:#121A13;--card-up:#19231A;--surface:#121A13;--surface2:#182219;--surface3:#213022;
+  --glass:rgba(18,26,19,.94);--glass-in:#182219;--glass-btn:#1A261B;--glass-btn2:#151F16;--glass-sec:#1A261B;
+  --chalk:#F2F7EF;--ink:#F2F7EF;--dim:#A8B6A5;--muted:#A8B6A5;
+  --line:#29382A;--hair:rgba(226,244,222,.10);--glass-brd:rgba(226,244,222,.09);
+  --brd-soft:rgba(226,244,222,.11);--brd-soft2:rgba(226,244,222,.14);--brd-soft3:rgba(226,244,222,.09);
+  --tab:rgba(10,17,11,.94);--sw:#253126;--shadow:rgba(0,0,0,.42);
+  --accent:#B9EE43;--accent2:#66D06B;--accent-rgb:185,238,67;
+  --accent-soft:rgba(185,238,67,.13);--accent-softer:rgba(185,238,67,.07);
+  --hero-grad:linear-gradient(135deg,#B9EE43 0%,#61C95F 100%);
+  --elev:0 18px 44px rgba(0,0,0,.30);--elev-lg:0 28px 74px rgba(0,0,0,.40);
+}
+
+html,body{background:var(--page)!important;color:var(--chalk)!important}
+body{background:var(--page)!important}
+body::before{background:var(--page)!important}
+#app{color:var(--chalk)!important}
+header h1,.display{color:var(--chalk)!important}
+.eyebrow{color:var(--accent)!important}
+.sub,.note,.setting-label span,.profile-meta,.food-search-copy small,.food-log-row small,.food-meal-title small,.profile-stat span,.profile-kpi span{color:var(--dim)!important}
+
+.card,.ex-card,.ex,.timer,.settings-section,.tool-card,.profile-stat,.metric-card,.food-dashboard,.food-library-card,.food-search-card,.food-editor,.food-custom-form,.food-scanner,.food-quick-card,.food-mini-stat,.home-snapshot,.home-action-card,.account-action-card,.profile-metric-card,.momentum-row{
+  background:var(--card)!important;
+  color:var(--chalk)!important;
+  border-color:var(--line)!important;
+  box-shadow:var(--elev)!important;
+}
+.card::before,.settings-section::before,.profile-hero::before,.food-dashboard::before{display:none!important}
+.inp,select,textarea,.rpe-select{
+  background:var(--surface2)!important;color:var(--chalk)!important;border-color:var(--line)!important;
+}
+.inp::placeholder,textarea::placeholder{color:var(--dim)!important;opacity:.78}
+
+.tabbar{background:var(--tab)!important;border-color:var(--line)!important;box-shadow:var(--elev-lg)!important}
+.tab{color:var(--dim)!important}.tab.on,.tab.active{color:var(--accent)!important;background:transparent!important;box-shadow:none!important}
+.tab.on svg,.tab.active svg{stroke:var(--accent)!important}
+
+.go-btn,.food-primary,.food-fab,.seg button.on,.food-filter-scroll button.on,.food-mode button.on,.food-meal-picker button.on,.toggle.on{
+  background:var(--hero-grad)!important;color:#0A160B!important;border-color:transparent!important;
+  box-shadow:0 10px 24px rgba(var(--accent-rgb),.18)!important;
+}
+.ghost-btn,.section-back,.food-subnav>button,.food-date-nav>button,.food-library-actions button,.day-btn,.theme-choice,.food-meal-actions button,.food-amount-chips button,.food-meal-menu button{
+  background:var(--surface2)!important;color:var(--chalk)!important;border-color:var(--line)!important;box-shadow:none!important;
+}
+.theme-choice.on{border-color:var(--accent)!important;color:var(--accent)!important;box-shadow:0 0 0 2px var(--accent-soft)!important}
+
+/* Brand hero surfaces use a deliberately dark green field in both themes so white text is always legible. */
+.home-hero-premium,.profile-hero-brand,.fuel-hero{
+  background:linear-gradient(135deg,#102313 0%,#1F5429 56%,#347B36 100%)!important;
+  color:#F8FFF5!important;border:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:0 22px 56px rgba(20,65,28,.24)!important;
+}
+:root[data-resolved-theme="dark"] .home-hero-premium,
+:root[data-resolved-theme="dark"] .profile-hero-brand,
+:root[data-resolved-theme="dark"] .fuel-hero{
+  background:linear-gradient(135deg,#0B160D 0%,#16351B 58%,#235B2B 100%)!important;
+  box-shadow:0 26px 64px rgba(0,0,0,.34)!important;
+}
+.home-hero-premium .display,.home-hero-premium b,.home-hero-premium .home-hero-sub,
+.profile-hero-brand .profile-name,.profile-hero-brand .profile-meta,.profile-hero-brand b,.profile-hero-brand span,
+.fuel-hero .fuel-kcal,.fuel-hero b,.fuel-hero span,.fuel-hero .sub{color:#F8FFF5!important}
+.home-hero-premium .eyebrow,.profile-hero-brand .eyebrow,.fuel-hero .eyebrow{color:#DFFF86!important}
+.home-focus-card,.fuel-macro-tile,.profile-kpi-deck .profile-kpi{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.12)!important;color:#F8FFF5!important;box-shadow:none!important}
+.home-brand-pill,.home-focus-badge,.profile-brand-mark,.profile-badge{background:rgba(0,0,0,.20)!important;color:#F8FFF5!important;border-color:rgba(255,255,255,.10)!important}
+.home-primary-actions .ghost-btn,.fuel-hero-actions .ghost-btn,.profile-hero-brand .ghost-btn{background:rgba(255,255,255,.10)!important;color:#F8FFF5!important;border-color:rgba(255,255,255,.14)!important}
+
+.food-cal-track,.food-mini-track,.mini-progress,.macro-row .track,.progress-track,.bar{background:var(--surface3)!important}
+.food-cal-track i,.food-mini-track i,.mini-progress i,.macro-row .track i,.progress-track i,.bar>div{background:var(--hero-grad)!important}
+.food-log-row,.food-search-row{color:var(--chalk)!important;border-color:var(--line)!important;background:transparent!important}
+.food-meal-card{background:var(--card)!important;border-color:var(--line)!important;color:var(--chalk)!important;box-shadow:var(--elev)!important}
+.food-meal-empty{background:var(--surface2)!important;color:var(--accent)!important;border-color:var(--line)!important}
+.food-avatar,.tool-icon,.momentum-icon{background:var(--accent-soft)!important;color:var(--accent)!important}
+
+.sync-dot.synced{background:#3EA451!important}.sync-dot.offline{background:#B78A21!important}.sync-dot.error{background:#C94B43!important}
+
+@media(max-width:560px){.theme-grid-three{grid-template-columns:repeat(3,1fr)!important}}
+
 </style>
 </head>
 <body>
@@ -1472,7 +1575,7 @@ function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth
 function blank(){return {
  start:todayStr(),logs:{},body:[],pb:{},acts:{},checkin:{},subs:{},session:null,profile:null,jokeState:null,food:{},
  foodMeta:{favorites:{},recent:[],usual:{},savedMeals:{},customFoods:{},barcodes:{}},
- notes:{},goals:{weekly:4},templates:{},settings:{theme:'dark',accent:'green',largeText:false,reduceMotion:false,haptics:true,activityMultiplier:1.55,nutritionMode:'estimated',nutritionTargets:{cal:null,prot:null,cb:null,f:null,fi:null}}
+ notes:{},goals:{weekly:4},templates:{},settings:{theme:'system',accent:'green',largeText:false,reduceMotion:false,haptics:true,activityMultiplier:1.55,nutritionMode:'estimated',nutritionTargets:{cal:null,prot:null,cb:null,f:null,fi:null}}
 };}
 // ensure profile has containers for custom exercises / per-day edits
 function ensureProfileEdits(){if(!S.profile)return;
@@ -1481,7 +1584,7 @@ function ensureProfileEdits(){if(!S.profile)return;
  if(!S.profile.del)S.profile.del={};}
 function load(){try{var r=localStorage.getItem(KEY);if(r){
  var b=blank(),d=Object.assign(b,JSON.parse(r));
- d.notes=d.notes||{};d.goals=Object.assign({},b.goals,d.goals||{});d.templates=d.templates||{};d.settings=Object.assign({},b.settings,d.settings||{});d.settings.nutritionTargets=Object.assign({},b.settings.nutritionTargets,d.settings.nutritionTargets||{});
+ d.notes=d.notes||{};d.goals=Object.assign({},b.goals,d.goals||{});d.templates=d.templates||{};d.settings=Object.assign({},b.settings,d.settings||{});d.settings.nutritionTargets=Object.assign({},b.settings.nutritionTargets,d.settings.nutritionTargets||{});if(['system','light','dark'].indexOf(d.settings.theme)<0)d.settings.theme='dark';d.settings.accent='green';
  d.foodMeta=Object.assign({},b.foodMeta,d.foodMeta||{});
  ['favorites','usual','savedMeals','customFoods','barcodes'].forEach(function(k){d.foodMeta[k]=Object.assign({},b.foodMeta[k]||{},d.foodMeta[k]||{});});
  d.foodMeta.recent=Array.isArray(d.foodMeta.recent)?d.foodMeta.recent:[];
@@ -1926,25 +2029,28 @@ var FOODS=[
 var S=load();
 function resolvedTheme(){
  var t=S.settings&&S.settings.theme||'system';
+ if(t!=='system'&&t!=='light'&&t!=='dark')t='dark';
  if(t==='system'){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}
  return t;
 }
 function applyAppearance(){
- var st=S.settings||{},root=document.documentElement;
+ var st=S.settings||{},root=document.documentElement,rt=resolvedTheme();
+ if(st.theme!=='system'&&st.theme!=='light'&&st.theme!=='dark')st.theme='dark';
+ st.accent='green';
  root.setAttribute('data-theme',st.theme||'system');
- root.setAttribute('data-resolved-theme',resolvedTheme());
- root.setAttribute('data-accent',st.accent||'blue');
+ root.setAttribute('data-resolved-theme',rt);
+ root.setAttribute('data-accent','green');
  root.setAttribute('data-text',st.largeText?'large':'normal');
  root.setAttribute('data-motion',st.reduceMotion?'reduced':'full');
  var meta=document.querySelector('meta[name="theme-color"]');
- if(meta){meta.setAttribute('content',resolvedTheme()==='light'?'#F6FAF2':(resolvedTheme()==='amoled'?'#000000':'#0E1510'));}
- var ios=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');if(ios)ios.setAttribute('content',resolvedTheme()==='light'?'default':'black-translucent');
+ if(meta)meta.setAttribute('content',rt==='light'?'#F7F9F4':'#0B120C');
+ var ios=document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');if(ios)ios.setAttribute('content',rt==='light'?'default':'black-translucent');
 }
 function initials(){var n=S.profile&&S.profile.name||'FF';return n.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x.charAt(0).toUpperCase();}).join('')||'FF';}
 function goalLabel(){var g=S.profile&&S.profile.goal||'lose';return g==='gain'?'Build muscle':g==='maintain'?'Maintain':'Lose fat';}
 function levelLabel(){var l=S.profile&&S.profile.level||'intermediate';return l.charAt(0).toUpperCase()+l.slice(1);}
 function setTheme(v){if(!S.settings)S.settings=blank().settings;S.settings.theme=v;applyAppearance();haptic(10);save();render();}
-function setAccent(v){if(!S.settings)S.settings=blank().settings;S.settings.accent=v;applyAppearance();haptic(10);save();render();}
+function setAccent(v){if(!S.settings)S.settings=blank().settings;S.settings.accent='green';applyAppearance();haptic(10);save();render();}
 function toggleSetting(k){if(!S.settings)S.settings=blank().settings;S.settings[k]=!S.settings[k];applyAppearance();save();render();}
 function haptic(ms){if(S.settings&&S.settings.haptics&&navigator.vibrate)try{navigator.vibrate(ms||18);}catch(e){}}
 function openProfile(){morePage='profile';tab='more';haptic(12);render();}
@@ -3071,7 +3177,6 @@ function profileView(){
  if(completed>=4)ach.push(['check','Consistent',completed+' strong weeks']);
  if((S.notes&&Object.keys(S.notes).length)>=5)ach.push(['note','Reflective','5+ training notes']);
  if(!ach.length)ach.push(['target','Getting started','Log sessions to unlock achievements']);
- var colors=[['blue','#78C729'],['green','#3EBC58'],['orange','#89B82D'],['violet','#4BAE45'],['rose','#2DBD6A'],['aqua','#2C9250']];
  var html='<button class="section-back" onclick="moreBack()">'+appIcon('back',18)+' More</button>'+headerHtml('Profile','accent');
  html+='<section class="profile-hero-brand"><div class="profile-top"><div><div class="profile-brand-mark">'+brandLogo(18,'')+'<span>Flex profile</span></div><div class="profile-name">'+esc(pr.name||'FlexFuel Athlete')+'</div><div class="profile-meta">'+levelLabel()+' · '+goalLabelText+(email?' · '+esc(email):'')+'</div><div class="profile-badges"><span class="profile-badge">'+esc(phase().name)+'</span><span class="profile-badge">'+goal+' sessions / week</span><span class="profile-badge">Week '+weekNum()+'</span></div></div><div class="profile-actions"><button class="ghost-btn" style="color:#fff;border-color:rgba(255,255,255,.22)!important" onclick="editProfile()">Edit profile</button></div></div>'+
  '<div class="profile-kpi-deck"><div class="profile-kpi"><b>'+(bw?bw+' lb':'—')+'</b><span>Current weight</span></div><div class="profile-kpi"><b>'+(target?target+' lb':'—')+'</b><span>Target</span></div><div class="profile-kpi"><b>'+streak+'</b><span>Week streak</span></div><div class="profile-kpi"><b>'+prs+'</b><span>PR sessions</span></div></div></section>';
@@ -3091,7 +3196,7 @@ function profileView(){
  html+='<section class="settings-section"><div class="modern-panel-title"><h3>Achievements</h3><span>Unlocked from your activity</span></div><div class="achievement-row">'+ach.map(function(a){return '<div class="achievement"><div class="ico">'+appIcon(a[0],23)+'</div><b>'+a[1]+'</b><span>'+a[2]+'</span></div>';}).join('')+'</div></section>';
 
  html+='<div class="profile-section-grid">'+
-   '<section class="settings-section"><div class="modern-panel-title"><h3>Appearance</h3><span>Theme & accents</span></div><div class="theme-grid">'+[['system','System'],['light','Light'],['dark','Dark'],['amoled','AMOLED']].map(function(x){return '<button class="theme-choice '+(st.theme===x[0]?'on':'')+'" onclick="setTheme(\''+x[0]+'\')"><div class="theme-preview '+x[0]+'"></div>'+x[1]+'</button>';}).join('')+'</div><div class="eyebrow" style="margin:18px 0 10px">Accent color</div><div class="accent-row">'+colors.map(function(c){return '<button aria-label="'+c[0]+' accent" class="accent-dot '+(st.accent===c[0]?'on':'')+'" style="background:'+c[1]+';color:'+c[1]+'" onclick="setAccent(\''+c[0]+'\')"></button>';}).join('')+'</div></section>'+
+   '<section class="settings-section"><div class="modern-panel-title"><h3>Appearance</h3><span>FlexFuel green stays consistent</span></div><div class="theme-grid theme-grid-three">'+[['system','System'],['light','Light'],['dark','Dark']].map(function(x){return '<button class="theme-choice '+(st.theme===x[0]?'on':'')+'" onclick="setTheme(\''+x[0]+'\')"><div class="theme-preview '+x[0]+'"></div>'+x[1]+'</button>';}).join('')+'</div><div class="sub" style="margin-top:12px">System follows your device appearance. FlexFuel uses one brand-green accent in every theme for consistent contrast.</div></section>'+
    '<section class="settings-section"><div class="modern-panel-title"><h3>Experience</h3><span>Comfort & accessibility</span></div><div class="setting-stack">'+
       '<div class="setting-row"><div class="setting-label"><b>Haptics</b><span>Tap feedback</span></div><button class="toggle '+(st.haptics?'on':'')+'" onclick="toggleSetting(\'haptics\')"><i></i></button></div>'+
       '<div class="setting-row"><div class="setting-label"><b>Reduce motion</b><span>Fewer animations</span></div><button class="toggle '+(st.reduceMotion?'on':'')+'" onclick="toggleSetting(\'reduceMotion\')"><i></i></button></div>'+

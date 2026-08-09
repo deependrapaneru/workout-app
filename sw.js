@@ -1,4 +1,4 @@
-const CACHE='flexfuel-contrast-v3';
+const CACHE='flexfuel-theme-clean-v4';
 const CORE=['./','./index.html','./flexfuel_fitness_logo.png','./favicon.ico','./favicon-32x32.png','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./maskable-icon-512.png','./site.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
