@@ -699,6 +699,21 @@ button:active,.tool-card:active,.day-btn:active{transform:scale(.975)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#app.view-enter,.ex.open .detail{animation:none!important}}
 :root[data-motion="reduced"] #app.view-enter,:root[data-motion="reduced"] .ex.open .detail{animation:none!important}
 
+
+/* ===== CLOUD SYNC STATUS ===== */
+.sync-panel{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+.sync-status{display:flex;align-items:center;gap:9px;min-width:0}
+.sync-dot{width:10px;height:10px;border-radius:50%;background:var(--dim);box-shadow:0 0 0 4px rgba(120,128,150,.10);flex:0 0 10px}
+.sync-dot.synced{background:#22C36A;box-shadow:0 0 0 4px rgba(34,195,106,.12)}
+.sync-dot.saving,.sync-dot.pulling{background:var(--accent);box-shadow:0 0 0 4px rgba(var(--accent-rgb),.12);animation:syncPulse 1.1s ease-in-out infinite}
+.sync-dot.offline{background:#F5A623;box-shadow:0 0 0 4px rgba(245,166,35,.12)}
+.sync-dot.error{background:#F0603A;box-shadow:0 0 0 4px rgba(240,96,58,.12)}
+.sync-copy{min-width:0}.sync-copy b{display:block;font-size:13px}.sync-copy span{display:block;color:var(--dim);font-size:10px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sync-now{flex:0 0 auto;color:var(--accent)!important;min-width:92px}
+@keyframes syncPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.88)}}
+@media(prefers-reduced-motion:reduce){.sync-dot.saving,.sync-dot.pulling{animation:none}}
+:root[data-motion="reduced"] .sync-dot.saving,:root[data-motion="reduced"] .sync-dot.pulling{animation:none}
+
 </style>
 </head>
 <body>
@@ -863,49 +878,99 @@ function save(){mem=S;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){
 // ===================== CLOUD SYNC (Supabase) =====================
 var SUPABASE_URL='https://azafunkyeoxeweejzfeh.supabase.co';
 var SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6YWZ1bmt5ZW94ZXdlZWp6ZmVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMzA2OTksImV4cCI6MjEwMTgwNjY5OX0.P1_UFGXP6e8Bdfc-KwwcYHS3lmBZqG7A94-gN8U6Cdg';
-var sb=null, authUser=null, authReady=false, pushTimer=null, syncStatus='';
+var sb=null, authUser=null, authReady=false, pushTimer=null, syncStatus='',syncState='idle';
+var retryTimer=null,retryCount=0,pendingSync=false,retryMode='push';
+var LAST_SYNC_KEY=KEY+'_last_sync';
+var lastSyncAt=(function(){try{return localStorage.getItem(LAST_SYNC_KEY)||'';}catch(e){return '';}})();
 function sbClient(){if(!sb&&window.supabase)sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);return sb;}
+function syncDefaultMessage(state){return state==='saving'?'Saving to cloud…':state==='pulling'?'Checking cloud…':state==='synced'?'Synced':state==='offline'?'Offline · saved on device':state==='error'?'Sync failed':'Ready to sync';}
+function setSyncState(state,msg){syncState=state||'idle';syncStatus=msg||syncDefaultMessage(syncState);updateSyncUI();}
+function syncLastLabel(){if(!lastSyncAt)return 'Not synced yet';var d=new Date(lastSyncAt);if(isNaN(d.getTime()))return 'Not synced yet';return 'Last synced '+d.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}
+function markSynced(){lastSyncAt=new Date().toISOString();try{localStorage.setItem(LAST_SYNC_KEY,lastSyncAt);}catch(e){}retryCount=0;pendingSync=false;clearTimeout(retryTimer);setSyncState('synced','Synced');}
+function updateSyncUI(){
+ var labels=document.querySelectorAll('[data-sync-label]'),lasts=document.querySelectorAll('[data-sync-last]'),dots=document.querySelectorAll('[data-sync-dot]');
+ for(var i=0;i<labels.length;i++)labels[i].textContent=syncStatus||syncDefaultMessage(syncState);
+ for(var j=0;j<lasts.length;j++)lasts[j].textContent=syncLastLabel();
+ for(var k=0;k<dots.length;k++)dots[k].className='sync-dot '+syncState;
+}
+function syncStatusHtml(){return '<div class="sync-panel" aria-live="polite"><div class="sync-status"><i class="sync-dot '+syncState+'" data-sync-dot></i><div class="sync-copy"><b data-sync-label>' + esc(syncStatus||syncDefaultMessage(syncState)) + '</b><span data-sync-last>' + esc(syncLastLabel()) + '</span></div></div><button class="ghost-btn sync-now" onclick="syncNow()">Sync Now</button></div>';}
+function scheduleSyncRetry(mode){
+ retryMode=mode||'push';if(retryMode==='push')pendingSync=true;clearTimeout(retryTimer);
+ if(!authUser)return;
+ if(typeof navigator!=='undefined'&&navigator.onLine===false){setSyncState('offline');return;}
+ retryCount=Math.min(retryCount+1,5);
+ var delay=Math.min(30000,1500*Math.pow(2,retryCount-1));
+ retryTimer=setTimeout(function(){
+  if(retryMode==='pull')syncPull(function(ok){if(ok&&S.profile)syncPush(true);});
+  else syncPush(true);
+ },delay);
+}
 
 // merge two app states: logs/body/acts by key, newest-wins on scalars
 function mergeState(local,cloud){
  if(!cloud)return local;if(!local)return cloud;
- var out=Object.assign({},cloud,local); // start from local, we'll union collections
- // logs: union by exercise id + date
+ var out=Object.assign({},cloud,local),localEstablished=!!local.profile;
+ // workout logs: union by exercise id + date; local wins equal-length edits
  out.logs={};
  [cloud.logs,local.logs].forEach(function(src){if(!src)return;for(var id in src){if(!out.logs[id])out.logs[id]=[];
   src[id].forEach(function(entry){var ex=out.logs[id].find(function(e){return e.d===entry.d;});
-   if(!ex)out.logs[id].push(entry);else if((entry.sets||[]).length>=(ex.sets||[]).length)ex.sets=entry.sets;});}});
+   if(!ex)out.logs[id].push(entry);else if((entry.sets||[]).length>=(ex.sets||[]).length)Object.assign(ex,entry);});}});
  for(var id in out.logs)out.logs[id].sort(function(a,b){return a.d<b.d?-1:1;});
- // body + acts: union by date
- function unionByDate(field){var m={};[cloud[field],local[field]].forEach(function(arr){(arr||[]).forEach(function(x){m[x.d]=x;});});
-  return Object.keys(m).sort().map(function(d){return m[d];});}
+ // arrays keyed by date
+ function unionByDate(field){var m={};[cloud[field],local[field]].forEach(function(arr){(arr||[]).forEach(function(x){if(x&&x.d)m[x.d]=x;});});return Object.keys(m).sort().map(function(d){return m[d];});}
  out.body=unionByDate('body');
- // acts is an object keyed by date
- out.acts=Object.assign({},cloud.acts||{},local.acts||{});
- out.pb=Object.assign({},cloud.pb||{},local.pb||{});
- out.checkin=Object.assign({},cloud.checkin||{},local.checkin||{});
- // profile: prefer whichever was saved more recently (local, since user just used it) but keep cloud if local lacks one
- out.profile=local.profile||cloud.profile;
+ // date/id keyed collections
+ ['acts','pb','checkin','subs','food','notes','templates'].forEach(function(field){out[field]=Object.assign({},cloud[field]||{},local[field]||{});});
+ // Defaults on a brand-new device must not overwrite cloud preferences.
+ out.goals=localEstablished?Object.assign({},cloud.goals||{},local.goals||{}):Object.assign({},blank().goals,cloud.goals||{});
+ out.settings=localEstablished?Object.assign({},cloud.settings||{},local.settings||{}):Object.assign({},blank().settings,cloud.settings||{});
+ // Merge profile containers while preferring deliberate local edits.
+ if(local.profile||cloud.profile){
+  var cp=cloud.profile||{},lp=local.profile||{};
+  out.profile=Object.assign({},cp,lp);
+  ['sched','acts','custom','add','del'].forEach(function(field){out.profile[field]=Object.assign({},cp[field]||{},lp[field]||{});});
+ }else out.profile=null;
  out.start=(local.start&&cloud.start)?(local.start<cloud.start?local.start:cloud.start):(local.start||cloud.start);
  return out;
 }
 
 function syncPull(cb){
- var c=sbClient();if(!c||!authUser){if(cb)cb();return;}
+ var c=sbClient();
+ if(!c||!authUser){if(authUser)setSyncState('error','Cloud service unavailable');if(cb)cb(false);return;}
+ if(typeof navigator!=='undefined'&&navigator.onLine===false){retryMode='pull';setSyncState('offline');if(cb)cb(false);return;}
+ retryMode='pull';setSyncState('pulling');
  c.from('profiles').select('data').eq('id',authUser.id).maybeSingle().then(function(res){
+  if(res&&res.error)throw res.error;
   if(res&&res.data&&res.data.data){
    S=mergeState(S,res.data.data);hydrateCustom();
    try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
   }
-  if(cb)cb();
- }).catch(function(){if(cb)cb();});
+  markSynced();
+  if(cb)cb(true);
+ }).catch(function(err){
+  console.warn('Cloud pull failed',err);setSyncState('error','Sync failed · will retry');scheduleSyncRetry('pull');if(cb)cb(false);
+ });
 }
-function syncPush(){
- var c=sbClient();if(!c||!authUser)return;
- clearTimeout(pushTimer);
- pushTimer=setTimeout(function(){
-  c.from('profiles').upsert({id:authUser.id,data:S,updated_at:new Date().toISOString()}).then(function(){}).catch(function(){});
- },1200); // debounce rapid saves
+function syncPush(immediate,cb){
+ var c=sbClient();if(!c||!authUser){if(authUser)setSyncState('error','Cloud service unavailable');if(cb)cb(false);return;}
+ pendingSync=true;retryMode='push';clearTimeout(pushTimer);
+ var run=function(){
+  if(typeof navigator!=='undefined'&&navigator.onLine===false){setSyncState('offline');if(cb)cb(false);return;}
+  setSyncState('saving');
+  c.from('profiles').upsert({id:authUser.id,data:S,updated_at:new Date().toISOString()}).then(function(res){
+   if(res&&res.error)throw res.error;
+   markSynced();if(cb)cb(true);
+  }).catch(function(err){
+   console.warn('Cloud save failed',err);setSyncState('error','Sync failed · will retry');scheduleSyncRetry('push');if(cb)cb(false);
+  });
+ };
+ if(immediate)run();else pushTimer=setTimeout(run,1200);
+}
+function syncNow(){
+ if(!authUser){setSyncState('error','Sign in to sync');return;}
+ if(typeof navigator!=='undefined'&&navigator.onLine===false){setSyncState('offline');return;}
+ clearTimeout(retryTimer);retryCount=0;
+ syncPull(function(ok){if(ok)syncPush(true);});
 }
 
 function initAuth(cb){
@@ -914,20 +979,20 @@ function initAuth(cb){
  c.auth.getSession().then(function(res){
   var sess=res&&res.data&&res.data.session;
   if(sess&&sess.user){authUser=sess.user;authReady=true;
-   syncPull(function(){if(cb)cb();});
-  } else {authReady=true;if(cb)cb();}
+   syncPull(function(ok){if(ok&&S.profile)syncPush(true);if(cb)cb();});
+  } else {authReady=true;setSyncState('idle','Sign in to sync');if(cb)cb();}
  }).catch(function(){authReady=true;if(cb)cb();});
  c.auth.onAuthStateChange(function(_ev,sess){
-  if(sess&&sess.user){authUser=sess.user;syncPull(function(){render();});}
-  else{authUser=null;render();}
+  if(sess&&sess.user){authUser=sess.user;syncPull(function(ok){if(ok&&S.profile)syncPush(true);render();});}
+  else{authUser=null;setSyncState('idle','Sign in to sync');render();}
  });
 }
 function signInGoogle(){
  var c=sbClient();if(!c){alert('No internet connection. Sign-in needs to be online the first time.');return;}
- syncStatus='Redirecting to Google…';render();
+ setSyncState('pulling','Redirecting to Google…');render();
  c.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}});
 }
-function signOut(){var c=sbClient();if(c)c.auth.signOut();authUser=null;render();}
+function signOut(){var c=sbClient();if(c)c.auth.signOut();authUser=null;clearTimeout(pushTimer);clearTimeout(retryTimer);setSyncState('idle','Sign in to sync');render();}
 function hasSession(){return !!authUser;}
 
 var FOODS=[
@@ -1679,7 +1744,7 @@ function onboardView(){
  var html='<header style="padding-top:40px"><div class="eyebrow">Training Week</div>'+
   '<h1 class="display" style="color:var(--accent)">'+(pr.name?'Edit profile':'Welcome')+'</h1>'+
   '<div class="accent-bar" style="background:var(--accent)"></div></header>'+
-  '<div class="card"><p class="sub" style="margin:0">Personalize your training, split, and schedule. Everything stays on this phone only.</p></div>'+
+  '<div class="card"><p class="sub" style="margin:0">Personalize your training, split, and schedule. Changes save on this device and sync to your account when online.</p></div>'+
   '<div class="card">'+
    '<div class="eyebrow" style="margin-bottom:6px">Name</div>'+
    '<input id="ob-name" class="inp" placeholder="Your name" value="'+esc(pr.name||'')+'">'+
@@ -1833,7 +1898,7 @@ function todayView(){
   if(open){
    var canSwap=EXDB[base]&&EXDB[base].alts&&EXDB[base].alts.length;
    html+='<div class="detail">'+
-    '<img class="eximg" src="img/'+id+'.jpg" alt="'+esc(ex.name)+'" loading="lazy" decoding="async" onerror="this.style.display=\'none\';">'+
+    '<img class="eximg" src="img/'+id+'.jpg" alt="'+esc(ex.name)+'" loading="lazy" onerror="this.style.display=\'none\'">'+
     '<dd>'+esc(ex.cues)+'</dd>'+
     '<div class="chips"><span class="chip">'+esc(ex.tempo)+'</span><span class="chip">'+esc(ex.rir)+'</span></div>'+
     '<p class="sub" style="margin:10px 0 0">'+esc(rec.why)+'</p>'+
@@ -2248,6 +2313,7 @@ function profileView(){
   '<div class="setting-row"><div class="setting-label"><b>Haptics</b><span>Tap feedback</span></div><button class="toggle '+(st.haptics?'on':'')+'" onclick="toggleSetting(\'haptics\')"><i></i></button></div>'+
   '<div class="setting-row"><div class="setting-label"><b>Reduce motion</b><span>Fewer animations</span></div><button class="toggle '+(st.reduceMotion?'on':'')+'" onclick="toggleSetting(\'reduceMotion\')"><i></i></button></div>'+
   '<div class="setting-row"><div class="setting-label"><b>Larger text</b><span>Bigger UI text</span></div><button class="toggle '+(st.largeText?'on':'')+'" onclick="toggleSetting(\'largeText\')"><i></i></button></div></section>';
+ html+='<section class="settings-section"><div class="settings-title"><h3>Cloud sync</h3><span>Workout data</span></div>'+syncStatusHtml()+'<div class="sub" style="margin-top:2px">Your workout history, body records, food logs, notes, profile, templates, goals, and settings are saved locally first and synced to your account.</div></section>';
  html+='<section class="settings-section"><div class="settings-title"><h3>Training profile</h3><button class="ghost-btn" style="color:var(--accent)" onclick="editProfile()">Edit details</button></div><div class="profile-stat-grid">'+
   '<div class="profile-stat"><b>'+levelLabel()+'</b><span>TRAINING LEVEL</span></div><div class="profile-stat"><b>'+goalLabel()+'</b><span>PRIMARY GOAL</span></div><div class="profile-stat"><b>'+SPLITS[pr.split||'ul'].name+'</b><span>TRAINING SPLIT</span></div><div class="profile-stat"><b>'+((pr.heightIn||0)?Math.floor(pr.heightIn/12)+'′ '+((pr.heightIn||0)%12)+'″':'—')+'</b><span>HEIGHT</span></div></div></section>';
  return html;
@@ -2263,7 +2329,7 @@ function moreView(){
  html+='<div class="card"><div class="card-headline"><h3>Workout templates</h3><span class="sub">'+ts.length+' saved</span></div>';
  if(ts.length)ts.forEach(function(id){var t=S.templates[id];html+='<div class="hist-row"><span><b>'+esc(t.name)+'</b><span class="sub"> · '+t.ex.length+' exercises</span></span><span><button class="ghost-btn mini-action" onclick="applyTemplate(\''+id+'\',\''+viewDay+'\')">Use</button> <button class="x-btn" onclick="deleteTemplate(\''+id+'\')">×</button></span></div>';});else html+='<p class="sub">No templates yet.</p>';
  html+='</div><div class="card"><h3>Backup</h3><div class="row"><button class="ghost-btn" style="flex:1;color:var(--chalk)" onclick="exportData()">Export backup</button><label class="ghost-btn" style="flex:1;text-align:center;color:var(--chalk)">Restore<input type="file" accept=".json" style="display:none" onchange="importData(this)"></label></div></div>';
- html+='<div class="card"><h3 style="margin-top:0">Account</h3><p class="sub">'+(authUser&&authUser.email?esc(authUser.email):'Signed in')+'</p><button class="ghost-btn" style="width:100%;color:var(--chalk)" onclick="signOut()">Sign out</button></div>';
+ html+='<div class="card"><div class="card-headline"><h3 style="margin-top:0">Account</h3><span class="sub">'+(authUser&&authUser.email?esc(authUser.email):'Signed in')+'</span></div>'+syncStatusHtml()+'<button class="ghost-btn" style="width:100%;color:var(--chalk);margin-top:6px" onclick="signOut()">Sign out</button></div>';
  return html;
 }
 
@@ -2297,6 +2363,7 @@ function render(){
   if(tab==='food'&&!foodPick)renderFoodList();
   bar.innerHTML=TABS.map(function(t){return '<button aria-label="'+t[2]+'" class="'+(tab===t[0]?'on':'')+'" onclick="setTab(\''+t[0]+'\')"><span class="ic">'+appIcon(t[1],22)+'</span><span>'+t[2]+'</span></button>';}).join('');
   renderTimer();
+  updateSyncUI();
  }catch(err){
   document.getElementById('app').innerHTML='<div class="card" style="margin-top:40px"><h3>Something went wrong</h3><p class="sub">'+esc(err.message)+'</p><button class="go-btn" style="background:#E4573D;margin-top:10px" onclick="resetApp()">Reset app data</button></div>';
  }
@@ -2312,6 +2379,10 @@ if('serviceWorker' in navigator){
  navigator.serviceWorker.register('sw.js').then(function(reg){reg.addEventListener('updatefound',function(){
   var nw=reg.installing;if(nw)nw.addEventListener('statechange',function(){if(nw.state==='installed'&&navigator.serviceWorker.controller)location.reload();});});}).catch(function(){});
 }
+
+// cloud connectivity: keep local saves working and retry automatically when connection returns
+window.addEventListener('offline',function(){if(authUser)setSyncState('offline');});
+window.addEventListener('online',function(){if(!authUser)return;retryCount=0;if(retryMode==='pull'&&(syncState==='offline'||syncState==='error'))syncPull(function(ok){if(ok&&S.profile)syncPush(true);});else if(pendingSync||syncState==='offline'||syncState==='error')syncPush(true);else setSyncState('synced',lastSyncAt?'Synced':'Ready to sync');});
 
 // start: check auth (offline-friendly), then render
 render(); // shows Loading… immediately
