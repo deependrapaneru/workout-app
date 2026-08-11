@@ -1,7 +1,7 @@
 /* FlexFuel service worker — network first, cache as a fallback.
    The app must never be trapped on a stale build, so fresh HTML always wins
    when the network is reachable and the cache only steps in when it isn't. */
-var CACHE='flexfuel-v3';
+var CACHE='flexfuel-v4';
 var SHELL=[
  './','./index.html','./site.webmanifest',
  './flexfuel_fitness_logo.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png',
