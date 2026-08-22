@@ -410,6 +410,13 @@ body{--tabbar-h:64px}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 12px;box-shadow:var(--shadow);text-align:left}
 .stat b{display:block;font-family:'Oswald',sans-serif;font-size:1.55rem;font-weight:600;line-height:1}
 .stat span{display:block;font-size:.72rem;color:var(--muted);margin-top:5px;font-weight:600;line-height:1.25}
+.measure-mini{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.measure-mini button{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:8px 2px;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.measure-mini button b{font-family:'Oswald',sans-serif;font-size:.92rem;font-weight:600;line-height:1;color:var(--ink)}
+.measure-mini button span{font-size:.6rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.measure-mini button.on{background:var(--accent);border-color:transparent}
+.measure-mini button.on b,.measure-mini button.on span{color:var(--accent-ink)}
+.measure-mini button:active{transform:scale(.96)}
 .wk{display:flex;gap:5px;margin-top:12px}
 .wk div{flex:1;text-align:center}
 .wk i{display:block;height:38px;border-radius:9px;background:var(--surface-3);margin-bottom:5px}
@@ -426,6 +433,7 @@ body{--tabbar-h:64px}
 .cal-day.off{background:var(--surface-3);color:var(--muted)}
 .cal-day.planned{border:1.5px dashed var(--line-2)}
 .cal-day.today{outline:2px solid var(--ink-2);outline-offset:1px}
+.cal-day.sel{box-shadow:0 0 0 2px var(--accent) inset}
 .cal-day:active{transform:scale(.92)}
 .cal-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .cal-legend span{display:flex;align-items:center;gap:6px;font-size:.74rem;color:var(--muted);font-weight:600}
@@ -466,6 +474,21 @@ details.disclose[open]>summary{margin-bottom:10px}
   .floater,.toast{max-width:532px}
   .sheet{max-width:560px}
   :root{--pad:20px}
+}
+
+/* desktop/pointer polish — touch devices never match this, so mobile feel is untouched */
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{filter:brightness(1.05)}
+  .row:hover{background:var(--surface-2)}
+  .chip:hover{border-color:var(--line-2)}
+  .chip.on:hover{filter:brightness(1.06)}
+  .iconbtn:hover{background:var(--surface-2)}
+  .avatar:hover{filter:brightness(1.08)}
+  .tabbar button:hover{color:var(--ink)}
+  .tabbar button.on:hover{color:var(--accent)}
+  .cal-day:not(:disabled):hover{box-shadow:0 0 0 1.5px var(--line-2) inset}
+  .measure-mini button:hover{border-color:var(--line-2)}
+  .section-title button:hover,.section-title a:hover{opacity:.75}
 }
 </style>
 </head>
@@ -1482,7 +1505,7 @@ function hasSession(){return !!authUser;}
 var S=load();
 var FOOD_BY_ID={};FOODS.forEach(function(f){FOOD_BY_ID[f.id]=f;});
 var tab='today',sub=null,editProf=false,openEx=null,extraSets={},histEx='bench';
-var measureTab='waist',calMonth=null;
+var measureTab='waist',calMonth=null,calSelDay=null;
 var viewDay=null,foodDate=todayStr(),foodMeal=null;
 var timerSecs=0,timerInt=null;
 var undoState=null,undoTimer=null,focusAfterRender=null;
@@ -1580,15 +1603,35 @@ function calShift(n){
  var s=calMonthStr(),y=+s.slice(0,4),m=+s.slice(5,7)-1+n,d=new Date(y,m,1);
  var next=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);
  if(next>todayStr().slice(0,7))return;
- calMonth=next;haptic(8);render();
+ calMonth=next;calSelDay=null;haptic(8);render();
 }
 function calInfo(ds){
- var st=dayStatus(ds),sets=setsLoggedOn(ds),act=actDoneOn(ds),msg;
- if(st==='skipped')msg='Skipped';
- else if(st==='off')msg='Rest day';
- else if(trainedOn(ds))msg='Trained'+(sets?' · '+sets+' sets logged':'')+(act?' · activity logged':'');
- else msg='Nothing logged';
- toast(dateLabel(ds)+' — '+msg);
+ calSelDay=ds;haptic(8);
+ var grid=document.getElementById('cal-grid-wrap');if(grid)grid.outerHTML=calGridHtml();
+ var panel=document.getElementById('cal-detail');if(panel)panel.outerHTML=calDetailHtml();
+}
+function calDaySummary(ds){
+ var st=dayStatus(ds),sets=setsLoggedOn(ds),act=actDoneOn(ds);
+ if(st==='skipped')return 'Skipped';
+ if(st==='off')return 'Rest day';
+ if(trainedOn(ds))return 'Trained'+(sets?' · '+sets+' set'+(sets===1?'':'s')+' logged':'')+(act?' · activity logged':'');
+ return isTraining(dayKeyOf(ds))?'Planned, nothing logged yet':'Not a training day';
+}
+function calDetailHtml(){
+ if(!calSelDay)return '<div id="cal-detail"></div>';
+ return '<div id="cal-detail" aria-live="polite" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px">'+
+  '<div><b style="display:block;font-size:.93rem">'+esc(dateLabel(calSelDay))+'</b><span class="sub">'+esc(calDaySummary(calSelDay))+'</span></div>'+
+  (calSelDay===todayStr()?'<button class="btn sm quiet" onclick="go(\'today\')">Open</button>':'')+
+  '</div>';
+}
+function calMonthSummaryHtml(y,m,daysInMonth){
+ var trained=0,skipped=0;
+ for(var day=1;day<=daysInMonth;day++){
+  var ds=y+'-'+('0'+(m+1)).slice(-2)+'-'+('0'+day).slice(-2);
+  if(ds>todayStr())continue;
+  if(trainedOn(ds))trained++;else if(dayStatus(ds)==='skipped')skipped++;
+ }
+ return trained+' trained'+(skipped?' · '+skipped+' skipped':'')+' this month';
 }
 function weeklyGoal(){
  // the plan on the calendar is the truth; a stale stored number never wins
@@ -3623,9 +3666,7 @@ function progressView(){
 
  // measurements
  html+='<div class="section-title"><h2>Measurements</h2><button type="button" onclick="openSheet(\'measure\')">Log</button></div>';
- html+='<div class="card" id="measure-card"><div class="chips" style="margin-bottom:12px">'+
-  MEASURE_FIELDS.map(function(f){return '<button type="button" class="chip '+(measureTab===f[0]?'on':'')+'" onclick="setMeasureTab(\''+f[0]+'\')">'+f[1]+'</button>';}).join('')+
-  '</div><div id="measure-body">'+measureCardBody()+'</div></div>';
+ html+=measureCardHtml();
 
  // lifts
  var lifted=Object.keys(S.logs).filter(function(id){return logsOf(id).length&&EXDB[id];});
@@ -3648,47 +3689,65 @@ function progressView(){
  }
  return html;
 }
+function measureMiniHtml(){
+ return '<div class="measure-mini" role="tablist" aria-label="Measurement to chart">'+
+  MEASURE_FIELDS.map(function(x){
+   var v=lastMeasure(x[0]),on=x[0]===measureTab;
+   return '<button type="button" class="'+(on?'on':'')+'" role="tab" aria-selected="'+on+'" onclick="setMeasureTab(\''+x[0]+'\')">'+
+    '<b>'+(v!=null?v:'—')+'</b><span>'+x[1]+'</span></button>';
+  }).join('')+'</div>';
+}
 function measureCardBody(){
  var f=measureTab,label=measureLabel(f),series=measureSeries(f);
+ var mini=measureMiniHtml();
  if(!series.length){
-  return '<div class="empty" style="margin:0"><b>No '+label.toLowerCase()+' logged yet</b><p>Track it monthly to see real trends, not day-to-day noise.</p></div>';
+  return mini+'<div class="empty" style="margin:0"><b>No '+label.toLowerCase()+' logged yet</b><p>Track it monthly to see real trends, not day-to-day noise.</p></div>';
  }
  var latest=series[series.length-1],first=series.length>1?series[Math.max(0,series.length-9)].v:null;
  var delta=first!=null?+(latest.v-first).toFixed(1):null;
- return '<div><b class="display num" style="font-size:2.1rem;line-height:1">'+latest.v+'</b> <span class="sub">in</span>'+
-  '<div class="sub" style="margin-top:3px">'+dateLabel(latest.d)+(delta!=null?' · '+(delta>0?'+':'')+delta+' in over the last '+Math.min(9,series.length)+' entries':'')+'</div></div>'+
+ var arrow=delta>0?' ▲':delta<0?' ▼':'';
+ return mini+'<div><b class="display num" style="font-size:2.1rem;line-height:1">'+latest.v+'</b> <span class="sub">in</span>'+
+  '<div class="sub" style="margin-top:3px">'+dateLabel(latest.d)+(delta!=null?' · '+(delta>0?'+':'')+delta+' in over the last '+Math.min(9,series.length)+' entries'+arrow:'')+'</div></div>'+
   spark(series.slice(-24).map(function(x){return x.v;}));
 }
+function measureCardHtml(){return '<div class="card" id="measure-card">'+measureCardBody()+'</div>';}
 function setMeasureTab(f){
  measureTab=f;haptic(8);
- var card=document.getElementById('measure-card');if(card)card.outerHTML=
-  '<div class="card" id="measure-card"><div class="chips" style="margin-bottom:12px">'+
-   MEASURE_FIELDS.map(function(x){return '<button type="button" class="chip '+(measureTab===x[0]?'on':'')+'" onclick="setMeasureTab(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+
-   '</div><div id="measure-body">'+measureCardBody()+'</div></div>';
+ var card=document.getElementById('measure-card');if(card)card.outerHTML=measureCardHtml();
 }
-function calendarView(){
- var html=subhead('Training calendar',"setSub(null)");
+function calParts(){
  var ms=calMonthStr(),y=+ms.slice(0,4),m=+ms.slice(5,7)-1;
- var first=new Date(y,m,1),startOffset=(first.getDay()+6)%7,daysInMonth=new Date(y,m+1,0).getDate();
- var monthLabel=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
- var atCurrent=ms>=todayStr().slice(0,7);
- var cells=DAYS.map(function(d){return '<span class="cal-dow">'+d.charAt(0)+'</span>';}).join('');
- for(var i=0;i<startOffset;i++)cells+='<span></span>';
- for(var day=1;day<=daysInMonth;day++){
-  var ds=y+'-'+('0'+(m+1)).slice(-2)+'-'+('0'+day).slice(-2);
+ return{y:y,m:m,daysInMonth:new Date(y,m+1,0).getDate(),startOffset:(new Date(y,m,1).getDay()+6)%7};
+}
+function calGridHtml(){
+ var p=calParts(),cells=DAYS.map(function(d){return '<span class="cal-dow">'+d.charAt(0)+'</span>';}).join('');
+ for(var i=0;i<p.startOffset;i++)cells+='<span></span>';
+ for(var day=1;day<=p.daysInMonth;day++){
+  var ds=p.y+'-'+('0'+(p.m+1)).slice(-2)+'-'+('0'+day).slice(-2);
   var future=ds>todayStr();
   var cls=future?'':trainedOn(ds)?'on':dayStatus(ds)==='skipped'?'skip':dayStatus(ds)==='off'?'off':(isTraining(dayKeyOf(ds))?'planned':'');
   if(ds===todayStr())cls+=' today';
-  cells+='<button type="button" class="cal-day '+cls+'"'+(future?' disabled':' onclick="calInfo(\''+ds+'\')"')+'>'+day+'</button>';
+  if(ds===calSelDay)cls+=' sel';
+  var full=new Date(ds+'T12:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'});
+  var label=full+(future?'':' — '+calDaySummary(ds));
+  cells+='<button type="button" class="cal-day '+cls+'" aria-label="'+esc(label)+'"'+(future?' disabled':' onclick="calInfo(\''+ds+'\')"')+'>'+day+'</button>';
  }
+ return '<div class="cal-grid" id="cal-grid-wrap">'+cells+'</div>';
+}
+function calendarView(){
+ var html=subhead('Training calendar',"setSub(null)");
+ var p=calParts(),monthLabel=new Date(p.y,p.m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ var atCurrent=calMonthStr()>=todayStr().slice(0,7);
  html+='<div class="card">'+
-  '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+  '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">'+
    '<button type="button" class="iconbtn plain" onclick="calShift(-1)" aria-label="Previous month">'+ic('back',18)+'</button>'+
    '<b>'+monthLabel+'</b>'+
    '<button type="button" class="iconbtn plain" style="'+(atCurrent?'visibility:hidden':'')+'" onclick="calShift(1)" aria-label="Next month">'+ic('chev',18)+'</button>'+
   '</div>'+
-  '<div class="cal-grid">'+cells+'</div>'+
+  '<div class="sub" style="text-align:center;margin-bottom:10px">'+esc(calMonthSummaryHtml(p.y,p.m,p.daysInMonth))+'</div>'+
+  calGridHtml()+
   '<div class="cal-legend"><span><i class="on"></i>Trained</span><span><i class="skip"></i>Skipped</span><span><i class="planned"></i>Planned</span></div>'+
+  calDetailHtml()+
  '</div>';
  return html;
 }
