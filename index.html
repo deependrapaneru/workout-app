@@ -417,6 +417,22 @@ body{--tabbar-h:64px}
 .wk i.act{background:var(--accent-soft);border:1.5px solid var(--accent)}
 .wk i.today{outline:2px solid var(--ink-2);outline-offset:1px}
 .wk span{font-size:.66rem;color:var(--muted);font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:2px}
+.cal-dow{font-size:.66rem;color:var(--muted);font-weight:700;text-align:center;padding-bottom:4px}
+.cal-day{aspect-ratio:1;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;font-size:.82rem;font-weight:600;color:var(--ink-2)}
+.cal-day:disabled{opacity:.35;cursor:default}
+.cal-day.on{background:var(--accent);color:var(--accent-ink)}
+.cal-day.skip{background:var(--danger-soft);color:var(--danger)}
+.cal-day.off{background:var(--surface-3);color:var(--muted)}
+.cal-day.planned{border:1.5px dashed var(--line-2)}
+.cal-day.today{outline:2px solid var(--ink-2);outline-offset:1px}
+.cal-day:active{transform:scale(.92)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.cal-legend span{display:flex;align-items:center;gap:6px;font-size:.74rem;color:var(--muted);font-weight:600}
+.cal-legend i{width:10px;height:10px;border-radius:3px;display:block}
+.cal-legend i.on{background:var(--accent)}
+.cal-legend i.skip{background:var(--danger-soft);border:1.5px solid var(--danger)}
+.cal-legend i.planned{background:none;border:1.5px dashed var(--line-2)}
 .note{margin:16px var(--pad) 8px;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5}
 .sync-line{display:flex;align-items:center;gap:9px;font-size:.83rem;color:var(--ink-2)}
 .sync-dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:0 0 auto}
@@ -1466,6 +1482,7 @@ function hasSession(){return !!authUser;}
 var S=load();
 var FOOD_BY_ID={};FOODS.forEach(function(f){FOOD_BY_ID[f.id]=f;});
 var tab='today',sub=null,editProf=false,openEx=null,extraSets={},histEx='bench';
+var measureTab='waist',calMonth=null;
 var viewDay=null,foodDate=todayStr(),foodMeal=null;
 var timerSecs=0,timerInt=null;
 var undoState=null,undoTimer=null,focusAfterRender=null;
@@ -1556,6 +1573,23 @@ function actDoneOn(ds){return !!(S.acts&&S.acts[ds]);}
 function trainedOn(ds){var st=dayStatus(ds);if(st==='done')return true;if(st==='skipped'||st==='off')return false;
  return liftDoneOn(ds)||actDoneOn(ds)||!!(S.pb&&S.pb[ds]);}
 function weekTrained(){return weekDates().filter(function(d){return d<=todayStr()&&trainedOn(d);}).length;}
+
+// ===================== TRAINING CALENDAR (month view) =====================
+function calMonthStr(){return calMonth||todayStr().slice(0,7);}
+function calShift(n){
+ var s=calMonthStr(),y=+s.slice(0,4),m=+s.slice(5,7)-1+n,d=new Date(y,m,1);
+ var next=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);
+ if(next>todayStr().slice(0,7))return;
+ calMonth=next;haptic(8);render();
+}
+function calInfo(ds){
+ var st=dayStatus(ds),sets=setsLoggedOn(ds),act=actDoneOn(ds),msg;
+ if(st==='skipped')msg='Skipped';
+ else if(st==='off')msg='Rest day';
+ else if(trainedOn(ds))msg='Trained'+(sets?' · '+sets+' sets logged':'')+(act?' · activity logged':'');
+ else msg='Nothing logged';
+ toast(dateLabel(ds)+' — '+msg);
+}
 function weeklyGoal(){
  // the plan on the calendar is the truth; a stale stored number never wins
  var actual=DAYS.filter(isTraining).length;
@@ -1577,6 +1611,21 @@ function logWeight(w){
 function daysSinceWeighIn(){
  var ws=bodyWeights();if(!ws.length)return 999;
  return Math.round((new Date(todayStr())-new Date(ws[ws.length-1].d))/864e5);
+}
+
+// ---- body measurements: same per-day record as weight, extra optional fields ----
+var MEASURE_FIELDS=[['waist','Waist'],['chest','Chest'],['hips','Hips'],['arm','Arm'],['thigh','Thigh']];
+function measureLabel(f){var m=MEASURE_FIELDS.filter(function(x){return x[0]===f;})[0];return m?m[1]:f;}
+function measureSeries(f){return S.body.filter(function(b){return +b[f]>0;}).map(function(b){return{d:b.d,v:+b[f]};});}
+function lastMeasure(f){var s=measureSeries(f);return s.length?s[s.length-1].v:null;}
+function logMeasurements(vals){
+ var patch={},any=false;
+ MEASURE_FIELDS.forEach(function(f){var v=+vals[f[0]];if(v>0){patch[f[0]]=v;any=true;}});
+ if(!any)return false;
+ pushUndo();var key=todayStr(),found=false;
+ S.body=S.body.map(function(b){if(b.d===key){found=true;return Object.assign({},b,patch,{id:b.id||recordId('body'),updatedAt:Date.now()});}return b;});
+ if(!found)S.body.push(Object.assign({id:recordId('body'),d:key,updatedAt:Date.now()},patch));
+ save();haptic(18);return true;
 }
 function targets(){
  var pr=S.profile||{},st=S.settings||{},bw=lastWeight()||170;
@@ -2615,6 +2664,7 @@ function renderSheet(){
  if(sheetKind==='amount')html+=amountSheet();
  else if(sheetKind==='entry')html+=entrySheet();
  else if(sheetKind==='weight')html+=weightSheet();
+ else if(sheetKind==='measure')html+=measureSheet();
  else if(sheetKind==='custom')html+=customSheet();
  else if(sheetKind==='activity')html+=activitySheet();
  else if(sheetKind==='exercise')html+=exerciseSheet();
@@ -2722,6 +2772,22 @@ function commitWeight(){
  var el=document.getElementById('wt-input'),w=el?+el.value:0;
  if(!w){toast('Enter a number');return;}
  if(logWeight(w)){closeSheet();render();toast('Weight saved','Undo',undoLast);}
+}
+
+// ---- measurements sheet ----
+function measureSheet(){
+ return sheetHead('Log measurements','Same tape, same time of day, relaxed — not flexed')+
+  MEASURE_FIELDS.map(function(f,i){
+   var last=lastMeasure(f[0]);
+   return '<label class="field"><span>'+f[1]+' (in)</span><input id="ms-'+f[0]+'" class="inp" type="number" inputmode="decimal" step="0.1" placeholder="'+(last||'—')+'"'+(i===0?' data-autofocus':'')+'></label>';
+  }).join('')+
+  '<button class="btn primary block" onclick="commitMeasurements()">Save</button>';
+}
+function commitMeasurements(){
+ var vals={};
+ MEASURE_FIELDS.forEach(function(f){var el=document.getElementById('ms-'+f[0]);if(el&&el.value)vals[f[0]]=+el.value;});
+ if(logMeasurements(vals)){closeSheet();render();toast('Measurements saved','Undo',undoLast);}
+ else toast('Enter at least one measurement');
 }
 
 // ---- custom food sheet ----
@@ -3508,6 +3574,7 @@ function myFoodsView(){
 // ===================== PROGRESS =====================
 function progressView(){
  if(sub==='lift')return liftHistoryView();
+ if(sub==='calendar')return calendarView();
  var wd=weekDates(),goal=weeklyGoal(),done=weekTrained();
  var ws=bodyWeights(),latest=ws.length?ws[ws.length-1]:null;
  var target=S.profile&&S.profile.targetWeight;
@@ -3523,7 +3590,8 @@ function progressView(){
    var cls=t?'on':act?'act':'';
    if(d===todayStr())cls+=' today';
    return '<div><i class="'+cls+'"></i><span>'+DAYS[i].charAt(0)+'</span></div>';
-  }).join('')+'</div></div>';
+  }).join('')+'</div>'+
+  '<button type="button" class="btn quiet sm block" style="margin-top:14px" onclick="setSub(\'calendar\')">View full calendar</button></div>';
 
  if(showsPerformance()){
   html+='<div class="stat-grid">'+
@@ -3553,6 +3621,12 @@ function progressView(){
    '<button class="btn primary" onclick="openSheet(\'weight\')">Log your weight</button></div>';
  }
 
+ // measurements
+ html+='<div class="section-title"><h2>Measurements</h2><button type="button" onclick="openSheet(\'measure\')">Log</button></div>';
+ html+='<div class="card" id="measure-card"><div class="chips" style="margin-bottom:12px">'+
+  MEASURE_FIELDS.map(function(f){return '<button type="button" class="chip '+(measureTab===f[0]?'on':'')+'" onclick="setMeasureTab(\''+f[0]+'\')">'+f[1]+'</button>';}).join('')+
+  '</div><div id="measure-body">'+measureCardBody()+'</div></div>';
+
  // lifts
  var lifted=Object.keys(S.logs).filter(function(id){return logsOf(id).length&&EXDB[id];});
  html+='<div class="section-title"><h2>Your lifts</h2></div>';
@@ -3572,6 +3646,50 @@ function progressView(){
     '<span class="chev">'+ic('chev',18)+'</span></button>';
   }).join('')+'</div>';
  }
+ return html;
+}
+function measureCardBody(){
+ var f=measureTab,label=measureLabel(f),series=measureSeries(f);
+ if(!series.length){
+  return '<div class="empty" style="margin:0"><b>No '+label.toLowerCase()+' logged yet</b><p>Track it monthly to see real trends, not day-to-day noise.</p></div>';
+ }
+ var latest=series[series.length-1],first=series.length>1?series[Math.max(0,series.length-9)].v:null;
+ var delta=first!=null?+(latest.v-first).toFixed(1):null;
+ return '<div><b class="display num" style="font-size:2.1rem;line-height:1">'+latest.v+'</b> <span class="sub">in</span>'+
+  '<div class="sub" style="margin-top:3px">'+dateLabel(latest.d)+(delta!=null?' · '+(delta>0?'+':'')+delta+' in over the last '+Math.min(9,series.length)+' entries':'')+'</div></div>'+
+  spark(series.slice(-24).map(function(x){return x.v;}));
+}
+function setMeasureTab(f){
+ measureTab=f;haptic(8);
+ var card=document.getElementById('measure-card');if(card)card.outerHTML=
+  '<div class="card" id="measure-card"><div class="chips" style="margin-bottom:12px">'+
+   MEASURE_FIELDS.map(function(x){return '<button type="button" class="chip '+(measureTab===x[0]?'on':'')+'" onclick="setMeasureTab(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+
+   '</div><div id="measure-body">'+measureCardBody()+'</div></div>';
+}
+function calendarView(){
+ var html=subhead('Training calendar',"setSub(null)");
+ var ms=calMonthStr(),y=+ms.slice(0,4),m=+ms.slice(5,7)-1;
+ var first=new Date(y,m,1),startOffset=(first.getDay()+6)%7,daysInMonth=new Date(y,m+1,0).getDate();
+ var monthLabel=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ var atCurrent=ms>=todayStr().slice(0,7);
+ var cells=DAYS.map(function(d){return '<span class="cal-dow">'+d.charAt(0)+'</span>';}).join('');
+ for(var i=0;i<startOffset;i++)cells+='<span></span>';
+ for(var day=1;day<=daysInMonth;day++){
+  var ds=y+'-'+('0'+(m+1)).slice(-2)+'-'+('0'+day).slice(-2);
+  var future=ds>todayStr();
+  var cls=future?'':trainedOn(ds)?'on':dayStatus(ds)==='skipped'?'skip':dayStatus(ds)==='off'?'off':(isTraining(dayKeyOf(ds))?'planned':'');
+  if(ds===todayStr())cls+=' today';
+  cells+='<button type="button" class="cal-day '+cls+'"'+(future?' disabled':' onclick="calInfo(\''+ds+'\')"')+'>'+day+'</button>';
+ }
+ html+='<div class="card">'+
+  '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+   '<button type="button" class="iconbtn plain" onclick="calShift(-1)" aria-label="Previous month">'+ic('back',18)+'</button>'+
+   '<b>'+monthLabel+'</b>'+
+   '<button type="button" class="iconbtn plain" style="'+(atCurrent?'visibility:hidden':'')+'" onclick="calShift(1)" aria-label="Next month">'+ic('chev',18)+'</button>'+
+  '</div>'+
+  '<div class="cal-grid">'+cells+'</div>'+
+  '<div class="cal-legend"><span><i class="on"></i>Trained</span><span><i class="skip"></i>Skipped</span><span><i class="planned"></i>Planned</span></div>'+
+ '</div>';
  return html;
 }
 function openLift(id){histEx=id;setSub('lift');}
